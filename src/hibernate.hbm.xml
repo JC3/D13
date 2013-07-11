@@ -1,0 +1,96 @@
+<!DOCTYPE hibernate-mapping 
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-access="field">
+
+    <class name="d13.dao.ApprovalSurvey" table="approval_surveys">
+        <id name="aformId"><generator class="foreign"><param name="property">user</param></generator></id>
+        <one-to-one name="user" class="d13.dao.User" constrained="true"/>
+        <property name="completionTime" type="d13.dao.types.DateTimeType"/>
+    </class>
+   
+    <class name="d13.dao.RegistrationForm" table="registration_forms">
+        <id name="rformId"><generator class="foreign"><param name="property">user</param></generator></id>
+        <one-to-one name="user" class="d13.dao.User" constrained="true"/>
+        <property name="completionTime" type="d13.dao.types.DateTimeType"/>
+
+		<property name="helpedOffPlaya" type="text"/>
+		<property name="helpedAlphaCamp"/>
+		<property name="helpedCampBuild"/>
+		<property name="helpedDisengage"/>
+		<property name="helpedLeadRoles"/>
+		<property name="helpedLoveMinistry"/>
+		<property name="helpedLNT"/>
+		<property name="helpedOther"/>
+		<property name="helpedOtherOther" type="text"/>
+		<property name="disorientVirgin"/>
+		<property name="bmVirgin"/>
+		<property name="sponsor" type="text"/>
+		<property name="sponsorFor" type="text"/>
+		<property name="arrivalDate"/>
+		<property name="arrivalTime"/>
+		<property name="departureDate"/>
+		<property name="departureTime"/>
+		<property name="drivingFromTo" type="d13.dao.types.LocationType"/>
+		<property name="drivingFromToOther" type="text"/>
+		<property name="rv"/>
+		<property name="driving"/>
+		<property name="rideSpaceTo"/>
+		<property name="rideSpaceFrom"/>
+		<property name="parkAtCamp"/>
+		<property name="vehicleComments" type="text"/>
+		<property name="needRideTo"/>
+		<property name="needRideFrom"/>
+		<many-to-one name="groupLeader" class="d13.dao.User"/>
+		<property name="personalProject" type="text"/>
+		<property name="comments" type="text"/>
+        
+    </class>
+    
+    <class name="d13.dao.User" table="users">
+        <id name="userId"><generator class="native"/></id>
+        <property name="email" length="254" not-null="true" unique="true"/>
+        <property name="admin" not-null="true"/>
+        <property name="passwordSalt" length="8" not-null="true"/>
+        <property name="passwordHash" length="40" not-null="true"/>
+        <property name="created" type="d13.dao.types.DateTimeType" not-null="true"/>
+        <property name="lastLogin" type="d13.dao.types.DateTimeType"/>
+        <property name="termsAgreed" not-null="true"/>
+        <property name="gender" type="d13.dao.types.GenderType" not-null="true"/>
+        <property name="realName" length="128" not-null="true"/>
+        <property name="playaName" length="128"/>
+        <property name="location" type="d13.dao.types.LocationType" not-null="true"/>
+        <property name="locationOther" length="128"/>
+        <property name="phone" length="24"/>
+        <property name="emergencyContact" type="text" not-null="true"/>
+        <one-to-one name="registration" class="d13.dao.RegistrationForm" cascade="save-update"/>
+        <one-to-one name="approval" class="d13.dao.ApprovalSurvey" cascade="save-update"/>
+        <property name="state" type="d13.dao.types.UserStateType" not-null="true"/>
+        <property name="adminComment" type="text"/>
+        <set name="cells" table="users_cells">
+            <key column="userId"/>
+            <many-to-many column="cellId" class="d13.dao.Cell"/>
+        </set>
+    </class>
+    
+    <class name="d13.dao.Cell" table="cells">
+        <id name="cellId"><generator class="native"/></id>
+        <many-to-one name="parent" class="d13.dao.Cell" insert="false" update="false"/>
+        <property name="category" not-null="true"/>
+        <property name="name" type="string" length="128" not-null="true"/>
+        <property name="description" type="text"/>
+        <property name="people" not-null="true"/>
+        <property name="startDate"/>
+        <property name="endDate"/>
+        <set name="users" inverse="true" table="users_cells">
+            <key column="cellId"/>
+            <many-to-many column="userId" class="d13.dao.User"/>
+        </set>
+        <list name="children" cascade="all">
+            <key column="parent"/>
+            <index column="`index`"/>
+            <one-to-many class="d13.dao.Cell"/>
+        </list>
+    </class>
+
+</hibernate-mapping>
