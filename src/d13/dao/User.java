@@ -65,6 +65,10 @@ public class User {
         c.removeUser(this);
     }
     
+    public boolean isInCell (Cell c) {
+        return cells.contains(c);
+    }
+    
     public boolean isInCells () {
         return !cells.isEmpty();
     }
