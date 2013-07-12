@@ -3,9 +3,10 @@ package d13.dao;
 public enum UserState {
 
     NEW_USER(0, "New User"),
-    REGISTERED(1, "Needs Review"),
-    APPROVED(2, "Approved"),
-    REJECTED(3, "Rejected");
+    NEEDS_REVIEW(1, "Needs Review"),
+    REGISTERED(2, "Registered"),
+    APPROVED(3, "Approved"),
+    REJECTED(4, "Rejected");
     
     private final int dbId;
     private final String displayString;
@@ -22,9 +23,10 @@ public enum UserState {
     public static UserState fromDBId (int dbId) {
         switch (dbId) {
         case 0: return NEW_USER;
-        case 1: return REGISTERED;
-        case 2: return APPROVED;
-        case 3: return REJECTED;
+        case 1: return NEEDS_REVIEW;
+        case 2: return REGISTERED;
+        case 3: return APPROVED;
+        case 4: return REJECTED;
         default: return null;
         }
     }

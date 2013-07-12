@@ -21,7 +21,7 @@ if (success_target == null || success_target.trim().isEmpty()) success_target = 
 
 if (!sess.isLoggedIn()) {
     sess.setAttribute(SessionData.SA_LOGIN_ERROR, "Please log in first.");
-    response.sendRedirect("index.jsp");
+    response.sendRedirect("index.jsp?next=" + java.net.URLEncoder.encode(Util.getCompleteUrl(request), "us-ascii"));
     return;
 }
 Long user_id = Util.getParameterLong(request, "u");
@@ -32,7 +32,7 @@ try {
     // no such user. do nothing.
     return;
 }
-if (!editee.isEditableBy(editor))
+if (!editee.isEditableBy(editor) && !editee.isViewableBy(editor))
     return; // permission denied. do nothing.
 //if (defaults == null)
 //    defaults = new RegistrationBean(editee);
@@ -84,7 +84,9 @@ function showMore (id) {
 <input type="hidden" name="user_id" value="<%= editee.getUserId() %>">
 <table>
 <% CellList.writeCellTree(out, root, editee); %>
+<% if (editee.isEditableBy(editor)) { %>
 <tr><td colspan="2"><input type="submit" value="Continue">
+<% } %>
 </table>
 </form>
 

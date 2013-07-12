@@ -8,14 +8,20 @@ sess.clearAttribute(SessionData.SA_LOGIN_ERROR);
 sess.clearAttribute(SessionData.SA_LOGIN_EMAIL);
 sess.clearAttribute(SessionData.SA_LOGIN_EXISTING);
 
+String next = request.getParameter("next");
+if (next != null && next.trim().isEmpty()) next = null;
+
 if (login.isFailed()) {
     sess.setAttribute(SessionData.SA_LOGIN_ERROR, login.getErrorMessage());
     sess.setAttribute(SessionData.SA_LOGIN_EMAIL, login.getEmail());
     sess.setAttribute(SessionData.SA_LOGIN_EXISTING, login.isExisting());
-    response.sendRedirect("index.jsp");
+    if (next != null)
+        response.sendRedirect("index.jsp?next=" + java.net.URLEncoder.encode(next, "us-ascii"));
+    else
+        response.sendRedirect("index.jsp");
     return;
 } else if (login.isLoggedIn()) {
-    response.sendRedirect("home.jsp");
+    response.sendRedirect(next == null ? "home.jsp" : next);
 } else {
     sess.setAttribute(SessionData.SA_LOGIN_EMAIL, login.getEmail());
     response.sendRedirect("personal.jsp?newuser");

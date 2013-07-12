@@ -9,11 +9,13 @@ SessionData sess = new SessionData(session);
 String error = (String)sess.getAndClearAttribute(SessionData.SA_LOGIN_ERROR);
 String message = request.getParameterMap().containsKey("loggedout") ? "You have been logged out." : null; //(String)sess.getAndClearAttribute(SessionData.SA_LOGIN_MESSAGE);
 String email = (String)sess.getAttribute(SessionData.SA_LOGIN_EMAIL);
+String next = request.getParameter("next");
 boolean existing = Util.unbox((Boolean)sess.getAttribute(SessionData.SA_LOGIN_EXISTING));
 
 String error_html = (error == null ? null : StringEscapeUtils.escapeHtml(error));
 String message_html = (message == null ? null : StringEscapeUtils.escapeHtml(message));
 String email_html = (email == null ? "" : StringEscapeUtils.escapeHtml(email));
+String next_html = (next == null ? "" : StringEscapeUtils.escapeHtml(next));
 
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -38,6 +40,7 @@ td { white-space: nowrap; }
 <% } %>
 
 <form action="do_login.jsp" method="post">
+<input type="hidden" name="next" value="<%=next_html%>">
 <table>
 <tr>
     <td>Email Address:

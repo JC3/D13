@@ -44,7 +44,7 @@ if (newuser) {
         // no such user. do nothing.
         return;
     }
-    if (!editee.isEditableBy(editor))
+    if (!editee.isEditableBy(editor) && !editee.isViewableBy(editor))
         return; // permission denied. do nothing.
     if (defaults == null)
         defaults = new UserProfileBean(editee);
@@ -99,7 +99,9 @@ String error_html = (error == null ? null : Util.html(error));
 List<Question> qs = ProfileQuestions.getQuestions();
 QuestionForm.writeQuestions(out, qs, defaults);
 %>
+<% if (editee == null || editee.isEditableBy(editor)) { %>
 <tr><td colspan="2"><input type="submit" value="Continue">
+<% } %>
 </table>
 </form>
 

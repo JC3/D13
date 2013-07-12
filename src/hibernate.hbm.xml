@@ -51,6 +51,7 @@
         <id name="userId"><generator class="native"/></id>
         <property name="email" length="254" not-null="true" unique="true"/>
         <property name="admin" not-null="true"/>
+        <property name="admissions" not-null="true"/>
         <property name="passwordSalt" length="8" not-null="true"/>
         <property name="passwordHash" length="40" not-null="true"/>
         <property name="created" type="d13.dao.types.DateTimeType" not-null="true"/>

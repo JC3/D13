@@ -8,6 +8,8 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import d13.dao.RegistrationForm;
 import d13.dao.User;
+import d13.dao.UserState;
+import d13.notify.RegistrationEmail;
 import d13.util.HibernateUtil;
 import d13.util.Util;
 
@@ -40,7 +42,8 @@ public class EditRegistration {
                 throw new SecurityException("Permission denied.");
             
             RegistrationForm form = editee.getRegistration();
-           
+            boolean sendmail = false;
+            
             // validate all before updating
             HibernateUtil.getCurrentSession().evict(form);
             HibernateUtil.getCurrentSession().evict(editee);
@@ -48,9 +51,16 @@ public class EditRegistration {
             form.validateMisc();
             if (!form.isCompleted())
                 form.setCompletionTimeNow();
+            if (editee.getState() == UserState.NEW_USER) {
+                editee.setState(UserState.NEEDS_REVIEW);
+                sendmail = true;
+            }
             HibernateUtil.getCurrentSession().merge(editee);
             HibernateUtil.getCurrentSession().merge(form);
                         
+            if (sendmail)
+                RegistrationEmail.sendNotification(editee);
+            
         } catch (InvocationTargetException x) {
             
             failed = true;

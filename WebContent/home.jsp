@@ -12,7 +12,14 @@ if (!sess.isLoggedIn()) {
 User user = sess.getUser();
 String email_html = Util.html(user.getEmail());
 String realname_html = Util.html(user.getRealName());
-String role_html = user.isAdmin() ? "Administrator" : null; //(user.isSpecialRole() ? Util.html(user.getRole().getName()) : null);
+//String role_html = null; // = user.isAdmin() ? "Administrator" : null; //(user.isSpecialRole() ? Util.html(user.getRole().getName()) : null);
+//if (user.isAdmin() && user.isAdmissions()) // this is getting hacky
+//    role_html = "Administrator";
+//else if (user.isAdmin())
+//    role_html = "Registration";
+//else if (user.isAdmissions())
+//    role_html = "Admissions";
+String role_html = Util.html(user.getRoleDisplay());
 
 if (!user.isTermsAgreed()) {
     response.sendRedirect("terms.jsp");
@@ -59,7 +66,12 @@ out this form, then you will not be camping with us this year!</p>
 
 <% if (user.isAdmin()) { %>
 <b>For Administrators:</b><br><ul>
-<li><a href="admin_users.jsp">Manage Users</a>
+<!-- <li><a href="admin_users.jsp">Manage Users</a> -->
+<li><a href="view_data.jsp">View Registration Data</a>
+</ul>
+<% } else if (user.isAdmissions()) { %>
+<b>For Admissions Team:</b><br><ul>
+<!-- <li><a href="admin_users.jsp">Manage Users</a> -->
 <li><a href="view_data.jsp">View Registration Data</a>
 </ul>
 <% } %> 

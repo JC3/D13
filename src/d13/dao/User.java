@@ -14,12 +14,15 @@ import org.joda.time.DateTime;
 
 import d13.util.HibernateUtil;
 import d13.util.Util;
+import d13.web.CompleteIncompleteBooleanConverter;
+import d13.web.DataView;
 
 public class User {
 
     public long userId;
     public String email;
     public boolean admin;
+    public boolean admissions;
     public String passwordSalt;
     public String passwordHash;
     public DateTime created;
@@ -73,10 +76,12 @@ public class User {
         return !cells.isEmpty();
     }
     
+    @DataView(i=0, n="ID")
     public long getUserId() {
         return userId;
     }
     
+    @DataView(i=2, n="Email")
     public String getEmail() {
         return email;
     }
@@ -92,22 +97,43 @@ public class User {
         return admin;
     }
     
+    public boolean isAdmissions () {
+        return admissions;
+    }
+    
+    @DataView(i=2, n="Role")
+    public String getRoleDisplay () {
+        if (admin && admissions) // getting hacky
+            return "Administrator";
+        else if (admin)
+            return "Registration";
+        else if (admissions)
+            return "Admissions";
+        else
+            return null;
+    }
+    
+    @DataView(i=3, n="Created")
     public DateTime getCreated() {
         return created;
     }
     
+    @DataView(i=4, n="Last Login")
     public DateTime getLastLogin() {
         return lastLogin;
     }
     
+    @DataView(i=5, n="Gender")
     public Gender getGender() {
         return gender;
     }
     
+    @DataView(i=6, n="Real Name")
     public String getRealName() {
         return realName;
     }
     
+    @DataView(i=7, n="Playa Name")
     public String getPlayaName() {
         return playaName;
     }
@@ -120,6 +146,7 @@ public class User {
         return locationOther;
     }
     
+    @DataView(i=8, n="Location")
     public String getLocationDisplay () {
         if (location == null)
             return "";
@@ -129,10 +156,12 @@ public class User {
             return location.toDisplayString();
     }
     
+    @DataView(i=9, n="Phone")
     public String getPhone() {
         return phone;
     }
     
+    @DataView(i=10, n="Emergency Contact")
     public String getEmergencyContact() {
         return emergencyContact;
     }
@@ -143,6 +172,7 @@ public class User {
         return registration;
     }
     
+    @DataView(i=12, n="Registration Form", value=CompleteIncompleteBooleanConverter.class)
     public boolean isRegistrationComplete () {
         return registration != null && registration.isCompleted();
     }
@@ -153,18 +183,22 @@ public class User {
         return approval;
     }
     
+    @DataView(i=13, n="Approval Survey", value=CompleteIncompleteBooleanConverter.class)
     public boolean isApprovalComplete () {
         return approval != null && approval.isCompleted();
     }
     
+    @DataView(i=1, n="Status")
     public UserState getState() {
         return state;
     }
     
+    @DataView(i=14, n="Administrator Comment")
     public String getAdminComment() {
         return adminComment;
     }
     
+    @DataView(i=11, n="Read Terms?")
     public boolean isTermsAgreed () {
         return termsAgreed;
     }
@@ -175,6 +209,10 @@ public class User {
     
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+    
+    public void setAdmissions (boolean admissions) {
+        this.admissions = admissions;
     }
      
     public void setPassword (String password) {
@@ -222,7 +260,7 @@ public class User {
     }
     
     public void setState(UserState state) {
-        this.state = (state == null ? UserState.NEW_USER : state);
+        this.state = (state == null ? UserState.NEW_USER : state);       
     }
     
     public void setAdminComment(String adminComment) {
@@ -239,6 +277,34 @@ public class User {
         else if (editor == this || editor.getUserId() == getUserId())
             return true;
         else if (editor.isAdmin() && !isAdmin())
+            return true;
+        else
+            return false;
+    }
+    
+    public boolean isApprovableBy (User editor) {
+        // admissions can approve anybody with REGISTERED state, including themselves and administrators
+        if (editor == null)
+            return false;
+        else if (editor.isAdmin() && editor.isAdmissions() && state != UserState.NEW_USER)
+            return true;
+        else if (editor.isAdmissions() && state == UserState.REGISTERED)
+            return true;
+        else
+            return false;
+    }
+    
+    public boolean isViewableBy (User editor) {
+        // administrators can view everybody
+        // admissions can view everybody who isn't a new user
+        // any user can view themselves
+        if (editor == null)
+            return false;
+        else if (editor == this || editor.getUserId() == getUserId())
+            return true;
+        else if (editor.isAdmin())
+            return true;
+        else if (editor.isAdmissions() && state != UserState.NEW_USER && state != UserState.NEEDS_REVIEW)
             return true;
         else
             return false;
@@ -298,6 +364,30 @@ public class User {
         @SuppressWarnings("unchecked")
         List<User> users = (List<User>)HibernateUtil.getCurrentSession()
                 .createCriteria(User.class)
+                .list();
+        
+        return users;
+
+    }
+    
+    public static List<User> findAdmins () {
+        
+        @SuppressWarnings("unchecked")
+        List<User> users = (List<User>)HibernateUtil.getCurrentSession()
+                .createCriteria(User.class)
+                .add(Restrictions.eq("admin", true))
+                .list();
+        
+        return users;
+
+    }
+    
+    public static List<User> findAdmissions () {
+        
+        @SuppressWarnings("unchecked")
+        List<User> users = (List<User>)HibernateUtil.getCurrentSession()
+                .createCriteria(User.class)
+                .add(Restrictions.eq("admissions", true))
                 .list();
         
         return users;
@@ -364,10 +454,18 @@ public class User {
                 return -1;
             else if (b == null)
                 return 1;
+            
+            int alevel = (a.isAdmin() ? 2 : 0) + (a.isAdmissions() ? 1 : 0);
+            int blevel = (b.isAdmin() ? 2 : 0) + (b.isAdmissions() ? 1 : 0);
+            return blevel - alevel;
+            
+            /*
             if (a.isAdmin() == b.isAdmin())
                 return 0;
             else
                 return a.isAdmin() ? -1 : 1;
+                */
+            
             /*
             Role arole = a.getRole();
             Role brole = b.getRole();

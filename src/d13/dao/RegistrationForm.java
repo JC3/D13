@@ -3,6 +3,7 @@ package d13.dao;
 import org.joda.time.DateTime;
 
 import d13.util.Util;
+import d13.web.DataView;
 
 public class RegistrationForm {
 
@@ -63,70 +64,87 @@ public class RegistrationForm {
         return completionTime != null;
     }
 
+    @DataView(i=1, n="Helped Off Playa")
     public String getHelpedOffPlaya() {
         return helpedOffPlaya;
     }
 
+    @DataView(i=2, n="Helped Alpha?")
     public boolean isHelpedAlphaCamp() {
         return helpedAlphaCamp;
     }
 
+    @DataView(i=3, n="Helped DPW?")
     public boolean isHelpedCampBuild() {
         return helpedCampBuild;
     }
 
+    @DataView(i=4, n="Helped Disengage?")
     public boolean isHelpedDisengage() {
         return helpedDisengage;
     }
 
+    @DataView(i=5, n="Helped Lead?")
     public boolean isHelpedLeadRoles() {
         return helpedLeadRoles;
     }
 
+    @DataView(i=6, n="Helped Love Ministry?")
     public boolean isHelpedLoveMinistry() {
         return helpedLoveMinistry;
     }
 
+    @DataView(i=7, n="Helped LNT?")
     public boolean isHelpedLNT() {
         return helpedLNT;
     }
 
+    @DataView(i=8, n="Helped Other?")
     public boolean isHelpedOther() {
         return helpedOther;
     }
 
+    @DataView(i=9, n="Helped Other")
     public String getHelpedOtherOther() {
         return helpedOtherOther;
     }
 
+    @DataView(i=10, n="Dis Virgin?")
     public boolean isDisorientVirgin() {
         return disorientVirgin;
     }
 
+    @DataView(i=11, n="BM Virgin?")
     public boolean isBmVirgin() {
         return bmVirgin;
     }
 
+    @DataView(i=12, n="Sponsor")
     public String getSponsor() {
         return sponsor;
     }
 
+    @DataView(i=13, n="Sponsor For")
     public String getSponsorFor() {
         return sponsorFor;
     }
 
+    @DataView(i=14, n="Arrival Date")
     public String getArrivalDate() {
         return arrivalDate;
     }
 
+    @DataView(i=15, n="Arrival Time")
     public String getArrivalTime() {
         return arrivalTime;
     }
 
+    @DataView(i=16, n="Departure Date")
     public String getDepartureDate() {
         return departureDate;
     }
 
+    @DataView(i=17, n="Departure Time")
     public String getDepartureTime() {
         return departureTime;
     }
@@ -146,39 +164,58 @@ public class RegistrationForm {
     public String getDrivingFromToIdOther () { // hack
         return getDrivingFromToOther();
     }
+    
+    @DataView(i=18, n="From/To Location")
+    public String getDrivingFromToDisplay () {
+        if (drivingFromTo == null)
+            return "";
+        else if (drivingFromTo == Location.OTHER)
+            return drivingFromToOther;
+        else
+            return drivingFromTo.toDisplayString();
+    }
 
+    @DataView(i=19, n="R.V.?")
     public boolean isRv() {
         return rv;
     }
 
+    @DataView(i=20, n="Driving?")
     public boolean isDriving() {
         return driving;
     }
 
+    @DataView(i=21, n="Ride Space To?")
     public String getRideSpaceTo() {
         return rideSpaceTo;
     }
 
+    @DataView(i=22, n="Ride Space From?")
     public String getRideSpaceFrom() {
         return rideSpaceFrom;
     }
 
+    @DataView(i=23, n="Parking At Camp?")
     public boolean isParkAtCamp() {
         return parkAtCamp;
     }
 
+    @DataView(i=24, n="Vehicle Comments")
     public String getVehicleComments() {
         return vehicleComments;
     }
 
+    @DataView(i=25, n="Need Ride To?")
     public boolean isNeedRideTo() {
         return needRideTo;
     }
 
+    @DataView(i=26, n="Need Ride From?")
     public boolean isNeedRideFrom() {
         return needRideFrom;
     }
 
+    @DataView(i=27, n="Group Leader")
     public User getGroupLeader() {
         return groupLeader;
     }
@@ -187,10 +224,12 @@ public class RegistrationForm {
         return groupLeader == null ? null : groupLeader.getUserId();
     }
 
+    @DataView(i=28, n="Personal Projects")
     public String getPersonalProject() {
         return personalProject;
     }
 
+    @DataView(i=29, n="User's Comments")
     public String getComments() {
         return comments;
     }
