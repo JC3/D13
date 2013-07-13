@@ -9,7 +9,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import d13.dao.RegistrationForm;
 import d13.dao.User;
 import d13.dao.UserState;
-import d13.notify.RegistrationEmail;
+import d13.notify.ReviewNotificationEmail;
 import d13.util.HibernateUtil;
 import d13.util.Util;
 
@@ -59,7 +59,7 @@ public class EditRegistration {
             HibernateUtil.getCurrentSession().merge(form);
                         
             if (sendmail)
-                RegistrationEmail.sendNotification(editee);
+                ReviewNotificationEmail.sendNow(editee, User.findAdmins());
             
         } catch (InvocationTargetException x) {
             

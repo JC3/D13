@@ -26,6 +26,7 @@ public class DataViewer {
         String field;
         int position;
         boolean longtext;
+        boolean email;
         public abstract String getString (Object o);
         @Override public int compareTo (ViewDescriptor other) {
             if (other == null)
@@ -77,6 +78,7 @@ public class DataViewer {
         public boolean approvable;
         public boolean needsReview;
         public List<String> values;
+        public List<String> hrefs;
     }
     
     private boolean failed;
@@ -153,6 +155,7 @@ public class DataViewer {
             }
             view.position = dv.i();
             view.longtext = dv.longtext();
+            view.email = dv.email();
             if (!dv.n().isEmpty()) view.field = dv.n();
             viewed.add(view);
         }
@@ -186,8 +189,14 @@ public class DataViewer {
         
     }
     
+    private static String href (String val, boolean email) {
+        if (email)
+            return "mailto:" + val + "?subject=Disorient 2013 Registration";
+        else
+            return null;
+    }
 
-   private Row getDataViewRow (User user, User current, boolean nocells) {
+    private Row getDataViewRow (User user, User current, boolean nocells) {
     
         Row row = new Row();
         row.userId = user.getUserId();
@@ -196,17 +205,28 @@ public class DataViewer {
         row.needsReview = (user.getState() == UserState.NEEDS_REVIEW);
         if (current.isAdmissions() && !current.isAdmin()) row.needsReview = false;
         row.values = new ArrayList<String>();
+        row.hrefs = new ArrayList<String>();
                 
-        for (ViewDescriptor vd:userProps)
-            row.values.add(vd.getString(user));
+        for (ViewDescriptor vd:userProps) {
+            String str = vd.getString(user);
+            row.values.add(str);
+            row.hrefs.add(href(str, vd.email));
+        }
         
         RegistrationForm rform = user.isRegistrationComplete() ? user.getRegistration() : null;
-        for (ViewDescriptor vd:rformProps)
-            row.values.add(vd.getString(rform));
+        for (ViewDescriptor vd:rformProps) {
+            String str = vd.getString(rform);
+            row.values.add(str);
+            row.hrefs.add(href(str, vd.email));
+        }
 
-        if (!nocells)
-            for (ViewDescriptor vd:cellProps)
-                row.values.add(vd.getString(user));
+        if (!nocells) {
+            for (ViewDescriptor vd:cellProps) {
+                String str = vd.getString(user);
+                row.values.add(str);
+                row.hrefs.add(href(str, vd.email));
+            }
+        }
         
         return row;
         

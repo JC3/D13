@@ -15,5 +15,6 @@ public @interface DataView {
     int i() default -1;
     String n() default "";
     boolean longtext() default false;
+    boolean email() default false;
     
 }

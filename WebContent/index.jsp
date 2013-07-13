@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ page import="d13.web.*" %>
 <%@ page import="d13.util.Util" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>

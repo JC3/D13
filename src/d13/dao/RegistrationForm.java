@@ -64,7 +64,7 @@ public class RegistrationForm {
         return completionTime != null;
     }
 
-    @DataView(i=1, n="Helped Off Playa")
+    @DataView(i=1, n="Helped Off Playa", longtext=true)
     public String getHelpedOffPlaya() {
         return helpedOffPlaya;
     }

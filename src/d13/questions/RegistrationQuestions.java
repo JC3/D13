@@ -62,6 +62,8 @@ public class RegistrationQuestions {
         q.addChoice("8/24", "8/24/2013");
         q.addChoice("8/25", "8/25/2013");
         q.addChoice("8/26", "8/26/2013");
+        q.addChoice("8/27", "8/27/2013");
+        q.addChoice("8/28", "8/28/2013");
         qs.add(q);
         
         q = Question.newDropList("arrivalTime", "Time of arrival on the playa.", null);
@@ -72,6 +74,8 @@ public class RegistrationQuestions {
         qs.add(q);
         
         q = Question.newDropList("departureDate", "Date of departure from the playa.", null);
+        q.addChoice("8/31", "8/31/2013");
+        q.addChoice("9/1", "9/1/2013");
         q.addChoice("9/2", "9/2/2013");
         q.addChoice("9/3", "9/3/2013");
         q.addChoice("9/4", "9/4/2013");

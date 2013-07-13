@@ -81,7 +81,7 @@ public class User {
         return userId;
     }
     
-    @DataView(i=2, n="Email")
+    @DataView(i=2, n="Email", email=true)
     public String getEmail() {
         return email;
     }

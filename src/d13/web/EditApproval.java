@@ -4,7 +4,9 @@ import javax.servlet.jsp.PageContext;
 
 import d13.dao.User;
 import d13.dao.UserState;
-import d13.notify.RegistrationEmail;
+import d13.notify.AcceptedNotificationEmail;
+import d13.notify.ApprovalEmail;
+import d13.notify.RejectionEmail;
 import d13.util.Util;
 
 public class EditApproval {
@@ -47,16 +49,22 @@ public class EditApproval {
         
         if (action_approve || action_reject) {
 
+            // TODO: error message if user already approved or rejected, to notify admins that an editing
+            // conflict just occurred.
+            
             if (!user.isApprovableBy(session.getUser())) {
                 failed = true;
                 errorMessage = "Permission denied.";
                 return; // permission denied
             }
           
-            if (action_approve)
+            if (action_approve && user.getState() != UserState.APPROVED) {
                 user.setState(UserState.APPROVED);
-            else if (action_reject)
+                ApprovalEmail.sendNow(user);
+            } else if (action_reject && user.getState() != UserState.REJECTED) { 
                 user.setState(UserState.REJECTED);
+                RejectionEmail.sendNow(user);
+            }
             
         } else if (action_review) {
         
@@ -68,7 +76,7 @@ public class EditApproval {
            
             if (user.getState() == UserState.NEEDS_REVIEW) {
                 user.setState(UserState.REGISTERED);
-                RegistrationEmail.sendNotificationAdmissions(user);
+                AcceptedNotificationEmail.sendNow(user, User.findAdmissions());
             }
             
         } else {

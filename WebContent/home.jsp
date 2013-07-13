@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ page import="d13.web.*" %>
 <%@ page import="d13.dao.*" %>
 <%@ page import="d13.util.Util" %>
@@ -64,11 +65,13 @@ out this form, then you will not be camping with us this year!</div>
 <strong>For Administrators:</strong><br><ul>
 <!-- <li><a href="admin_users.jsp">Manage Users</a> -->
 <li><a href="view_data.jsp">View Registration Data</a>
+<li><a href="adminhelp.jsp">Help</a>
 </ul>
 <% } else if (user.isAdmissions()) { %>
 <strong>For Admissions Team:</strong><br><ul>
 <!-- <li><a href="admin_users.jsp">Manage Users</a> -->
 <li><a href="view_data.jsp">View Registration Data</a>
+<li><a href="adminhelp.jsp">Help</a>
 </ul>
 <% } %> 
 

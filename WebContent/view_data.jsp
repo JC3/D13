@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ page import="d13.dao.*" %>
 <%@ page import="d13.web.*" %>
 <%@ page import="d13.util.Util" %>
@@ -140,7 +141,15 @@ String sortLink (int index) {
     <% if (row.approvable) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Admission</a><% }
     else if (row.needsReview) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Review</a><% } %></div>
     
-    <% for (int n = 0; n < row.values.size(); ++ n) { String str=row.values.get(n); %><td class="<%=cls.get(n)%>"><div><%=Util.html(str) %></div><% } %>
+    <% for (int n = 0; n < row.values.size(); ++ n) { String str=row.values.get(n); %>
+    <td class="<%=cls.get(n)%>"><div>
+        <% if (row.hrefs.get(n) != null) { %>
+            <a href="<%=Util.html(row.hrefs.get(n))%>"><%=Util.html(str) %></a>
+        <% } else { %>
+            <%=Util.html(str) %>
+        <% } %>
+    </div>
+    <% } %>
     
     <td class="standard"><div>
     <% if (row.editable) { %><a href="personal.jsp?u=<%=row.userId%>&next=<%=this_url%>">Profile</a> | <a href="registration.jsp?u=<%=row.userId%>&next=<%=this_url%>">Registration</a> | <a href="cells.jsp?u=<%=row.userId%>&next=<%=this_url%>">Cells</a><% } %>
