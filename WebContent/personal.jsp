@@ -4,6 +4,7 @@
 <%@ page import="d13.questions.*" %>
 <%@ page import="d13.util.Util" %>
 <%@ page import="java.util.List" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="dis" %>
 <%
 
 // personal.jsp?newuser Display form for new user.
@@ -73,17 +74,18 @@ String error_html = (error == null ? null : Util.html(error));
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<style type="text/css">
-.error { color: red; }
-.message { color: #008000; }
-</style>
+<link rel="stylesheet" type="text/css" href="disorient.css">
 <title>Disorient</title>
 </head>
 <body>
 
+<dis:header/>
+
 <% if (error != null) { %>
 <div class="error">Error: <%=error_html%></div>
 <% } %>
+
+<div class="form">
 
 <form action="do_edituser.jsp" method="post">
 <input type="hidden" name="action" value="<%= newuser ? "create" : "update" %>">
@@ -94,18 +96,21 @@ String error_html = (error == null ? null : Util.html(error));
 <% } else if (nologin) { %>
 <input type="hidden" name="nologin" value="1">
 <% } %>
-<table>
+
 <%
 List<Question> qs = ProfileQuestions.getQuestions();
 QuestionForm.writeQuestions(out, qs, defaults);
 %>
 <% if (editee == null || editee.isEditableBy(editor)) { %>
-<tr><td colspan="2"><input type="submit" value="Continue">
+<div style="text-align:center"><input class="dbutton" type="submit" value="Continue"></div>
 <% } %>
-</table>
 </form>
 
-<a href="home.jsp">Home</a>
+<% if (!newuser) { %>
+<div style="text-align:center"><a href="home.jsp">Home</a></div>
+<% } %>
+
+</div>
 
 </body>
 </html>

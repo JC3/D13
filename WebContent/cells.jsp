@@ -3,6 +3,7 @@
 <%@ page import="d13.web.*" %>
 <%@ page import="d13.util.Util" %>
 <%@ page import="java.util.List" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="dis" %>
 <%
 
 // registration.jsp?u=123   Display form for user 123.
@@ -52,13 +53,19 @@ Cell root = Cell.findRoot();
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="disorient.css">
 <style type="text/css">
-td { vertical-align: top; }
+table.form td { vertical-align: top; border-bottom: 1px solid #202020; padding: 0; margin: 0; }
+table.form td.bottom { border: 0; padding-top: 1ex; }
 .cellname { font-weight: bold; }
-.cellvol { font-weight: bold; font-size: smaller; }
+.cellvol { font-weight: bold; font-size: smaller; color: #ff8000; }
 .celllink a { text-decoration: none; }
 .celldesc { display: none; }
 .error { color: red; }
+td.cellcheck { white-space: nowrap; }
+table.form a:link { color: #00a0ff; }
+table.form a:visited { color: #00a0ff; }
+table.form a:active { color: #00a0ff; }
 </style>
 <script language="JavaScript" type="text/javascript">
 function setVisible (id, visible) {
@@ -74,18 +81,22 @@ function showMore (id) {
 </head>
 <body>
 
+<dis:header/>
+
 <% if (error != null) { %>
 <div class="error">Error: <%=error_html%></div>
 <% } %>
+
 
 <form action="do_editcells.jsp" method="post">
 <input type="hidden" name="fail_target" value="<%= Util.html(fail_target) %>">
 <input type="hidden" name="success_target" value="<%= Util.html(success_target) %>">
 <input type="hidden" name="user_id" value="<%= editee.getUserId() %>">
-<table>
+<table class="form">
 <% CellList.writeCellTree(out, root, editee); %>
 <% if (editee.isEditableBy(editor)) { %>
-<tr><td colspan="2"><input type="submit" value="Continue">
+<tr class="section">
+    <td colspan="2" style="text-align:center" class="bottom"><input class="dbutton" type="submit" value="Continue">
 <% } %>
 </table>
 </form>

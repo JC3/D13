@@ -20,7 +20,7 @@ public class RegistrationEmail {
     private static final String SMTP_PASSWORD = "the7ages";
     private static final String SMTP_FROM = "camp@disorient.info";
     
-    private static final String MAIL_URL_BASE = "http://somewhere";
+    private static final String MAIL_URL_BASE = "http://camp.disorient.info";
     
     
     public static void sendNotification (User registrant) {

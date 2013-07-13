@@ -4,6 +4,7 @@
 <%@ page import="d13.questions.*" %>
 <%@ page import="d13.util.Util" %>
 <%@ page import="java.util.List" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="dis" %>
 <%
 
 // registration.jsp?u=123   Display form for user 123.
@@ -51,35 +52,55 @@ String error_html = (error == null ? null : Util.html(error));
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<style type="text/css">
-.error { color: red; }
-.message { color: #008000; }
-</style>
+<link rel="stylesheet" type="text/css" href="disorient.css">
 <title>Disorient</title>
+<script language="JavaScript" type="text/javascript">
+function setVisible (id, visible) {
+    document.getElementById(id).style.display = (visible ? 'block' : 'none');
+}
+function isChecked (id) {
+	return document.getElementById(id).checked;
+}
+function updateVisibility () {
+    var b = isChecked("disorientVirgin_1");
+    setVisible("bmVirgin", b);
+    setVisible("sponsor", b);
+    setVisible("sponsorFor", !b);
+    b = isChecked("driving_1");
+    setVisible("rideSpaceTo", b);
+    setVisible("rideSpaceFrom", b);
+    setVisible("parkAtCamp", b);
+    setVisible("vehicleComments", b);
+}
+</script>
 </head>
-<body>
+<body onload="updateVisibility()">
+
+<dis:header/>
 
 <% if (error != null) { %>
 <div class="error">Error: <%=error_html%></div>
 <% } %>
+
+<div class="form">
 
 <form action="do_editreg.jsp" method="post">
 <input type="hidden" name="fail_target" value="<%= Util.html(fail_target) %>">
 <input type="hidden" name="success_target" value="<%= Util.html(success_target) %>">
 <input type="hidden" name="user_id" value="<%= editee.getUserId() %>">
 
-<table>
 <%
 List<Question> qs = RegistrationQuestions.getQuestions();
-QuestionForm.writeQuestions(out, qs, defaults);
+QuestionForm.writeQuestions(out, qs, defaults, true);
 %>
 <% if (editee.isEditableBy(editor)) { %>
-<tr><td colspan="2"><input type="submit" value="Continue">
+<div style="text-align:center"><input class="dbutton" type="submit" value="Continue"></div>
 <% } %>
-</table>
 </form>
 
 <a href="home.jsp">Home</a>
+
+</div>
 
 </body>
 </html>

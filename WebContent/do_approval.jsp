@@ -5,6 +5,7 @@ SessionData sess = new SessionData(session);
 EditApproval edit = new EditApproval(pageContext, sess);
 
 if (edit.isFailed()) {
+    System.err.println("ERROR: " + edit.getErrorMessage());
     response.sendRedirect(edit.getFailTarget());
 } else {
     response.sendRedirect(edit.getSuccessTarget());

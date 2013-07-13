@@ -3,6 +3,7 @@
 <%@ page import="d13.web.*" %>
 <%@ page import="d13.util.Util" %>
 <%@ page import="java.util.List" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="dis" %>
 <%
 SessionData sess = new SessionData(session);
 if (!sess.isLoggedIn()) {
@@ -18,6 +19,7 @@ if (view.isFailed())
 String this_url = Util.html(java.net.URLEncoder.encode(Util.getCompleteUrl(request), "us-ascii"));
 
 List<String> cols = view.getColumns();
+List<String> cls = view.getColumnClasses();
 List<DataViewer.Row> rows = view.getRows();
 
 if (view.isDownloadCSV()) {
@@ -47,12 +49,55 @@ String sortLink (int index) {
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Disorient</title>
+<link rel="stylesheet" type="text/css" href="disorient.css">
 <style type="text/css">
-td { border-bottom: 1px solid black; border-right: 1px solid #e0e0e0; white-space: nowrap; vertical-align: top; }
-th { border-bottom: 1px solid black; border-right: 1px solid #e0e0e0; font-weight: bold; white-space: nowrap; }
+/*td { border-bottom: 1px solid black; border-right: 1px solid #e0e0e0; white-space: nowrap; vertical-align: top; }*/
+/*th { border-bottom: 1px solid black; border-right: 1px solid #e0e0e0; font-weight: bold; white-space: nowrap; }*/
+.summary {
+    background: #101010;
+    border: 1px solid #303030;
+    padding: 2ex;
+    width: 60ex;    
+}
+.summary th {
+    white-space: nowrap;
+    text-align: left;
+    border: 0;
+    margin: 0;
+    padding: 2px 0.5ex 2px 0.5ex;
+    background: #202020;
+}
+.summary td {
+    vertical-align: top;
+    border: 0;
+    margin: 0;
+    padding: 2px 0.5ex 2px 0.5ex;
+    border-right: 1px solid #202020;
+    border-top: 1px solid #303030;
+}
+.standard {
+    white-space: nowrap;
+}
+.standard div {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+.wide {
+    vertical-align: top;
+}
+.wide div {
+    width: 30ex;
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
 </style>
 </head>
 <body>
+
+<dis:header/>
+
 <!-- 
 <form action="<%=Util.getCompleteUrl(request) %>" method="get">
 <table border=1>
@@ -76,32 +121,38 @@ th { border-bottom: 1px solid black; border-right: 1px solid #e0e0e0; font-weigh
 </table>
 </form>
 -->
-<a href="<%=Util.html(csv_link) %>">Download as CSV</a>
-<table>
+<div><a href="<%=Util.html(csv_link) %>">Download as CSV</a></div>
+<table cellspacing="0" class="summary">
 <tr>
-    <th>Actions
-<% for (int n = 0; n < cols.size(); ++ n) { %><th><a href="<%=sortLink(n)%>"><%=Util.html(cols.get(n)) %></a><% } %>
-    <th>Actions
+
+    <th class="standard">Actions
+<% for (int n = 0; n < cols.size(); ++ n) { %>
+    <th class="<%=cls.get(n)%>"><a href="<%=sortLink(n)%>"><%=Util.html(cols.get(n)) %></a>
+<% } %>
+    <th class="standard">Actions
+
 <% for (DataViewer.Row row:rows) { %>
 <tr>
-    <td>
-    
+
+    <td class="standard"><div>
     <% if (row.editable) { %><a href="personal.jsp?u=<%=row.userId%>&next=<%=this_url%>">Profile</a> | <a href="registration.jsp?u=<%=row.userId%>&next=<%=this_url%>">Registration</a> | <a href="cells.jsp?u=<%=row.userId%>&next=<%=this_url%>">Cells</a><% } %>
     <% if (row.editable && (row.approvable || row.needsReview)) out.print("|"); %>
     <% if (row.approvable) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Admission</a><% }
-    else if (row.needsReview) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Review</a><% } %>
+    else if (row.needsReview) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Review</a><% } %></div>
     
-    <% for (String str:row.values) { %><td><%=Util.html(str) %><% } %>
+    <% for (int n = 0; n < row.values.size(); ++ n) { String str=row.values.get(n); %><td class="<%=cls.get(n)%>"><div><%=Util.html(str) %></div><% } %>
     
+    <td class="standard"><div>
     <% if (row.editable) { %><a href="personal.jsp?u=<%=row.userId%>&next=<%=this_url%>">Profile</a> | <a href="registration.jsp?u=<%=row.userId%>&next=<%=this_url%>">Registration</a> | <a href="cells.jsp?u=<%=row.userId%>&next=<%=this_url%>">Cells</a><% } %>
     <% if (row.editable && (row.approvable || row.needsReview)) out.print("|"); %>
     <% if (row.approvable) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Admission</a><% }
-    else if (row.needsReview) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Review</a><% } %>
+    else if (row.needsReview) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Review</a><% } %></div>
     
 <% } %>
+
 </table>
 
-<a href="home.jsp">Home</a>
+<div><a href="home.jsp">Home</a></div>
 
 </body>
 </html>

@@ -25,8 +25,8 @@ public class CellList {
     
     private static void writeCell (JspWriter out, Cell cell, User user) throws IOException {
       
-        out.println("<tr><td style=\"width:70ex;\">");
-        out.println(String.format("<div class=\"cellname\">%s</div>", Util.html(cell.getName())));
+        out.println("<tr><td width=\"100%\">");
+        out.println(String.format("<div class=\"cellname\">%s</div>", Util.html(cell.getFullName())));
         
         String volunteers;
         
@@ -51,7 +51,7 @@ public class CellList {
             out.println(String.format("<div class=\"celldesc\" id=\"celldesc_%s\">%s</div>", cell.getCellId(), Util.html(desc)));
         }
         
-        out.println(String.format("<td><input type=\"hidden\" name=\"xc\" value=\"%s\"><input type=\"checkbox\" name=\"c\" value=\"%s\"%s>Volunteer!", cell.getCellId(), cell.getCellId(), user.isInCell(cell) ? " checked" : ""));
+        out.println(String.format("<td class=\"cellcheck\"><div><input type=\"hidden\" name=\"xc\" value=\"%s\"><input type=\"checkbox\" name=\"c\" value=\"%s\"%s>Volunteer!</div>", cell.getCellId(), cell.getCellId(), user.isInCell(cell) ? " checked" : ""));
         
     }
        

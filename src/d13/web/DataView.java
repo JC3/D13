@@ -14,5 +14,6 @@ public @interface DataView {
     Class<? extends DataConverter> value() default DefaultDataConverter.class;
     int i() default -1;
     String n() default "";
+    boolean longtext() default false;
     
 }

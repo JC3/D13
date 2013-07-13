@@ -8,6 +8,7 @@ public class UserProfileBean {
 
     private String email;
     private String password;
+    private String password2;
     private String realName;
     private String playaName;
     private String gender;
@@ -32,6 +33,9 @@ public class UserProfileBean {
     }
     public String getPassword() {
         return password;
+    }
+    public String getPassword2() {
+        return password2;
     }
     public String getRealName() {
         return realName;
@@ -60,6 +64,9 @@ public class UserProfileBean {
     public void setPassword(String password) {
         this.password = password;
     }
+    public void setPassword2(String password2) {
+        this.password2 = password2;
+    }
     public void setRealName(String realName) {
         this.realName = realName;
     }
@@ -86,7 +93,7 @@ public class UserProfileBean {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("UserProfileBean [email=").append(email)
-                .append(", password=").append(password).append(", realName=")
+                .append(", realName=")
                 .append(realName).append(", playaName=").append(playaName)
                 .append(", gender=").append(gender).append(", phone=")
                 .append(phone).append(", location=").append(location)

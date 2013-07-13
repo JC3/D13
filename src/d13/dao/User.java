@@ -161,7 +161,7 @@ public class User {
         return phone;
     }
     
-    @DataView(i=10, n="Emergency Contact")
+    @DataView(i=10, n="Emergency Contact", longtext=true)
     public String getEmergencyContact() {
         return emergencyContact;
     }

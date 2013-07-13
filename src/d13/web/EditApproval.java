@@ -10,6 +10,7 @@ import d13.util.Util;
 public class EditApproval {
     
     private boolean failed;
+    private String errorMessage;
     private String successTarget;
     private String failTarget;
     
@@ -17,6 +18,7 @@ public class EditApproval {
 
         if (!session.isLoggedIn()) {
             failed = true;
+            errorMessage = "Permission denied.";
             return; // permission denied
         }
         
@@ -26,6 +28,7 @@ public class EditApproval {
        
         if (user_id == null) {
             failed = true;
+            errorMessage = "User ID must be specified.";
             return; // missing user_id parameter
         }
         
@@ -34,6 +37,7 @@ public class EditApproval {
             user = User.findById(user_id);
         } catch (Throwable t) {
             failed = true;
+            errorMessage = "User ID is incorrect.";
             return; // no such user
         }
    
@@ -45,6 +49,7 @@ public class EditApproval {
 
             if (!user.isApprovableBy(session.getUser())) {
                 failed = true;
+                errorMessage = "Permission denied.";
                 return; // permission denied
             }
           
@@ -55,8 +60,9 @@ public class EditApproval {
             
         } else if (action_review) {
         
-            if (!user.isEditableBy(session.getUser())) {
+            if (!session.getUser().isAdmin()) { // !user.isEditableBy(session.getUser())) {
                 failed = true;
+                errorMessage = "Permission denied.";
                 return; // permission denied
             }
            
@@ -68,6 +74,7 @@ public class EditApproval {
         } else {
     
             failed = true;
+            errorMessage = "Incorrect action.";
             return; // invalid/missing action parameter
         
         }                    
@@ -76,6 +83,10 @@ public class EditApproval {
     
     public boolean isFailed () {
         return failed;
+    }
+    
+    public String getErrorMessage () {
+        return errorMessage;
     }
     
     public String getSuccessTarget () {

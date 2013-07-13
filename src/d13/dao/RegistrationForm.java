@@ -104,7 +104,7 @@ public class RegistrationForm {
         return helpedOther;
     }
 
-    @DataView(i=9, n="Helped Other")
+    @DataView(i=9, n="Helped Other", longtext=true)
     public String getHelpedOtherOther() {
         return helpedOtherOther;
     }
@@ -119,12 +119,12 @@ public class RegistrationForm {
         return bmVirgin;
     }
 
-    @DataView(i=12, n="Sponsor")
+    @DataView(i=12, n="Sponsor", longtext=true)
     public String getSponsor() {
         return sponsor;
     }
 
-    @DataView(i=13, n="Sponsor For")
+    @DataView(i=13, n="Sponsor For", longtext=true)
     public String getSponsorFor() {
         return sponsorFor;
     }
@@ -200,7 +200,7 @@ public class RegistrationForm {
         return parkAtCamp;
     }
 
-    @DataView(i=24, n="Vehicle Comments")
+    @DataView(i=24, n="Vehicle Comments", longtext=true)
     public String getVehicleComments() {
         return vehicleComments;
     }
@@ -224,12 +224,12 @@ public class RegistrationForm {
         return groupLeader == null ? null : groupLeader.getUserId();
     }
 
-    @DataView(i=28, n="Personal Projects")
+    @DataView(i=28, n="Personal Projects", longtext=true)
     public String getPersonalProject() {
         return personalProject;
     }
 
-    @DataView(i=29, n="User's Comments")
+    @DataView(i=29, n="User's Comments", longtext=true)
     public String getComments() {
         return comments;
     }

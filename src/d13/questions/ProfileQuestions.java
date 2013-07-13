@@ -16,6 +16,7 @@ public class ProfileQuestions {
         qs = new ArrayList<Question>();
         qs.add(Question.newShortText("email", "Email", "We will be sending periodic updates, which will often require a timely reply, so please give us your most used address."));
         qs.add(Question.newPassword("password", "Password", null));
+        qs.add(Question.newPassword("password2", "Confirm Password", null));
         qs.add(Question.newShortText("realName", "Real Name", null));
         qs.add(Question.newShortText("playaName", "Playa Name", "This is how you will appear in the registration list. You can leave it blank if you don't have one."));
         q = Question.newSingleChoice("gender", "Gender", null);

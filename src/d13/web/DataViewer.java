@@ -25,6 +25,7 @@ public class DataViewer {
     private abstract static class ViewDescriptor implements Comparable<ViewDescriptor> {
         String field;
         int position;
+        boolean longtext;
         public abstract String getString (Object o);
         @Override public int compareTo (ViewDescriptor other) {
             if (other == null)
@@ -81,12 +82,27 @@ public class DataViewer {
     private boolean failed;
     private static final List<ViewDescriptor> userProps = getDataViewProps(User.class);
     private static final List<ViewDescriptor> rformProps = getDataViewProps(RegistrationForm.class);
-    private final List<ViewDescriptor> cellProps = getCellProps();
-    @SuppressWarnings("unchecked")
-    private final List<String> columns = Collections.unmodifiableList(getDataViewColumns(userProps, rformProps, cellProps)); // must be same order as getDataViewRow
+    private final List<ViewDescriptor> cellProps;
+    private final List<String> columns; // must be same order as getDataViewRow
+    private final List<String> colclasses;
     private final List<Row> rows = new ArrayList<Row>();
     private boolean downloadCSV;
     private User theSingleUser; 
+    
+    public int getProfileBorderIndex () {
+        return userProps.size() - 1;
+    }
+    
+    public int getRegistrationBorderIndex () {
+        return userProps.size() + rformProps.size() - 1;
+    }
+    
+    public int getCellBorderIndex () {
+        if (cellProps == null)
+            return -1;
+        else
+            return userProps.size() + rformProps.size() + cellProps.size() - 1;
+    }
     
     private static void addCellProps (List<ViewDescriptor> props, Cell cell) {
         
@@ -98,8 +114,9 @@ public class DataViewer {
                 addCellProps(props, sub);
             else {
                 CellViewDescriptor vd = new CellViewDescriptor();
-                vd.field = "CELL:" + sub.getName();
+                vd.field = sub.getFullName();
                 vd.position = props.size();
+                vd.longtext = false;
                 vd.cell = sub;
                 props.add(vd);
             }
@@ -135,6 +152,7 @@ public class DataViewer {
                 e.printStackTrace();
             }
             view.position = dv.i();
+            view.longtext = dv.longtext();
             if (!dv.n().isEmpty()) view.field = dv.n();
             viewed.add(view);
         }
@@ -156,7 +174,20 @@ public class DataViewer {
         
     }
     
-    private Row getDataViewRow (User user, User current) {
+    private static List<String> getDataViewColumnClasses (List<ViewDescriptor> ... lists) {
+        
+        List<String> columns = new ArrayList<String>();
+       
+        for (List<ViewDescriptor> vds:lists)
+            for (ViewDescriptor vd:vds)
+                columns.add(vd.longtext ? "wide" : "standard");
+        
+        return columns;
+        
+    }
+    
+
+   private Row getDataViewRow (User user, User current, boolean nocells) {
     
         Row row = new Row();
         row.userId = user.getUserId();
@@ -173,8 +204,9 @@ public class DataViewer {
         for (ViewDescriptor vd:rformProps)
             row.values.add(vd.getString(rform));
 
-        for (ViewDescriptor vd:cellProps)
-            row.values.add(vd.getString(user));
+        if (!nocells)
+            for (ViewDescriptor vd:cellProps)
+                row.values.add(vd.getString(user));
         
         return row;
         
@@ -209,18 +241,35 @@ public class DataViewer {
     }
     
     public DataViewer (PageContext context, SessionData session) {
-        this(context, session, false);
+        this(context, session, 0);
     }
     
-    public DataViewer (PageContext context, SessionData session, boolean singleUser) {
+    public static final int FLAG_SINGLE_USER = 1<<0;
+    public static final int FLAG_NO_CELLS = 1<<1;
+    
+    @SuppressWarnings("unchecked")
+    public DataViewer (PageContext context, SessionData session, int flags) {
         
         User current = session.getUser();
         if (!current.isAdmin() && !current.isAdmissions()) {
             failed = true;
+            columns = null; // kludge
+            colclasses = null;
+            cellProps = null; // same
             return; // permission denied
         }
 
-        if (singleUser) {
+        if ((flags & FLAG_NO_CELLS) == 0) {
+            cellProps = getCellProps();
+            columns = Collections.unmodifiableList(getDataViewColumns(userProps, rformProps, cellProps));
+            colclasses = Collections.unmodifiableList(getDataViewColumnClasses(userProps, rformProps, cellProps));
+        } else {
+            cellProps = null;
+            columns = Collections.unmodifiableList(getDataViewColumns(userProps, rformProps));
+            colclasses = Collections.unmodifiableList(getDataViewColumnClasses(userProps, rformProps));
+        }
+                
+        if ((flags & FLAG_SINGLE_USER) != 0) {
             
             Long id = Util.getParameterLong(context.getRequest(), "u");
             if (id == null) {
@@ -242,7 +291,7 @@ public class DataViewer {
             }
     
             theSingleUser = user;
-            rows.add(getDataViewRow(user, current));
+            rows.add(getDataViewRow(user, current, (flags & FLAG_NO_CELLS) != 0));
             
         } else {
             
@@ -252,7 +301,7 @@ public class DataViewer {
             
             for (User user:User.findAll()) {
                 if (user.isViewableBy(current))
-                    rows.add(getDataViewRow(user, current));
+                    rows.add(getDataViewRow(user, current, (flags & FLAG_NO_CELLS) != 0));
             }
             
             Collections.sort(rows, new ColumnValueComparator(sortby));
@@ -263,6 +312,10 @@ public class DataViewer {
    
     public List<String> getColumns () {
         return columns;
+    }
+    
+    public List<String> getColumnClasses () {
+        return colclasses;
     }
   
     public List<Row> getRows () {

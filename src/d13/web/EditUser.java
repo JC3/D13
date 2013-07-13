@@ -40,8 +40,8 @@ public class EditUser {
                 // add the user to the database
                 User user = new User(bean.getEmail());
                 user.setPassword(bean.getPassword());
-                //if (!bean.getPassword().equals(bean.getPassword2()))
-                //    throw new InvalidParameterException("password2", "Confirmation password does not match.");
+                if (!bean.getPassword().equals(bean.getPassword2()))
+                    throw new IllegalArgumentException("Confirmation password does not match.");
                 user.setRealName(bean.getRealName());
                 user.setPlayaName(bean.getPlayaName());
                 user.setGender(Gender.fromDBString(bean.getGender()));
@@ -85,6 +85,8 @@ public class EditUser {
                 if (bean.getPassword() != null && !bean.getPassword().isEmpty()) { // change pw if specified
                    // if (!bean.getPassword().equals(bean.getPassword2()))
                    //     throw new InvalidParameterException("password2", "Confirmation password does not match.");
+                    if (!bean.getPassword().equals(bean.getPassword2()))
+                        throw new IllegalArgumentException("Confirmation password does not match.");
                     editee.setPassword(/*editor, bean.getOldpassword(),*/ bean.getPassword());
                 }
                 editee.setRealName(bean.getRealName());

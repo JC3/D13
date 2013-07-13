@@ -87,6 +87,13 @@ public class Cell {
         return endDate;
     }
 
+    public String getFullName () {
+        if (parent != null && !parent.getName().equals(ROOT_NAME))
+            return parent.getFullName() + ": " + getName();
+        else
+            return getName();
+    }
+    
     public String getName() {
         return name;
     }
