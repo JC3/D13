@@ -169,10 +169,9 @@ but please make sure that your email address is valid!
 
 <p>There is still a lot of work to be done on this site. Here are the urgent things I am working on now:</p>
 <ul>
-<li>Send approval / rejection email to users -- currently users are not notified when they are approved or rejected.
-This is the highest priority feature. Any users you approve / reject now, before I finish, will be notified once I
-implement this.
-<li>Approval survey -- Once the approval survey is finalized, it will be integrated into this site.
+<li>Notification emails (including approval/rejection emails to users) are currently broken because of SMTP server
+issues that are currently unresolved. This is the highest priority issue. Any users you approve / reject now, before I
+get this working, will be notified once I implement this.
 <li>Due payments -- Integrate due payments with PayPal.
 <li>Cell view -- See all members of a given cell.
 <li>Group view -- See camping groups.
@@ -188,7 +187,6 @@ implement this.
 <li>Ability to add comments about users.
 <li>Interface for editing rules, questions, etc.
 <li>Improved site navigation; maybe a nav bar with breadcrumbs or something.
-<li>More robust handling of notification emails.
 </ul>
 
 </div>

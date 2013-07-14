@@ -14,6 +14,7 @@ import javax.servlet.jsp.PageContext;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 
+import d13.dao.ApprovalSurvey;
 import d13.dao.Cell;
 import d13.dao.RegistrationForm;
 import d13.dao.User;
@@ -84,6 +85,7 @@ public class DataViewer {
     private boolean failed;
     private static final List<ViewDescriptor> userProps = getDataViewProps(User.class);
     private static final List<ViewDescriptor> rformProps = getDataViewProps(RegistrationForm.class);
+    private static final List<ViewDescriptor> aformProps = getDataViewProps(ApprovalSurvey.class);
     private final List<ViewDescriptor> cellProps;
     private final List<String> columns; // must be same order as getDataViewRow
     private final List<String> colclasses;
@@ -104,6 +106,10 @@ public class DataViewer {
             return -1;
         else
             return userProps.size() + rformProps.size() + cellProps.size() - 1;
+    }
+    
+    public int getApprovalBorderIndex () {
+        return userProps.size() + rformProps.size() + (cellProps == null ? 0 : cellProps.size()) + aformProps.size() - 1;        
     }
     
     private static void addCellProps (List<ViewDescriptor> props, Cell cell) {
@@ -228,6 +234,13 @@ public class DataViewer {
             }
         }
         
+        ApprovalSurvey aform = user.isApprovalComplete() ? user.getApproval() : null;
+        for (ViewDescriptor vd:aformProps) {
+            String str = vd.getString(aform);
+            row.values.add(str);
+            row.hrefs.add(href(str, vd.email));
+        }
+        
         return row;
         
     }
@@ -281,12 +294,12 @@ public class DataViewer {
 
         if ((flags & FLAG_NO_CELLS) == 0) {
             cellProps = getCellProps();
-            columns = Collections.unmodifiableList(getDataViewColumns(userProps, rformProps, cellProps));
-            colclasses = Collections.unmodifiableList(getDataViewColumnClasses(userProps, rformProps, cellProps));
+            columns = Collections.unmodifiableList(getDataViewColumns(userProps, rformProps, cellProps, aformProps));
+            colclasses = Collections.unmodifiableList(getDataViewColumnClasses(userProps, rformProps, cellProps, aformProps));
         } else {
             cellProps = null;
-            columns = Collections.unmodifiableList(getDataViewColumns(userProps, rformProps));
-            colclasses = Collections.unmodifiableList(getDataViewColumnClasses(userProps, rformProps));
+            columns = Collections.unmodifiableList(getDataViewColumns(userProps, rformProps, aformProps));
+            colclasses = Collections.unmodifiableList(getDataViewColumnClasses(userProps, rformProps, aformProps));
         }
                 
         if ((flags & FLAG_SINGLE_USER) != 0) {

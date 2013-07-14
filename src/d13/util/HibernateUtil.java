@@ -39,6 +39,11 @@ public class HibernateUtil {
     }
     
     
+    public static Session openSession () {
+        return getSessionFactory().openSession();
+    }
+    
+    
     /**
      * Start a new transaction.
      */

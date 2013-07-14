@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
@@ -18,6 +19,16 @@ import d13.web.CompleteIncompleteBooleanConverter;
 import d13.web.DataView;
 
 public class User {
+    
+    /*
+     * when profile last modified
+     * when registration first completed
+     * when registration last modified
+     * when cells last modified
+     * reviewed by / when
+     * approved rejected by / when
+     * approval/rejection email sent? (when or null -- will use this to mass send emails when implemented)
+     */
 
     public long userId;
     public String email;
@@ -333,8 +344,14 @@ public class User {
     }
 
     public static User findById (Long id) {
+        
+        return findById(id, HibernateUtil.getCurrentSession());
 
-        User user = (User)HibernateUtil.getCurrentSession()
+    }
+
+    public static User findById (Long id, Session session) {
+
+        User user = (User)session
                 .get(User.class, id);
         
         if (user == null)
@@ -343,7 +360,7 @@ public class User {
         return user;
 
     }
-    
+
     public static User findByEmail (String email) {
     
         email = (email == null ? "" : email.trim());
@@ -370,10 +387,10 @@ public class User {
 
     }
     
-    public static List<User> findAdmins () {
+    public static List<User> findAdmins (Session session) {
         
         @SuppressWarnings("unchecked")
-        List<User> users = (List<User>)HibernateUtil.getCurrentSession()
+        List<User> users = (List<User>)session
                 .createCriteria(User.class)
                 .add(Restrictions.eq("admin", true))
                 .list();
@@ -382,16 +399,28 @@ public class User {
 
     }
     
-    public static List<User> findAdmissions () {
+    public static List<User> findAdmins () {
+        
+        return findAdmins(HibernateUtil.getCurrentSession());
+        
+    }
+    
+    public static List<User> findAdmissions (Session session) {
         
         @SuppressWarnings("unchecked")
-        List<User> users = (List<User>)HibernateUtil.getCurrentSession()
+        List<User> users = (List<User>)session
                 .createCriteria(User.class)
                 .add(Restrictions.eq("admissions", true))
                 .list();
         
         return users;
 
+    }
+    
+    public static List<User> findAdmissions () {
+        
+        return findAdmissions(HibernateUtil.getCurrentSession());
+        
     }
     
     public static void addUser (User user) {

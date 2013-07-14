@@ -23,6 +23,8 @@ public class SessionData {
     public static final String SA_REG_ERROR = "jsp.registration.error";
     public static final String SA_REG_DEFAULTS = "jsp.registration.defaults";
     public static final String SA_CELL_ERROR = "jsp.cells.error";
+    public static final String SA_SURVEY_ERROR = "jsp.approval.error";
+    public static final String SA_SURVEY_DEFAULTS = "jsp.approval.defaults";
 
     //private static final String SA_EMAIL = "info.disorient.SessionData.email";
     private static final String SA_USERID = "info.disorient.SessionData.userid";

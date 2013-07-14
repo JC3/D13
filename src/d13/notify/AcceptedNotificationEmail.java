@@ -37,7 +37,7 @@ private final String body;
     }
 
     
-    public static final void sendNow (User registrant, List<User> recipients) {
+    public static final void sendNow (User registrant, List<User> recipients) throws Exception {
         
         AcceptedNotificationEmail email = new AcceptedNotificationEmail(registrant);
         email.send(recipients);

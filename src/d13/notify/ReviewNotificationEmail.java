@@ -37,7 +37,7 @@ public class ReviewNotificationEmail extends Email {
     }
     
     
-    public static final void sendNow (User registrant, List<User> recipients) {
+    public static final void sendNow (User registrant, List<User> recipients) throws Exception {
         
         ReviewNotificationEmail email = new ReviewNotificationEmail(registrant);
         email.send(recipients);

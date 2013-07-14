@@ -56,52 +56,42 @@ public abstract class Email {
     
     protected abstract String getBody ();
 
-    private final void send (List<InternetAddress> recipients) {
-
-        /*
+    private final void send (List<InternetAddress> recipients) throws Exception {
+   
+        if (recipients.isEmpty())
+            throw new Exception("No recipients.");
+    
+        // get javamail session
+        Properties props = System.getProperties();
+        props.setProperty("mail.smtp.starttls.enable", "true");
+        props.setProperty("mail.smtp.auth", "true");
+        props.setProperty("mail.smtp.host", SMTP_SERVER);
+        props.setProperty("mail.smtp.port", "587");
+        Session session = Session.getDefaultInstance(props);
         
-        try {
-            
-            if (recipients.isEmpty())
-                throw new Exception("No recipients.");
-        
-            // get javamail session
-            Properties props = System.getProperties();
-            props.setProperty("mail.smtp.host", SMTP_SERVER);
-            Session session = Session.getDefaultInstance(props);
-            
-            // create message and header
-            MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(SMTP_FROM));            
-            for (InternetAddress recipient:recipients) {
-                System.out.println("Sending to " + recipient);
-                message.addRecipient(Message.RecipientType.BCC, recipient);
-            }
-            
-            // message subject and body
-            message.setSubject(getSubject());
-            message.setText(getBody());
-
-            // send it
-            Transport t = session.getTransport("smtp");
-            t.connect(SMTP_SERVER, SMTP_USERNAME, SMTP_PASSWORD);
-            t.sendMessage(message, message.getAllRecipients());
-            t.close();
-            
-            System.out.println("Notification email sent.");
-                        
-        } catch (Throwable t) {
-            
-            System.err.println("Email Warning: " + t.getClass().getName() + ": " + t.getMessage());
-            return;
-
+        // create message and header
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(SMTP_FROM));            
+        for (InternetAddress recipient:recipients) {
+            System.out.println("Sending to " + recipient);
+            message.addRecipient(Message.RecipientType.BCC, recipient);
         }
         
-        */
+        // message subject and body
+        message.setSubject(getSubject());
+        message.setText(getBody());
+
+        // send it
+        Transport t = session.getTransport("smtp");
+        t.connect(SMTP_SERVER, SMTP_USERNAME, SMTP_PASSWORD);
+        t.sendMessage(message, message.getAllRecipients());
+        t.close();
         
+        System.out.println("Notification email sent.");
+                
     }
     
-    public final void send (User ... recipients) {
+    public final void send (User ... recipients) throws Exception {
         
         List<InternetAddress> addrs = new ArrayList<InternetAddress>();
         for (User recipient:recipients)
@@ -111,7 +101,7 @@ public abstract class Email {
         
     }
     
-    public final void send (Collection<User> recipients) {
+    public final void send (Collection<User> recipients) throws Exception {
 
         List<InternetAddress> addrs = new ArrayList<InternetAddress>();
         for (User recipient:recipients)

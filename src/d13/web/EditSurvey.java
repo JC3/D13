@@ -6,22 +6,21 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import d13.dao.QueuedEmail;
-import d13.dao.RegistrationForm;
+import d13.dao.ApprovalSurvey;
 import d13.dao.User;
 import d13.dao.UserState;
 import d13.util.HibernateUtil;
 import d13.util.Util;
 
-public class EditRegistration {
+public class EditSurvey {
 
-    private RegistrationBean bean = new RegistrationBean();
+    private SurveyBean bean = new SurveyBean();
     private boolean failed;
     private String errorMessage;
     private String failTarget;
     private String successTarget;
 
-    public EditRegistration (PageContext context, SessionData session) {
+    public EditSurvey (PageContext context, SessionData session) {
         
         Long user_id = Util.getParameterLong(context.getRequest(), "user_id");    
         failTarget = context.getRequest().getParameter("fail_target");
@@ -40,9 +39,10 @@ public class EditRegistration {
             User editee = User.findById(user_id);
             if (!editee.isEditableBy(editor))
                 throw new SecurityException("Permission denied.");
+            if (editee.getState() != UserState.APPROVED)
+                throw new SecurityException("Permission denied.");
             
-            RegistrationForm form = editee.getRegistration();
-            boolean sendmail = false;
+            ApprovalSurvey form = editee.getApproval();
             
             // validate all before updating
             HibernateUtil.getCurrentSession().evict(form);
@@ -51,16 +51,9 @@ public class EditRegistration {
             form.validateMisc();
             if (!form.isCompleted())
                 form.setCompletionTimeNow();
-            if (editee.getState() == UserState.NEW_USER) {
-                editee.setState(UserState.NEEDS_REVIEW);
-                sendmail = true;
-            }
             HibernateUtil.getCurrentSession().merge(editee);
             HibernateUtil.getCurrentSession().merge(form);
                         
-            if (sendmail)
-                QueuedEmail.queueNotification(QueuedEmail.TYPE_REVIEW, editee);
-            
         } catch (InvocationTargetException x) {
             
             failed = true;
@@ -89,7 +82,7 @@ public class EditRegistration {
         return successTarget;
     }
     
-    public RegistrationBean getRegistrationBean () {
+    public SurveyBean getSurveyBean () {
         return bean;
     }
     

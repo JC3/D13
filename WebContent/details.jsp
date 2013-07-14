@@ -28,6 +28,7 @@ DataViewer.Row row = view.getRows().get(0);
 int profileBorder = view.getProfileBorderIndex();
 int registrationBorder = view.getRegistrationBorderIndex();
 int cellBorder = view.getCellBorderIndex();
+int surveyBorder = view.getApprovalBorderIndex();
 
 String next_html = Util.html(java.net.URLEncoder.encode(Util.getCompleteUrl(request), "us-ascii"));
 
@@ -82,6 +83,7 @@ marked as "Reviewed", this user cannot be accepted or rejected!</p></div>
 <tr><td class="link" colspan="2">^ <a href="personal.jsp?u=<%=view.getSingleUser().getUserId() %>&next=<%=next_html%>">Edit</a> this user's profile data. ^
 <%   } else if (n == registrationBorder) { %>
 <tr><td class="link" colspan="2">^ <a href="registration.jsp?u=<%=view.getSingleUser().getUserId() %>&next=<%=next_html%>">Edit</a> this user's registration data. ^
+<%     break; // hack, relying on order of sections, to put approval survey after cells. %>
 <%   } %>
 <% } %>
 
@@ -94,6 +96,13 @@ marked as "Reviewed", this user cannot be accepted or rejected!</p></div>
     <tr><td class="cell" colspan="2">This person has not volunteered for any cells!
 <% } %>
 <tr><td class="link" colspan="2">^ <a href="cells.jsp?u=<%=view.getSingleUser().getUserId() %>&next=<%=next_html%>">Edit</a> this user's cell assignments. ^
+
+<% if (view.getSingleUser().getState() == UserState.APPROVED) { %>
+<% for (int n = registrationBorder + 1; n < cols.size(); ++ n) { // continuation of hack from above %>
+<tr><td class="key"><%=Util.html(cols.get(n)) %><td class="value"><%=Util.html(row.values.get(n)) %>
+<% } %>
+<tr><td class="link" colspan="2">^ <a href="survey.jsp?u=<%=view.getSingleUser().getUserId() %>&next=<%=next_html%>">Edit</a> this user's approval survey. ^
+<% } %>
 
 </table>
 

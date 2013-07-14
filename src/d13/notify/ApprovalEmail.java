@@ -15,9 +15,10 @@ public class ApprovalEmail extends Email {
         return "approved";
     }
     
-    public static final void sendNow (User user) {
-        ApprovalEmail email = new ApprovalEmail(user);
-        email.send(user);
+    public static final void sendNow (User user) throws Exception {
+        throw new Exception("Not implemented.");
+        //ApprovalEmail email = new ApprovalEmail(user);
+        //email.send(user);
     }
 
 }

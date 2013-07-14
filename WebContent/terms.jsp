@@ -163,21 +163,21 @@ h1 {
   up to excel.</p>
 
   <p>New or seasoned pornj campers will find there are lots of paths
-  to information on Disorient such as our Disorient <a href="http://disorient.com/">Wiki</a>,
+  to information on Disorient such as our Disorient <a href="http://wiki.disorient.info">Wiki</a>,
   which will have camp plans from
   previous years archived, and projects close to Disorients heart available to
   investigate. You will find what to expect when camping with us and learn what is
   expected of you. Everyone camping with Disorient should jump in and join
-  <a href="http://disorient.tv/forum">The Puddle</a> to make an introduction in
-  <a class="c7" href="http://disorient.tv/forum/viewforum.php?f=14">Welcome to
+  <a href="http://puddle.disorient.info">The Puddle</a> to make an introduction in
+  <a class="c7" href="http://puddle.disorient.info/forum/viewforum.php?f=14">Welcome to
   Disorient!</a>, and to generally get involved.
   You can read up on projects you may be interested in participating and you will
   find important information given to campers that you are responsible for knowing so
   please be alert to activity and be involved.</p>
 
   <ul>
-  <li>The Puddle: <a href="http://disorient.tv/forum">http://disorient.tv/forum</a>
-  <li>Wiki: <a href="http://disorient.com/">http://disorient.com</a>
+  <li>The Puddle: <a href="http://puddle.disorient.info">http://puddle.disorient.info</a>
+  <li>Wiki: <a href="http://wiki.disorient.info">http://wiki.disorient.info</a>
   <li>Email: <a href="mailto:camp@disorient.info?subject=Disorient 2013 Registration">camp [AT] disorient [DOT] info</a>
   </ul>
 

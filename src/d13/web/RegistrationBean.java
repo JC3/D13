@@ -46,7 +46,7 @@ public class RegistrationBean {
         } catch (Exception x) {
             x.printStackTrace();
         }
-        System.out.println(toString()); // TODO: remove this
+        //System.out.println(toString()); // TODO: remove this
     }
 
     public String getHelpedOffPlaya() {

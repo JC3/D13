@@ -3,17 +3,36 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping default-access="field">
 
+    <class name="d13.dao.QueuedEmail" table="notifications">
+        <id name="qnId"><generator class="native"/></id>
+        <property name="type" not-null="true"/>
+        <property name="queued" not-null="true" type="d13.dao.types.DateTimeType"/>
+        <property name="userId"/>
+        <property name="failedAttempt" type="d13.dao.types.DateTimeType"/>
+        <property name="failedDetail" type="text"/>
+    </class>
+
     <class name="d13.dao.ApprovalSurvey" table="approval_surveys">
         <id name="aformId"><generator class="foreign"><param name="property">user</param></generator></id>
         <one-to-one name="user" class="d13.dao.User" constrained="true"/>
         <property name="completionTime" type="d13.dao.types.DateTimeType"/>
+        <property name="sharingWith" type="text"/>
+        <property name="livingIn" type="string"/>
+        <property name="livingInOther" type="string"/>
+        <property name="livingSpaceSize" type="text"/>
+        <property name="mealPreference" type="text"/>
+        <property name="placementRequest" type="text"/>
+        <property name="disengage9_1" not-null="true"/>
+        <property name="disengage9_2" not-null="true"/>
+        <property name="disengage9_3" not-null="true"/>
+        <property name="disengage9_4" not-null="true"/>
+        <property name="disengageNone" not-null="true"/>
     </class>
-   
+    
     <class name="d13.dao.RegistrationForm" table="registration_forms">
         <id name="rformId"><generator class="foreign"><param name="property">user</param></generator></id>
         <one-to-one name="user" class="d13.dao.User" constrained="true"/>
         <property name="completionTime" type="d13.dao.types.DateTimeType"/>
-
 		<property name="helpedOffPlaya" type="text"/>
 		<property name="helpedAlphaCamp"/>
 		<property name="helpedCampBuild"/>

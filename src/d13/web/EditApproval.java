@@ -2,11 +2,9 @@ package d13.web;
 
 import javax.servlet.jsp.PageContext;
 
+import d13.dao.QueuedEmail;
 import d13.dao.User;
 import d13.dao.UserState;
-import d13.notify.AcceptedNotificationEmail;
-import d13.notify.ApprovalEmail;
-import d13.notify.RejectionEmail;
 import d13.util.Util;
 
 public class EditApproval {
@@ -60,10 +58,10 @@ public class EditApproval {
           
             if (action_approve && user.getState() != UserState.APPROVED) {
                 user.setState(UserState.APPROVED);
-                ApprovalEmail.sendNow(user);
+                QueuedEmail.queueNotification(QueuedEmail.TYPE_APPROVED, user);
             } else if (action_reject && user.getState() != UserState.REJECTED) { 
                 user.setState(UserState.REJECTED);
-                RejectionEmail.sendNow(user);
+                QueuedEmail.queueNotification(QueuedEmail.TYPE_REJECTED, user);
             }
             
         } else if (action_review) {
@@ -76,7 +74,7 @@ public class EditApproval {
            
             if (user.getState() == UserState.NEEDS_REVIEW) {
                 user.setState(UserState.REGISTERED);
-                AcceptedNotificationEmail.sendNow(user, User.findAdmissions());
+                QueuedEmail.queueNotification(QueuedEmail.TYPE_ACCEPTED, user);
             }
             
         } else {

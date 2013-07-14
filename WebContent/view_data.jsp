@@ -136,7 +136,7 @@ String sortLink (int index) {
 <tr>
 
     <td class="standard"><div>
-    <% if (row.editable) { %><a href="personal.jsp?u=<%=row.userId%>&next=<%=this_url%>">Profile</a> | <a href="registration.jsp?u=<%=row.userId%>&next=<%=this_url%>">Registration</a> | <a href="cells.jsp?u=<%=row.userId%>&next=<%=this_url%>">Cells</a><% } %>
+    <% if (row.editable) { %><a href="personal.jsp?u=<%=row.userId%>&next=<%=this_url%>">Profile</a>|<a href="registration.jsp?u=<%=row.userId%>&next=<%=this_url%>">Registration</a>|<a href="cells.jsp?u=<%=row.userId%>&next=<%=this_url%>">Cells</a><% } %>
     <% if (row.editable && (row.approvable || row.needsReview)) out.print("|"); %>
     <% if (row.approvable) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Admission</a><% }
     else if (row.needsReview) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Review</a><% } %></div>
@@ -152,7 +152,7 @@ String sortLink (int index) {
     <% } %>
     
     <td class="standard"><div>
-    <% if (row.editable) { %><a href="personal.jsp?u=<%=row.userId%>&next=<%=this_url%>">Profile</a> | <a href="registration.jsp?u=<%=row.userId%>&next=<%=this_url%>">Registration</a> | <a href="cells.jsp?u=<%=row.userId%>&next=<%=this_url%>">Cells</a><% } %>
+    <% if (row.editable) { %><a href="personal.jsp?u=<%=row.userId%>&next=<%=this_url%>">Profile</a>|<a href="registration.jsp?u=<%=row.userId%>&next=<%=this_url%>">Registration</a>|<a href="cells.jsp?u=<%=row.userId%>&next=<%=this_url%>">Cells</a><% } %>
     <% if (row.editable && (row.approvable || row.needsReview)) out.print("|"); %>
     <% if (row.approvable) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Admission</a><% }
     else if (row.needsReview) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Review</a><% } %></div>

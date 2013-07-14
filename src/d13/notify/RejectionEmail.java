@@ -15,9 +15,10 @@ public class RejectionEmail extends Email {
         return "rejected";
     }
 
-    public static final void sendNow (User user) {
-        RejectionEmail email = new RejectionEmail(user);
-        email.send(user);
+    public static final void sendNow (User user) throws Exception {
+        throw new Exception("Not implemented.");
+        //RejectionEmail email = new RejectionEmail(user);
+        //email.send(user);
     }
 
 }

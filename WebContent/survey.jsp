@@ -7,16 +7,11 @@
 <%@ page import="java.util.List" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="dis" %>
 <%
-
-// registration.jsp?u=123   Display form for user 123.
-// registration.jsp         Display form for current user.
-// Parameter 'next' specifies URL to redirect to on success.
-
 SessionData sess = new SessionData(session);
 
 User editor = null;
 User editee = null;
-RegistrationBean defaults = (RegistrationBean)sess.getAndClearAttribute(SessionData.SA_REG_DEFAULTS);
+SurveyBean defaults = (SurveyBean)sess.getAndClearAttribute(SessionData.SA_SURVEY_DEFAULTS);
 
 String fail_target = Util.getCompleteUrl(request); // on error come back to this page
 String success_target = request.getParameter("next");
@@ -38,9 +33,9 @@ try {
 if (!editee.isEditableBy(editor) && !editee.isViewableBy(editor))
     return; // permission denied. do nothing.
 if (defaults == null)
-    defaults = new RegistrationBean(editee);
+    defaults = new SurveyBean(editee);
 
-String error = (String)sess.getAndClearAttribute(SessionData.SA_REG_ERROR);
+String error = (String)sess.getAndClearAttribute(SessionData.SA_SURVEY_ERROR);
 String error_html = (error == null ? null : Util.html(error));
 
 // at this point:
@@ -55,34 +50,8 @@ String error_html = (error == null ? null : Util.html(error));
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="disorient.css">
 <title>Disorient</title>
-<script language="JavaScript" type="text/javascript">
-function setVisible (id, visible) {
-    document.getElementById(id).style.display = (visible ? 'block' : 'none');
-}
-function isChecked (id) {
-	return document.getElementById(id).checked;
-}
-function setChecked (id, state) {
-	document.getElementById(id).checked = state;
-}
-function updateVisibility () {
-    var b = isChecked("disorientVirgin_1");
-    setVisible("bmVirgin", b);
-    setVisible("sponsor", b);
-    setVisible("sponsorFor", !b);
-    if (!b) {
-        setChecked("bmVirgin_1", false);
-        setChecked("bmVirgin_0", true);
-    }
-    b = isChecked("driving_1");
-    setVisible("rideSpaceTo", b);
-    setVisible("rideSpaceFrom", b);
-    setVisible("parkAtCamp", b);
-    setVisible("vehicleComments", b);
-}
-</script>
 </head>
-<body onload="updateVisibility()">
+<body>
 
 <dis:header/>
 
@@ -92,13 +61,22 @@ function updateVisibility () {
 
 <div class="form">
 
-<form action="do_editreg.jsp" method="post">
+<p>Hello fellow Pornj Star! We are very excited to share our camp with you this year but we
+need a little more information. Please fill out this form so that we can gather all the necessary
+information for a smooth and seamless DISOR13NT. We will be sending out emails periodically to
+keep camp members updated.</p>
+
+<p>While Disorient provides all tent campers with shade, we require that each camper purchase and
+bring with them one 10 by 10 orange tarp (<a href="http://www.tents-canopy.com/orange-tarp-10x10.html">http://www.tents-canopy.com/orange-tarp-10x10.html</a>) 
+to expand shade as necessary.</p> 
+
+<form action="do_editsurvey.jsp" method="post">
 <input type="hidden" name="fail_target" value="<%= Util.html(fail_target) %>">
 <input type="hidden" name="success_target" value="<%= Util.html(success_target) %>">
 <input type="hidden" name="user_id" value="<%= editee.getUserId() %>">
 
 <%
-List<Question> qs = RegistrationQuestions.getQuestions();
+List<Question> qs = ApprovalQuestions.getQuestions();
 QuestionForm.writeQuestions(out, qs, defaults, true);
 %>
 <% if (editee.isEditableBy(editor)) { %>
