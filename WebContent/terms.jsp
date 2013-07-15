@@ -203,7 +203,7 @@ h1 {
     setting up, maintaining, and packing away the kitchen.)
 
     <li><strong>PLEASE NOTE</strong> that your
-    placement on Playa is not only based on your regional social pod but based upon other
+    placement on Playa is not only based on your social node but based upon other
     factors such as footprint of your tent and arrival/departure times. If you have plans
     to camp with specific campers please indicate so when describing your personal camp
     footprint and electrical needs in the Approved Camper Survey.

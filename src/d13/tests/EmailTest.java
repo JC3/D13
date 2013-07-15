@@ -5,6 +5,7 @@ import java.util.List;
 
 import d13.dao.User;
 import d13.notify.AcceptedNotificationEmail;
+import d13.notify.Email.Configuration;
 import d13.notify.ReviewNotificationEmail;
 import d13.util.HibernateUtil;
 
@@ -18,8 +19,10 @@ public class EmailTest {
         List<User> r = new ArrayList<User>();
         r.add(User.findByEmail("jason.cipriani@gmail.com"));
         
-        AcceptedNotificationEmail.sendNow(user, r);
-        ReviewNotificationEmail.sendNow(user, r);
+        Configuration c = Configuration.fromDatabase(HibernateUtil.getCurrentSession());
+        
+        AcceptedNotificationEmail.sendNow(user, r, c);
+        ReviewNotificationEmail.sendNow(user, r, c);
         HibernateUtil.commitTransaction();
         
     }

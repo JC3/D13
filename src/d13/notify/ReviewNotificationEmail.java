@@ -10,8 +10,9 @@ public class ReviewNotificationEmail extends Email {
     private final String body;
     
     
-    public ReviewNotificationEmail (User registrant) {
+    public ReviewNotificationEmail (User registrant, Configuration c) {
         
+        super(c);
         String detailsUrl = makeURL("details.jsp?u=" + registrant.getUserId());
         
         StringBuilder sb = new StringBuilder();
@@ -37,9 +38,9 @@ public class ReviewNotificationEmail extends Email {
     }
     
     
-    public static final void sendNow (User registrant, List<User> recipients) throws Exception {
+    public static final void sendNow (User registrant, List<User> recipients, Configuration c) throws Exception {
         
-        ReviewNotificationEmail email = new ReviewNotificationEmail(registrant);
+        ReviewNotificationEmail email = new ReviewNotificationEmail(registrant, c);
         email.send(recipients);
         
     }

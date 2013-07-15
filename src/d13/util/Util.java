@@ -21,6 +21,16 @@ public class Util {
         }
     }
 
+    public static int parseIntDefault (String str, int def) {
+        if (str == null)
+            return def;
+        try {
+            return Integer.parseInt(str);
+        } catch (Throwable t) {
+            return def;
+        }
+    }
+    
     public static Long getParameterLong (ServletRequest request, String param) {
         String s = request.getParameter(param);
         Long v = null;

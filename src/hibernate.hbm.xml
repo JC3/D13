@@ -3,6 +3,11 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping default-access="field">
 
+    <class name="d13.dao.RuntimeOptions$RuntimeOption" table="options">
+        <id name="name"><generator class="assigned"/></id>
+        <property name="value"/>
+    </class>
+
     <class name="d13.dao.QueuedEmail" table="notifications">
         <id name="qnId"><generator class="native"/></id>
         <property name="type" not-null="true"/>

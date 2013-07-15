@@ -10,8 +10,9 @@ public class AcceptedNotificationEmail extends Email {
 private final String body;
     
     
-    public AcceptedNotificationEmail (User registrant) {
+    public AcceptedNotificationEmail (User registrant, Configuration c) {
         
+        super(c);
         String detailsUrl = makeURL("details.jsp?u=" + registrant.getUserId());
         
         StringBuilder sb = new StringBuilder();
@@ -37,9 +38,9 @@ private final String body;
     }
 
     
-    public static final void sendNow (User registrant, List<User> recipients) throws Exception {
+    public static final void sendNow (User registrant, List<User> recipients, Configuration c) throws Exception {
         
-        AcceptedNotificationEmail email = new AcceptedNotificationEmail(registrant);
+        AcceptedNotificationEmail email = new AcceptedNotificationEmail(registrant, c);
         email.send(recipients);
         
     }

@@ -3,8 +3,10 @@ package d13.tests;
 import d13.dao.Cell;
 import d13.dao.Gender;
 import d13.dao.Location;
+import d13.dao.RuntimeOptions;
 import d13.dao.User;
 import d13.dao.UserState;
+import d13.notify.BackgroundNotificationManager;
 import d13.util.HibernateUtil;
 
 public class Initialize {
@@ -14,9 +16,22 @@ public class Initialize {
 
         HibernateUtil.beginTransaction();
 
+        RuntimeOptions.setOption("maintenance", "0");
+        RuntimeOptions.setOption(BackgroundNotificationManager.RT_ENABLE_NOTIFY, "1");
+        RuntimeOptions.setOption("notify.smtp_auth", "1");
+        RuntimeOptions.setOption("notify.smtp_tls", "0");
+        RuntimeOptions.setOption("notify.smtp_ssl", "0");
+        RuntimeOptions.setOption("notify.smtp_host", "mail.disorient.info");
+        RuntimeOptions.setOption("notify.smtp_port", "25");
+        RuntimeOptions.setOption("notify.smtp_user", "camp@disorient.info");
+        RuntimeOptions.setOption("notify.smtp_password", "the7ages");
+        RuntimeOptions.setOption("notify.mail_from", "camp@disorient.info");
+        RuntimeOptions.setOption("notify.base_url", "http://camp.disorient.info");
+        
         if (User.findByEmail("jason@disorient.info") == null) {        
             User user = new User("jason@disorient.info");
             user.setAdmin(true);
+            user.setAdmissions(true);
             user.setAdminComment("Owner; created during initialization.");
             user.setEmergencyContact("Art Cipriani, 412-655-5004");
             user.setGender(Gender.MALE);
@@ -154,11 +169,7 @@ public class Initialize {
             //==============================================================
             
             cell = root.addCategory("Kitchen");
-            
-            cell2 = cell.addCell("Cooking Help");
-            cell2.setPeople(16);
-            cell2.setDescription("");
-    
+         
             cell2 = cell.addCell("Cleanup");
             cell2.setPeople(16);
             cell2.setDescription("");
