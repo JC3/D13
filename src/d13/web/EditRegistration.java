@@ -38,7 +38,7 @@ public class EditRegistration {
             
             User editor = session.getUser();
             User editee = User.findById(user_id);
-            if (!editee.isEditableBy(editor))
+            if (!editee.isEditableBy2(editor))
                 throw new SecurityException("Permission denied.");
             
             RegistrationForm form = editee.getRegistration();

@@ -37,7 +37,7 @@ public class EditSurvey {
             
             User editor = session.getUser();
             User editee = User.findById(user_id);
-            if (!editee.isEditableBy(editor))
+            if (!editee.isEditableBy2(editor))
                 throw new SecurityException("Permission denied.");
             if (editee.getState() != UserState.APPROVED)
                 throw new SecurityException("Permission denied.");

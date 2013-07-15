@@ -10,7 +10,8 @@
 <body>
 <dis:header/>
 
-<div class="error">Sorry, you must accept the Disorient registration rules in order to register for camp.</div>
+<div class="error">Sorry, you must accept the Disorient registration rules in order to register for camp (<a href="terms.jsp">back to rules</a> or <a href="http://www.catoftheday.com/">go away</a>).</div>
 
+<dis:footer/>
 </body>
 </html>

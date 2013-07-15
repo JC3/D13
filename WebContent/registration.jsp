@@ -35,7 +35,7 @@ try {
     // no such user. do nothing.
     return;
 }
-if (!editee.isEditableBy(editor) && !editee.isViewableBy(editor))
+if (!editee.isEditableBy2(editor) && !editee.isViewableBy2(editor))
     return; // permission denied. do nothing.
 if (defaults == null)
     defaults = new RegistrationBean(editee);
@@ -79,12 +79,17 @@ function updateVisibility () {
     setVisible("rideSpaceFrom", b);
     setVisible("parkAtCamp", b);
     setVisible("vehicleComments", b);
+    b = isChecked("tixWanted_1");
+    setVisible("numWanted", b);
+    b = isChecked("tixForSale_1");
+    setVisible("numForSale", b);
 }
 </script>
 </head>
 <body onload="updateVisibility()">
 
 <dis:header/>
+<div class="nav"><a href="<%=Util.html(success_target) %>">Go Back</a></div>
 
 <% if (error != null) { %>
 <div class="error">Error: <%=error_html%></div>
@@ -101,14 +106,15 @@ function updateVisibility () {
 List<Question> qs = RegistrationQuestions.getQuestions();
 QuestionForm.writeQuestions(out, qs, defaults, true);
 %>
-<% if (editee.isEditableBy(editor)) { %>
+<% if (editee.isEditableBy2(editor)) { %>
 <div style="text-align:center"><input class="dbutton" type="submit" value="Continue"></div>
 <% } %>
 </form>
 
-<a href="home.jsp">Home</a>
-
 </div>
+
+<div class="nav"><a href="<%=Util.html(success_target) %>">Go Back</a></div>
+<dis:footer/>
 
 </body>
 </html>

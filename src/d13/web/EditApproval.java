@@ -50,7 +50,7 @@ public class EditApproval {
             // TODO: error message if user already approved or rejected, to notify admins that an editing
             // conflict just occurred.
             
-            if (!user.isApprovableBy(session.getUser())) {
+            if (!user.isApprovableBy2(session.getUser())) {
                 failed = true;
                 errorMessage = "Permission denied.";
                 return; // permission denied
@@ -66,7 +66,9 @@ public class EditApproval {
             
         } else if (action_review) {
         
-            if (!session.getUser().isAdmin()) { // !user.isEditableBy(session.getUser())) {
+            // TODO: error message if already reviewed, same reason as above.
+            
+            if (!user.isReviewableBy2(session.getUser())) {
                 failed = true;
                 errorMessage = "Permission denied.";
                 return; // permission denied

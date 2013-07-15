@@ -34,10 +34,9 @@ try {
     // no such user. do nothing.
     return;
 }
-if (!editee.isEditableBy(editor) && !editee.isViewableBy(editor))
+if (!editee.isEditableBy2(editor) && !editee.isViewableBy2(editor))
     return; // permission denied. do nothing.
-//if (defaults == null)
-//    defaults = new RegistrationBean(editee);
+
 
 String error = (String)sess.getAndClearAttribute(SessionData.SA_CELL_ERROR);
 String error_html = (error == null ? null : Util.html(error));
@@ -83,6 +82,7 @@ function showMore (id) {
 <body>
 
 <dis:header/>
+<div class="nav"><a href="<%=Util.html(success_target) %>">Go Back</a></div>
 
 <% if (error != null) { %>
 <div class="error">Error: <%=error_html%></div>
@@ -95,14 +95,15 @@ function showMore (id) {
 <input type="hidden" name="user_id" value="<%= editee.getUserId() %>">
 <table class="form">
 <% CellList.writeCellTree(out, root, editee); %>
-<% if (editee.isEditableBy(editor)) { %>
+<% if (editee.isEditableBy2(editor)) { %>
 <tr class="section">
     <td colspan="2" style="text-align:center" class="bottom"><input class="dbutton" type="submit" value="Continue">
 <% } %>
 </table>
 </form>
 
-<a href="home.jsp">Home</a>
+<div class="nav"><a href="<%=Util.html(success_target) %>">Go Back</a></div>
+<dis:footer/>
 
 </body>
 </html>

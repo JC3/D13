@@ -22,12 +22,22 @@ public class ApprovalSurvey {
     private boolean disengage9_3;
     private boolean disengage9_4;
     private boolean disengageNone;
-    
+    private boolean tixForSale;
+    private int numForSale;
+    private boolean tixWanted;
+    private int numWanted;
+
     ApprovalSurvey () {
     }
     
     ApprovalSurvey (User user) {
         this.user = user;
+        if (user.isRegistrationComplete()) {
+            this.tixForSale = user.getRegistration().isTixForSale();
+            this.numForSale = user.getRegistration().getNumForSale();
+            this.tixWanted = user.getRegistration().isTixWanted();
+            this.numWanted = user.getRegistration().getNumWanted();
+        }
     }
     
     public long getAformId () {
@@ -97,6 +107,24 @@ public class ApprovalSurvey {
         return disengageNone;
     }
 
+    public boolean isTixForSale() {
+        return tixForSale;
+    }
+
+    @DataView(i=110, n="Tickets For Sale")
+    public int getNumForSale() {
+        return tixForSale ? numForSale : 0;
+    }
+
+    public boolean isTixWanted() {
+        return tixWanted;
+    }
+
+    @DataView(i=120, n="Tickets Needed")
+    public int getNumWanted() {
+        return tixWanted ? numWanted : 0;
+    }
+
     public boolean isCompleted () {
         return completionTime != null;
     }
@@ -145,9 +173,31 @@ public class ApprovalSurvey {
         this.disengageNone = disengageNone;
     }
 
+    public void setTixForSale (boolean tixForSale) {
+        this.tixForSale = tixForSale;
+    }
+
+    public void setNumForSale (int numForSale) {
+        if (numForSale < 0) throw new IllegalArgumentException("Number of tickets for sale can't be negative.");
+        this.numForSale = numForSale;
+    }
+
+    public void setTixWanted (boolean tixWanted) {
+        this.tixWanted = tixWanted;
+    }
+
+    public void setNumWanted (int numWanted) {
+        if (numWanted < 0) throw new IllegalArgumentException("Number of tickets wanted can't be negative.");
+        this.numWanted = numWanted;
+    }
+
     public void validateMisc () throws IllegalArgumentException {
         if ("other".equalsIgnoreCase(livingIn))
             Util.require(livingInOther, "Other living space type");
+        if (tixForSale && numForSale <= 0)
+            throw new IllegalArgumentException("Number of tickets for sale must be specified.");
+        if (tixWanted && numWanted <= 0)
+            throw new IllegalArgumentException("Number of tickets wanted must be specified.");
     }
     
     public void setCompletionTimeNow () {

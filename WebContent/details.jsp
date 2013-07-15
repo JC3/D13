@@ -32,6 +32,14 @@ int surveyBorder = view.getApprovalBorderIndex();
 
 String next_html = Util.html(java.net.URLEncoder.encode(Util.getCompleteUrl(request), "us-ascii"));
 
+User editor = sess.getUser();
+User editee = view.getSingleUser();
+boolean canEdit = editee.isEditableBy2(editor);
+boolean canReview = editee.isReviewableBy2(editor);
+boolean canAdmit = editee.isApprovableBy2(editor);
+boolean needsReview = canReview && (editee.getState() == UserState.NEEDS_REVIEW);
+boolean needsAdmit = canAdmit && (editee.getState() == UserState.REGISTERED);
+
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -68,66 +76,76 @@ function checkc () {
 <body>
 
 <dis:header/>
+<div class="nav"><a href="<%=Util.html(success_target) %>">Go Back</a></div>
 
-<% if (sess.getUser().isAdmin() && view.getSingleUser().getState() == UserState.NEEDS_REVIEW) { %>
+<% if (needsReview) { %>
 <div class="notice"><p>This user has just signed up. Please review the form below and click "Looks Good!" at the bottom if
-the application is in order. If there are issues, you may <a href="mailto:<%=Util.html(view.getSingleUser().getEmail())%>?subject=Your Disorient 2013 Registration">contact the user</a> to clear them up first. Until this application is
+the application is in order. If there are issues, you may <a href="mailto:<%=Util.html(editee.getEmail())%>?subject=Your Disorient 2013 Registration">contact the user</a> to clear them up first. Until this application is
 marked as "Reviewed", this user cannot be accepted or rejected!</p></div>
+<% } else if (needsAdmit) { %>
+<div class="notice"><p>This user's registration application is complete. Please review the form below then use the buttons
+at the bottom to make an approval decision.</p></div>
 <% } %>
 
 <table class="form">
 
 <% for (int n = 0; n < cols.size(); ++ n) { %>
-<tr><td class="key"><%=Util.html(cols.get(n)) %><td class="value"><%=Util.html(row.values.get(n)) %>
-<%   if (n == profileBorder) { %>
-<tr><td class="link" colspan="2">^ <a href="personal.jsp?u=<%=view.getSingleUser().getUserId() %>&next=<%=next_html%>">Edit</a> this user's profile data. ^
-<%   } else if (n == registrationBorder) { %>
-<tr><td class="link" colspan="2">^ <a href="registration.jsp?u=<%=view.getSingleUser().getUserId() %>&next=<%=next_html%>">Edit</a> this user's registration data. ^
-<%     break; // hack, relying on order of sections, to put approval survey after cells. %>
+     <tr><td class="key"><%=Util.html(cols.get(n)) %><td class="value"><%=Util.html(row.values.get(n)) %>
+<%   if (n == profileBorder && canEdit) { %>
+        <tr><td class="link" colspan="2">^ <a href="personal.jsp?u=<%=editee.getUserId() %>&next=<%=next_html%>">Edit</a> this user's profile data. ^
+<%   } else if (n == registrationBorder) { 
+        if (canEdit) { %>
+          <tr><td class="link" colspan="2">^ <a href="registration.jsp?u=<%=editee.getUserId() %>&next=<%=next_html%>">Edit</a> this user's registration data. ^
+<%      }
+        break; // hack, relying on order of sections, to put approval survey after cells. %>
 <%   } %>
 <% } %>
 
 <tr><td class="key" colspan="2">Cell Assignments:
-<% if (view.getSingleUser().isInCells()) { %>
-    <% for (Cell cell:view.getSingleUser().getCells()) { %>
-    <tr><td class="cell" colspan="2"><%= Util.html(cell.getFullName()) %>
+<% if (editee.isInCells()) { %>
+    <% for (Cell cell:editee.getCells()) { %>
+         <tr><td class="cell" colspan="2"><%= Util.html(cell.getFullName()) %>
     <% } %>
 <% } else { %>
-    <tr><td class="cell" colspan="2">This person has not volunteered for any cells!
+     <tr><td class="cell" colspan="2">This person has not volunteered for any cells!
 <% } %>
-<tr><td class="link" colspan="2">^ <a href="cells.jsp?u=<%=view.getSingleUser().getUserId() %>&next=<%=next_html%>">Edit</a> this user's cell assignments. ^
+<% if (canEdit) { %>
+     <tr><td class="link" colspan="2">^ <a href="cells.jsp?u=<%=editee.getUserId() %>&next=<%=next_html%>">Edit</a> this user's cell assignments. ^
+<% } %>
 
-<% if (view.getSingleUser().getState() == UserState.APPROVED) { %>
-<% for (int n = registrationBorder + 1; n < cols.size(); ++ n) { // continuation of hack from above %>
-<tr><td class="key"><%=Util.html(cols.get(n)) %><td class="value"><%=Util.html(row.values.get(n)) %>
-<% } %>
-<tr><td class="link" colspan="2">^ <a href="survey.jsp?u=<%=view.getSingleUser().getUserId() %>&next=<%=next_html%>">Edit</a> this user's approval survey. ^
+<% if (editee.getState() == UserState.APPROVED) { %>
+<%   for (int n = registrationBorder + 1; n < cols.size(); ++ n) { // continuation of hack from above %>
+       <tr><td class="key"><%=Util.html(cols.get(n)) %><td class="value"><%=Util.html(row.values.get(n)) %>
+<%   } %>
+<%   if (canEdit) { %>
+<tr><td class="link" colspan="2">^ <a href="survey.jsp?u=<%=editee.getUserId() %>&next=<%=next_html%>">Edit</a> this user's approval survey. ^
+<%   } %>
 <% } %>
 
 </table>
 
-<% if (sess.getUser().isAdmin() && view.getSingleUser().getState() == UserState.NEEDS_REVIEW) { %>
+<% if (needsReview) { %>
 <form action="do_approval.jsp" method="post">
 <input type="hidden" name="fail_target" value="<%= Util.html(fail_target) %>">
 <input type="hidden" name="success_target" value="<%= Util.html(success_target) %>">
-<input type="hidden" name="user_id" value="<%= row.userId %>">
+<input type="hidden" name="user_id" value="<%= editee.getUserId() %>">
 <input type="hidden" name="action" value="review">
 <table class="form" style="margin-top: 1ex;">
 <tr><td class="title">Application Review
 <tr><td class="wide" style="padding-top: 1ex;"><input class="dbutton" type="submit" value="Looks good!">
 </table>
 </form>
-<% } else if (row.approvable) { %>
+<% } else if (needsAdmit) { %>
 <form action="do_approval.jsp" method="post">
 <input type="hidden" name="fail_target" value="<%= Util.html(fail_target) %>">
 <input type="hidden" name="success_target" value="<%= Util.html(success_target) %>">
-<input type="hidden" name="user_id" value="<%= row.userId %>">
+<input type="hidden" name="user_id" value="<%= editee.getUserId() %>">
 <table class="form" style="margin-top: 1ex;">
 <tr><td colspan="2" class="title">Approve / Reject User
-<tr><td class="left"><input class="dcheckbox" type="checkbox" name="c1" id="c1" value="1"><td>I have thoroughly reviewed the above application and if I approve it, I believe that <%=Util.html(view.getSingleUser().getRealName()) %> is a DOer who will positively contribute to our camp.
-<tr><td class="left"><input class="dcheckbox" type="checkbox" name="c2" id="c2" value="1"><td>I understand that I have been trusted with the responsibility to enforce our maximum camper limit so that we can provide <%=Util.html(view.getSingleUser().getRealName()) %> with food, water, power, and a place to live for a week.
+<tr><td class="left"><input class="dcheckbox" type="checkbox" name="c1" id="c1" value="1"><td>I have thoroughly reviewed the above application and if I approve it, I believe that <%=Util.html(editee.getRealName()) %> is a DOer who will positively contribute to our camp.
+<tr><td class="left"><input class="dcheckbox" type="checkbox" name="c2" id="c2" value="1"><td>I understand that I have been trusted with the responsibility to enforce our maximum camper limit so that we can provide <%=Util.html(editee.getRealName()) %> with food, water, power, and a place to live for a week.
 <tr><td class="left"><input class="dcheckbox" type="checkbox" name="c3" id="c3" value="1"><td>I understand that once I approve/reject a user, the user will be notified immediately and only an administrator may change their status.
-<% if (!view.getSingleUser().isInCells()) { %>
+<% if (!editee.isInCells()) { %>
 <tr><td colspan="2" style="text-align:center;"><span style="color: red;">Warning: This user has not signed up for any volunteer cells!</span>
 <% } %>
 <tr><td colspan="2" style="text-align:center;">Action: <select class="dselect" name="action" id="action">
@@ -140,7 +158,8 @@ marked as "Reviewed", this user cannot be accepted or rejected!</p></div>
 </form>
 <% } %>
 
-<a href="<%=Util.html(success_target)%>">Go Back</a>
+<div class="nav"><a href="<%=Util.html(success_target) %>">Go Back</a></div>
+<dis:footer/>
 
 </body>
 </html>

@@ -3,6 +3,17 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping default-access="field">
 
+    <class name="d13.dao.Role" table="roles">
+        <id name="roleId"><generator class="native"/></id>
+        <property name="name" not-null="true"/>
+        <property name="level" not-null="true"/>
+        <property name="viewUsers" not-null="true"/>
+        <property name="editUsers" not-null="true"/>
+        <property name="reviewUsers" not-null="true"/>
+        <property name="admitUsers" not-null="true"/>
+        <property name="finalizeUsers" not-null="true"/>
+    </class>
+
     <class name="d13.dao.RuntimeOptions$RuntimeOption" table="options">
         <id name="name"><generator class="assigned"/></id>
         <property name="value"/>
@@ -32,6 +43,10 @@
         <property name="disengage9_3" not-null="true"/>
         <property name="disengage9_4" not-null="true"/>
         <property name="disengageNone" not-null="true"/>
+        <property name="tixForSale" not-null="true"/>
+        <property name="numForSale" not-null="true"/>
+        <property name="tixWanted" not-null="true"/>
+        <property name="numWanted" not-null="true"/>
     </class>
     
     <class name="d13.dao.RegistrationForm" table="registration_forms">
@@ -65,6 +80,10 @@
 		<property name="vehicleComments" type="text"/>
 		<property name="needRideTo"/>
 		<property name="needRideFrom"/>
+		<property name="tixForSale" not-null="true"/>
+		<property name="numForSale" not-null="true"/>
+		<property name="tixWanted" not-null="true"/>
+		<property name="numWanted" not-null="true"/>
 		<many-to-one name="groupLeader" class="d13.dao.User"/>
 		<property name="personalProject" type="text"/>
 		<property name="comments" type="text"/>
@@ -74,8 +93,7 @@
     <class name="d13.dao.User" table="users">
         <id name="userId"><generator class="native"/></id>
         <property name="email" length="254" not-null="true" unique="true"/>
-        <property name="admin" not-null="true"/>
-        <property name="admissions" not-null="true"/>
+        <many-to-one name="role" class="d13.dao.Role"/>
         <property name="passwordSalt" length="8" not-null="true"/>
         <property name="passwordHash" length="40" not-null="true"/>
         <property name="created" type="d13.dao.types.DateTimeType" not-null="true"/>

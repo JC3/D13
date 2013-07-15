@@ -36,6 +36,7 @@ public class Question {
     private String detail;
     private String field;
     private List<Choice> choices = new ArrayList<Choice>();
+    private boolean forLogin;
     
     public static Question newShortText (String field, String brief, String detail) {
         Question q = new Question();
@@ -137,6 +138,15 @@ public class Question {
     
     public List<Choice> getChoices () {
         return Collections.unmodifiableList(choices);
+    }
+    
+    public boolean isForLogin () {
+        return forLogin;
+    }
+    
+    public Question setForLogin (boolean forLogin) {
+        this.forLogin = forLogin;
+        return this;
     }
     
 }

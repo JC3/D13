@@ -13,7 +13,7 @@ if (!sess.isLoggedIn()) {
 }
 
 User user = sess.getUser();
-if (!user.isAdmin() && !user.isAdmissions())
+if (!user.getRole().isSpecial())
     return; // permission denied.
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -30,6 +30,10 @@ h1 { font-size: larger; font-weight: bold; }
 <body>
 
 <dis:header/>
+<div class="nav">
+    <a href="home.jsp">Home</a> |
+    <a href="view_data.jsp">View Registration Data</a>
+</div>
 
 <p>This page describes how this site works, for administrative / registration / admissions team members.</p> 
 
@@ -192,9 +196,12 @@ get this working, will be notified once I implement this.
 </div>
 </div>
 
-<hr>
 
-<div style="font-size:smaller;"><a href="mailto:jason.cipriani@gmail.com">jason.cipriani@gmail.com</a>, 7/12/2013</div>
+<div class="nav">
+    <a href="home.jsp">Home</a> |
+    <a href="view_data.jsp">View Registration Data</a>
+</div>
+<dis:footer/>
 
 </body>
 </html>

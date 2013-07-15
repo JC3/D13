@@ -6,7 +6,9 @@ public enum UserState {
     NEEDS_REVIEW(1, "Needs Review"),
     REGISTERED(2, "Registered"),
     APPROVED(3, "Approved"),
-    REJECTED(4, "Rejected");
+    REJECTED(4, "Rejected"),
+    APPROVE_PENDING(5, "Approval Pending"),
+    REJECT_PENDING(6, "Rejection Pending");
     
     private final int dbId;
     private final String displayString;
@@ -27,6 +29,8 @@ public enum UserState {
         case 2: return REGISTERED;
         case 3: return APPROVED;
         case 4: return REJECTED;
+        case 5: return APPROVE_PENDING;
+        case 6: return REJECT_PENDING;
         default: return null;
         }
     }

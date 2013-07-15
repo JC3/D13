@@ -33,10 +33,10 @@ if (view.isDownloadCSV()) {
 
 String csv_link = Util.getCompleteUrl(request);
 if (!csv_link.contains("download")) { // hack
-	if (csv_link.indexOf('?') == -1)
-	    csv_link += "?download";
-	else
-	    csv_link += "&download";
+    if (csv_link.indexOf('?') == -1)
+        csv_link += "?download";
+    else
+        csv_link += "&download";
 }
 
 %>
@@ -98,6 +98,11 @@ String sortLink (int index) {
 <body>
 
 <dis:header/>
+<div class="nav">
+  <a href="home.jsp">Home</a> | 
+  <a href="<%=Util.html(csv_link) %>">Download as CSV</a>
+</div>
+
 
 <!-- 
 <form action="<%=Util.getCompleteUrl(request) %>" method="get">
@@ -122,24 +127,39 @@ String sortLink (int index) {
 </table>
 </form>
 -->
-<div><a href="<%=Util.html(csv_link) %>">Download as CSV</a></div>
+
 <table cellspacing="0" class="summary">
 <tr>
 
-    <th class="standard">Actions
+    <th class="standard" colspan="4">Actions
 <% for (int n = 0; n < cols.size(); ++ n) { %>
     <th class="<%=cls.get(n)%>"><a href="<%=sortLink(n)%>"><%=Util.html(cols.get(n)) %></a>
 <% } %>
-    <th class="standard">Actions
+    <th class="standard" colspan="4">Actions
 
-<% for (DataViewer.Row row:rows) { %>
+<% for (DataViewer.Row row:rows) { 
+
+    boolean personal = row.user.isEditableBy2(sess.getUser()) || row.user.isViewableBy2(sess.getUser());
+    boolean registration = row.user.isEditableBy2(sess.getUser()) || row.user.isViewableBy2(sess.getUser());
+    boolean cells = row.user.isEditableBy2(sess.getUser()) || row.user.isViewableBy2(sess.getUser());
+    boolean review =
+            (row.user.getState() == UserState.NEEDS_REVIEW && row.user.isReviewableBy2(sess.getUser())) ||
+            (row.user.getState() == UserState.REGISTERED && row.user.isApprovableBy2(sess.getUser()));
+    
+    String query = ("u=" + row.user.getUserId() + "&next=" + this_url);
+    
+    /* "details" will be labelled:
+        - review: if user is NEEDS_REVIEW and current user can review
+        - review: if user is REGISTERED and current user can admit
+        - details: in all other cases
+     */
+%>
 <tr>
 
-    <td class="standard"><div>
-    <% if (row.editable) { %><a href="personal.jsp?u=<%=row.userId%>&next=<%=this_url%>">Profile</a>|<a href="registration.jsp?u=<%=row.userId%>&next=<%=this_url%>">Registration</a>|<a href="cells.jsp?u=<%=row.userId%>&next=<%=this_url%>">Cells</a><% } %>
-    <% if (row.editable && (row.approvable || row.needsReview)) out.print("|"); %>
-    <% if (row.approvable) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Admission</a><% }
-    else if (row.needsReview) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Review</a><% } %></div>
+    <td class="standard"><div><%if (personal) {%><a href="personal.jsp?<%=query%>">Profile</a><%}%></div>
+    <td class="standard"><div><%if (registration) {%><a href="registration.jsp?<%=query%>">Registration</a><%}%></div>
+    <td class="standard"><div><%if (cells) {%><a href="cells.jsp?<%=query%>">Cells</a><%}%></div>
+    <td class="standard"><div><a href="details.jsp?<%=query%>"><%=review?"Review":"Details"%></a></div>
     
     <% for (int n = 0; n < row.values.size(); ++ n) { String str=row.values.get(n); %>
     <td class="<%=cls.get(n)%>"><div>
@@ -151,17 +171,20 @@ String sortLink (int index) {
     </div>
     <% } %>
     
-    <td class="standard"><div>
-    <% if (row.editable) { %><a href="personal.jsp?u=<%=row.userId%>&next=<%=this_url%>">Profile</a>|<a href="registration.jsp?u=<%=row.userId%>&next=<%=this_url%>">Registration</a>|<a href="cells.jsp?u=<%=row.userId%>&next=<%=this_url%>">Cells</a><% } %>
-    <% if (row.editable && (row.approvable || row.needsReview)) out.print("|"); %>
-    <% if (row.approvable) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Admission</a><% }
-    else if (row.needsReview) { %><a href="details.jsp?u=<%=row.userId%>&next=<%=this_url%>">Review</a><% } %></div>
-    
+    <td class="standard"><div><%if (personal) {%><a href="personal.jsp?<%=query%>">Profile</a><%}%></div>
+    <td class="standard"><div><%if (registration) {%><a href="registration.jsp?<%=query%>">Registration</a><%}%></div>
+    <td class="standard"><div><%if (cells) {%><a href="cells.jsp?<%=query%>">Cells</a><%}%></div>
+    <td class="standard"><div><a href="details.jsp?<%=query%>"><%=review?"Review":"Details"%></a></div>
+
 <% } %>
 
 </table>
 
-<div><a href="home.jsp">Home</a></div>
+<div class="nav">
+  <a href="home.jsp">Home</a> | 
+  <a href="<%=Util.html(csv_link) %>">Download as CSV</a>
+</div>
+<dis:footer/>
 
 </body>
 </html>

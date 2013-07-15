@@ -38,6 +38,10 @@ public class RegistrationForm {
     private String vehicleComments;
     private boolean needRideTo;
     private boolean needRideFrom;
+    private boolean tixForSale;
+    private int numForSale;
+    private boolean tixWanted;
+    private int numWanted;
     private User groupLeader;
     private String personalProject;
     private String comments;
@@ -215,7 +219,7 @@ public class RegistrationForm {
         return needRideFrom;
     }
 
-    @DataView(i=27, n="Group Leader")
+    @DataView(i=227, n="Group Leader")
     public User getGroupLeader() {
         return groupLeader;
     }
@@ -224,14 +228,32 @@ public class RegistrationForm {
         return groupLeader == null ? null : groupLeader.getUserId();
     }
 
-    @DataView(i=28, n="Personal Projects", longtext=true)
+    @DataView(i=228, n="Personal Projects", longtext=true)
     public String getPersonalProject() {
         return personalProject;
     }
 
-    @DataView(i=29, n="User's Comments", longtext=true)
+    @DataView(i=229, n="User's Comments", longtext=true)
     public String getComments() {
         return comments;
+    }
+
+    public boolean isTixForSale() {
+        return tixForSale;
+    }
+
+    @DataView(i=100, n="Tickets For Sale")
+    public int getNumForSale() {
+        return tixForSale ? numForSale : 0;
+    }
+
+    public boolean isTixWanted() {
+        return tixWanted;
+    }
+
+    @DataView(i=101, n="Tickets Needed")
+    public int getNumWanted() {
+        return tixWanted ? numWanted : 0;
     }
 
     public void setHelpedOffPlaya(String helpedOffPlaya) {
@@ -383,6 +405,24 @@ public class RegistrationForm {
         this.comments = comments;
     }
 
+    public void setTixForSale (boolean tixForSale) {
+        this.tixForSale = tixForSale;
+    }
+
+    public void setNumForSale (int numForSale) {
+        if (numForSale < 0) throw new IllegalArgumentException("Number of tickets for sale can't be negative.");
+        this.numForSale = numForSale;
+    }
+
+    public void setTixWanted (boolean tixWanted) {
+        this.tixWanted = tixWanted;
+    }
+
+    public void setNumWanted (int numWanted) {
+        if (numWanted < 0) throw new IllegalArgumentException("Number of tickets wanted can't be negative.");
+        this.numWanted = numWanted;
+    }
+
     public void validateMisc () throws IllegalArgumentException {
         if (helpedOther)
             Util.require(helpedOtherOther, "Other on-playa event");
@@ -392,6 +432,10 @@ public class RegistrationForm {
             throw new IllegalArgumentException("If this is your first time at Burning Man, it is also your first time with Disorient. Please correct your answers!");
         if (disorientVirgin)
             Util.require(sponsor, "Sponsor name");
+        if (tixForSale && numForSale <= 0)
+            throw new IllegalArgumentException("Number of tickets for sale must be specified.");
+        if (tixWanted && numWanted <= 0)
+            throw new IllegalArgumentException("Number of tickets wanted must be specified.");
     }
     
     public void setCompletionTimeNow () {

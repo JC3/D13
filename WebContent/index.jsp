@@ -7,6 +7,10 @@
 <%
 
 SessionData sess = new SessionData(session);
+if (sess.isLoggedIn()) {
+    response.sendRedirect("home.jsp");
+    return;
+}
 
 String error = (String)sess.getAndClearAttribute(SessionData.SA_LOGIN_ERROR);
 String message = request.getParameterMap().containsKey("loggedout") ? "You have been logged out." : null; //(String)sess.getAndClearAttribute(SessionData.SA_LOGIN_MESSAGE);
@@ -28,7 +32,7 @@ String next_html = (next == null ? "" : StringEscapeUtils.escapeHtml(next));
 <title>Disorient</title>
 </head>
 <body>
-<dis:header/>
+<dis:header blank="true"/>
 <br><br><br><br>
 
 <% if (error != null) { %>
@@ -61,6 +65,7 @@ String next_html = (next == null ? "" : StringEscapeUtils.escapeHtml(next));
 a new account above!</strong>
 </div>
 
+<dis:footer/>
 
 </body>
 </html>

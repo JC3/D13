@@ -137,6 +137,25 @@ public class RegistrationQuestions {
         q.addChoice("needRideFrom", "Departure", 1);
         qs.add(q);
 
+        
+        q = Question.newSingleChoice("tixForSale", "Do you have any BM tickets for sale?", null);
+        q.addChoice("Yes", 1);
+        q.addChoice("No", 0);
+        qs.add(q);
+        
+        q = Question.newShortText("numForSale", "How many are you selling?", null);
+        qs.add(q);
+        
+        q = Question.newSingleChoice("tixWanted", "Do you need BM tickets?", null);
+        q.addChoice("Yes", 1);
+        q.addChoice("No", 0);
+        qs.add(q);
+        
+        q = Question.newShortText("numWanted", "How many do you need?", null);
+        qs.add(q);
+        
+        
+        
         q = Question.newUserDropList("groupLeaderId",
                 "Who will be your group leader?",
                 "This individual is responsible for coordinating with Disorient about registration, arrival, disengage, etc. If your group leader has not yet registered, please just select yourself for now - you'll be able to change it later."); 

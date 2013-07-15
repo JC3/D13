@@ -25,9 +25,12 @@ String fail_target = Util.getCompleteUrl(request); // on error come back to this
 String success_target = request.getParameter("next");
 if (success_target == null || success_target.trim().isEmpty()) success_target = "home.jsp";
 
+boolean editLogin;
+
 if (newuser) {
     editor = null;
     editee = null;
+    editLogin = true;
     if (defaults == null) {
         defaults = new UserProfileBean();
         defaults.setEmail((String)sess.getAndClearAttribute(SessionData.SA_LOGIN_EMAIL));
@@ -46,10 +49,11 @@ if (newuser) {
         // no such user. do nothing.
         return;
     }
-    if (!editee.isEditableBy(editor) && !editee.isViewableBy(editor))
+    if (!editee.isEditableBy2(editor) && !editee.isViewableBy2(editor))
         return; // permission denied. do nothing.
     if (defaults == null)
         defaults = new UserProfileBean(editee);
+    editLogin = editee.isLoginEditableBy(editor);
 }
 
 sess.clearAttribute(SessionData.SA_LOGIN_EMAIL);
@@ -81,6 +85,7 @@ String error_html = (error == null ? null : Util.html(error));
 <body>
 
 <dis:header/>
+<% if (!newuser) { %><div class="nav"><a href="<%=Util.html(success_target) %>">Go Back</a></div><% } %>
 
 <% if (error != null) { %>
 <div class="error">Error: <%=error_html%></div>
@@ -100,18 +105,17 @@ String error_html = (error == null ? null : Util.html(error));
 
 <%
 List<Question> qs = ProfileQuestions.getQuestions();
-QuestionForm.writeQuestions(out, qs, defaults);
+QuestionForm.writeQuestions(out, qs, defaults, false,  !editLogin);
 %>
-<% if (editee == null || editee.isEditableBy(editor)) { %>
+<% if (editee == null || editee.isEditableBy2(editor)) { %>
 <div style="text-align:center"><input class="dbutton" type="submit" value="Continue"></div>
 <% } %>
 </form>
 
-<% if (!newuser) { %>
-<div style="text-align:center"><a href="home.jsp">Home</a></div>
-<% } %>
-
 </div>
+
+<% if (!newuser) { %><div class="nav"><a href="<%=Util.html(success_target) %>">Go Back</a></div><% } %>
+<dis:footer/>
 
 </body>
 </html>

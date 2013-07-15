@@ -18,7 +18,6 @@ import d13.dao.ApprovalSurvey;
 import d13.dao.Cell;
 import d13.dao.RegistrationForm;
 import d13.dao.User;
-import d13.dao.UserState;
 import d13.util.Util;
 
 public class DataViewer {
@@ -74,10 +73,7 @@ public class DataViewer {
     }
     
     public static class Row {
-        public long userId;
-        public boolean editable;
-        public boolean approvable;
-        public boolean needsReview;
+        public User user;
         public List<String> values;
         public List<String> hrefs;
     }
@@ -205,11 +201,7 @@ public class DataViewer {
     private Row getDataViewRow (User user, User current, boolean nocells) {
     
         Row row = new Row();
-        row.userId = user.getUserId();
-        row.editable = user.isEditableBy(current);
-        row.approvable = user.isApprovableBy(current);
-        row.needsReview = (user.getState() == UserState.NEEDS_REVIEW);
-        if (current.isAdmissions() && !current.isAdmin()) row.needsReview = false;
+        row.user = user;
         row.values = new ArrayList<String>();
         row.hrefs = new ArrayList<String>();
                 
@@ -284,7 +276,7 @@ public class DataViewer {
     public DataViewer (PageContext context, SessionData session, int flags) {
         
         User current = session.getUser();
-        if (!current.isAdmin() && !current.isAdmissions()) {
+        if (!current.getRole().canViewUsers()) {
             failed = true;
             columns = null; // kludge
             colclasses = null;
@@ -318,7 +310,7 @@ public class DataViewer {
                 return; // no such user
             }
             
-            if (!user.isViewableBy(current)) {
+            if (!user.isViewableBy2(current)) {
                 failed = true;
                 return; // permission denied
             }
@@ -333,7 +325,7 @@ public class DataViewer {
             int sortby = intParam(context.getRequest().getParameter("sortby"));
             
             for (User user:User.findAll()) {
-                if (user.isViewableBy(current))
+                if (user.isViewableBy2(current))
                     rows.add(getDataViewRow(user, current, (flags & FLAG_NO_CELLS) != 0));
             }
             

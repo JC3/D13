@@ -86,25 +86,21 @@ here periodically for status updates!</div>
 </ul>
 <% } %>
 
-<% if (user.isAdmin()) { %>
+<% if (user.getRole().isSpecial()) { %>
 <strong>For Administrators:</strong><br><ul>
 <!-- <li><a href="admin_users.jsp">Manage Users</a> -->
 <li><a href="view_data.jsp">View Registration Data</a>
 <li><a href="adminhelp.jsp">Help</a>
 </ul>
-<% } else if (user.isAdmissions()) { %>
-<strong>For Admissions Team:</strong><br><ul>
-<!-- <li><a href="admin_users.jsp">Manage Users</a> -->
-<li><a href="view_data.jsp">View Registration Data</a>
-<li><a href="adminhelp.jsp">Help</a>
-</ul>
-<% } %> 
+<% } %>
 
 <strong>Your Account:</strong><ul>
 <li><a href="personal.jsp">Edit Profile</a>
 <li><a href="do_logout.jsp">Log Out</a>
 </ul>
 </div>
+
+<dis:footer/>
 
 </body>
 </html>

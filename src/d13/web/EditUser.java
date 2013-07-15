@@ -70,24 +70,29 @@ public class EditUser {
                 User editor = session.getUser();
                 User editee = User.findById(user_id);
 
-                if (!editee.isEditableBy(editor))
+                if (!editee.isEditableBy2(editor))
                     throw new SecurityException("Permission denied.");
+
+                // if we don't have permission to edit user's email/password, just silently ignore changes below.
+                boolean loginEdit = editee.isLoginEditableBy(editor);
                 
                 // kludge to give reasonable error message if email address exists
-                String oldemail = editee.getEmail().trim();
-                String newemail = (bean.getEmail() == null ? "" : bean.getEmail().trim());
-                if (!oldemail.equalsIgnoreCase(newemail) && User.findByEmail(newemail) != null) 
-                    throw new IllegalArgumentException("This email address is already in use.");
+                if (loginEdit) {
+                    String oldemail = editee.getEmail().trim();
+                    String newemail = (bean.getEmail() == null ? "" : bean.getEmail().trim());
+                    if (!oldemail.equalsIgnoreCase(newemail) && User.findByEmail(newemail) != null) 
+                        throw new IllegalArgumentException("This email address is already in use.");
+                }
 
                 // validate all before updating
                 HibernateUtil.getCurrentSession().evict(editee);
-                editee.setEmail(bean.getEmail());
-                if (bean.getPassword() != null && !bean.getPassword().isEmpty()) { // change pw if specified
-                   // if (!bean.getPassword().equals(bean.getPassword2()))
-                   //     throw new InvalidParameterException("password2", "Confirmation password does not match.");
-                    if (!bean.getPassword().equals(bean.getPassword2()))
-                        throw new IllegalArgumentException("Confirmation password does not match.");
-                    editee.setPassword(/*editor, bean.getOldpassword(),*/ bean.getPassword());
+                if (loginEdit) {
+                    editee.setEmail(bean.getEmail());
+                    if (bean.getPassword() != null && !bean.getPassword().isEmpty()) { // change pw if specified
+                        if (!bean.getPassword().equals(bean.getPassword2()))
+                            throw new IllegalArgumentException("Confirmation password does not match.");
+                        editee.setPassword(/*editor, bean.getOldpassword(),*/ bean.getPassword());
+                    }
                 }
                 editee.setRealName(bean.getRealName());
                 editee.setPlayaName(bean.getPlayaName());

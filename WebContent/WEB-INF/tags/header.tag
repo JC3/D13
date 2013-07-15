@@ -1,8 +1,21 @@
 <%@ tag language="java" pageEncoding="ISO-8859-1"%>
 <%@ attribute name="blank" required="false" %>
+<%@ attribute name="nav" required="false" %>
 <%@ tag import="d13.web.*" %>
 <%@ tag import="d13.dao.*" %>
 <%@ tag import="d13.util.*" %>
+<%@ tag import="java.util.List" %>
+<%@ tag import="java.util.ArrayList" %>
+<%!
+private static class NavButton {
+    String text;
+    String url;
+    NavButton (String text, String url) {
+        this.text = text;
+        this.url = url;
+    }
+}
+%>
 <%
 User user = null;
 
@@ -21,7 +34,17 @@ if (user != null) {
     role_html = Util.html(user.getRoleDisplay());
     if (role_html.isEmpty()) role_html = null;
 }
+
+/*List<NavButton> buttons = new ArrayList<NavButton>();
+
+if (nav == null || nav.isEmpty()) {
+} else if ("user".equalsIgnoreCase(nav)) {
+} else if ("admin".equalsIgnoreCase(nav)) {
+}*/
+
 %>
+<div id="container">
+<div id="dheader">
 <table class="header" width="100%" cellspacing="0" cellpadding="0">
 <tr>
   <td width="100%">
@@ -29,7 +52,7 @@ if (user != null) {
   </td>
   <td>
       <div class="you">
-<% if (user != null) { %>
+<% if (user != null && !"true".equalsIgnoreCase(blank)) { %>
       You are logged in as:<br>
       Email: <%=email_html %><br>
       Name: <%=realname_html %><br>
@@ -43,5 +66,13 @@ if (user != null) {
 </tr>
 </table>
 <hr>
-<div class="contact">If you have any questions, <a href="mailto:camp@disorient.info?subject=Disorent 2013 Registration">contact us</a>.</div>
-<br>
+<!-- 
+<div id="navbar">
+  <div class="navitem">One</div>
+  <div class="navitem">Two</div>
+  <div class="navitem">Three</div>
+  <div class="navitem">Four</div>
+</div>
+-->
+</div>
+<div id="dbody">

@@ -39,6 +39,9 @@ h1 {
 </head>
 <body>
 <dis:header/>
+<% if (sess.getUser().isTermsAgreed()) { %>
+<div class="nav"><a href="home.jsp">Home</a></div>
+<% } %>
 
 <h1>Disorient Registration Rules</h1>
 
@@ -321,10 +324,9 @@ If you have ?s, suggestions, ideas or concerns please contact us at camp{AT}diso
 </div>
 </form>
 <% } else { %>
-<div style="margin-top:2ex;text-align:center;" class="content">
-<a href="home.jsp">Home</a>
-</div>
+<div class="nav"><a href="home.jsp">Home</a></div>
 <% } %>
+<dis:footer/>
 
 </body>
 </html>

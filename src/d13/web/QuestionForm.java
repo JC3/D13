@@ -21,13 +21,19 @@ public class QuestionForm {
     }
 
     public static void writeQuestions (JspWriter out, List<Question> qs, Object defaults, boolean script) throws IOException {
-        
-        for (Question q:qs)
-            writeQuestion(out, q, defaults, script);
+    
+        writeQuestions(out, qs, defaults, script, false);
         
     }
     
-    public static void writeQuestion (JspWriter out, Question q, Object defaults, boolean script) throws IOException {
+    public static void writeQuestions (JspWriter out, List<Question> qs, Object defaults, boolean script, boolean readOnlyLogin) throws IOException {
+        
+        for (Question q:qs)
+            writeQuestion(out, q, defaults, script, readOnlyLogin);
+
+    }
+    
+    public static void writeQuestion (JspWriter out, Question q, Object defaults, boolean script, boolean readOnlyLogin) throws IOException {
        
         out.println("<div class=\"question\" id=\"" + q.getField() + "\">");
         out.println("<div class=\"qname\">" + Util.html(q.getBrief()) + "</div>");
@@ -45,9 +51,9 @@ public class QuestionForm {
         */
         
         switch (q.getType()) {
-        case Question.TYPE_SHORT_TEXT: writeShortText(out, q, defaults); break;
+        case Question.TYPE_SHORT_TEXT: writeShortText(out, q, defaults, readOnlyLogin); break;
         case Question.TYPE_LONG_TEXT: writeLongText(out, q, defaults); break;
-        case Question.TYPE_PASSWORD: writePassword(out, q, defaults); break;
+        case Question.TYPE_PASSWORD: writePassword(out, q, defaults, readOnlyLogin); break;
         case Question.TYPE_SINGLE_CHOICE: writeSingleChoice(out, q, defaults, script); break;
         case Question.TYPE_MULTI_CHOICE: writeMultiChoice(out, q, defaults); break;
         case Question.TYPE_DROPLIST: writeDropList(out, q, defaults); break;
@@ -60,7 +66,7 @@ public class QuestionForm {
 
     }
     
-    private static void writeShortText (JspWriter out, Question q, Object defaults) throws IOException {
+    private static void writeShortText (JspWriter out, Question q, Object defaults, boolean readOnlyLogin) throws IOException {
         
         String valuestr = null;
         
@@ -72,7 +78,10 @@ public class QuestionForm {
             }
         }
         
-        out.println(String.format("<input class=\"dtext\" type=\"text\" name=\"%s\" value=\"%s\">", Util.html(q.getField()), Util.html(valuestr)));
+        if (q.isForLogin() && readOnlyLogin)
+            out.println(Util.html(valuestr));
+        else
+            out.println(String.format("<input class=\"dtext\" type=\"text\" name=\"%s\" value=\"%s\">", Util.html(q.getField()), Util.html(valuestr)));
         
     }
     
@@ -92,7 +101,12 @@ public class QuestionForm {
 
     }
     
-    private static void writePassword (JspWriter out, Question q, Object defaults) throws IOException {
+    private static void writePassword (JspWriter out, Question q, Object defaults, boolean readOnlyLogin) throws IOException {
+       
+        if (q.isForLogin() && readOnlyLogin) {
+            out.println("N/A");
+            return;
+        }
         
         String valuestr = null;
         

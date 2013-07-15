@@ -30,8 +30,8 @@ public class Initialize {
         
         if (User.findByEmail("jason@disorient.info") == null) {        
             User user = new User("jason@disorient.info");
-            user.setAdmin(true);
-            user.setAdmissions(true);
+            //user.setAdmin(true);
+            //user.setAdmissions(true);
             user.setAdminComment("Owner; created during initialization.");
             user.setEmergencyContact("Art Cipriani, 412-655-5004");
             user.setGender(Gender.MALE);

@@ -50,6 +50,22 @@ public class ApprovalQuestions {
         q.addChoice("disengageNone", "I'm sorry, I cannot stay to help.", 1);
         qs.add(q);
         
+        q = Question.newSingleChoice("tixForSale", "Do you have any BM tickets for sale?", null);
+        q.addChoice("Yes", 1);
+        q.addChoice("No", 0);
+        qs.add(q);
+        
+        q = Question.newShortText("numForSale", "How many are you selling?", null);
+        qs.add(q);
+        
+        q = Question.newSingleChoice("tixWanted", "Do you need BM tickets?", null);
+        q.addChoice("Yes", 1);
+        q.addChoice("No", 0);
+        qs.add(q);
+        
+        q = Question.newShortText("numWanted", "How many do you need?", null);
+        qs.add(q);
+        
     }
     
     public static final List<Question> getQuestions () {

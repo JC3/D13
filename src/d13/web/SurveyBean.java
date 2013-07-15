@@ -17,6 +17,10 @@ public class SurveyBean {
     private boolean disengage9_3;
     private boolean disengage9_4;
     private boolean disengageNone;
+    private boolean tixForSale;
+    private String numForSale;
+    private boolean tixWanted;
+    private String numWanted;
    
     public SurveyBean () {
     }
@@ -97,4 +101,35 @@ public class SurveyBean {
         this.disengageNone = disengageNone;
     }
     
+    public boolean isTixForSale() {
+        return tixForSale;
+    }
+
+    public String getNumForSale() {
+        return numForSale;
+    }
+
+    public boolean isTixWanted() {
+        return tixWanted;
+    }
+
+    public String getNumWanted() {
+        return numWanted;
+    }
+
+    public void setTixForSale(boolean tixForSale) {
+        this.tixForSale = tixForSale;
+    }
+
+    public void setNumForSale(String numForSale) {
+        this.numForSale = numForSale;
+    }
+
+    public void setTixWanted(boolean tixWanted) {
+        this.tixWanted = tixWanted;
+    }
+
+    public void setNumWanted(String numWanted) {
+        this.numWanted = numWanted;
+    }
 }

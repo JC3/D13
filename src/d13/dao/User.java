@@ -32,8 +32,7 @@ public class User {
 
     public long userId;
     public String email;
-    public boolean admin;
-    public boolean admissions;
+    public Role role;
     public String passwordSalt;
     public String passwordHash;
     public DateTime created;
@@ -104,22 +103,17 @@ public class User {
         return hashed.equalsIgnoreCase(this.passwordHash);
     }
     
-    public boolean isAdmin() {
-        return admin;
-    }
-    
-    public boolean isAdmissions () {
-        return admissions;
+    public Role getRole () {
+        if (role == null)
+            return Role.DEFAULT_ROLE;
+        else
+            return role;
     }
     
     @DataView(i=2, n="Role")
     public String getRoleDisplay () {
-        if (admin && admissions) // getting hacky
-            return "Administrator";
-        else if (admin)
-            return "Registration";
-        else if (admissions)
-            return "Admissions";
+        if (getRole().isSpecial())
+            return getRole().getName();
         else
             return null;
     }
@@ -217,14 +211,6 @@ public class User {
     public void setEmail(String email) {
         this.email = Util.requireEmail(email, "A valid email address");
     }
-    
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
-    }
-    
-    public void setAdmissions (boolean admissions) {
-        this.admissions = admissions;
-    }
      
     public void setPassword (String password) {
         if (password == null || password.isEmpty())
@@ -282,12 +268,13 @@ public class User {
         this.termsAgreed = termsAgreed;
     }
     
+    /*
     public boolean isEditableBy (User editor) {
         if (editor == null)
             return false;
         else if (editor == this || editor.getUserId() == getUserId())
             return true;
-        else if (editor.isAdmin() && !isAdmin())
+        else if (editor.getRole().canEditUsers())
             return true;
         else
             return false;
@@ -316,6 +303,68 @@ public class User {
         else if (editor.isAdmin())
             return true;
         else if (editor.isAdmissions() && state != UserState.NEW_USER && state != UserState.NEEDS_REVIEW)
+            return true;
+        else
+            return false;
+    }
+   */
+    
+    public boolean isLoginEditableBy (User editor) {
+        if (editor == null)
+            return false;
+        else if (editor == this || editor.getUserId() == getUserId())
+            return true;
+        else if (!editor.getRole().canEditUsers())
+            return false;
+        else if (editor.getRole().getLevel() > getRole().getLevel())
+            return true;
+        else
+            return false;
+    }
+    
+    // TODO: rename
+    public boolean isEditableBy2 (User editor) {
+        if (editor == null)
+            return false;
+        else if (editor == this || editor.getUserId() == getUserId())
+            return true;
+        else if (editor.getRole().canEditUsers())
+            return true;
+        else
+            return false;
+    }
+    
+    // TODO: rename
+    public boolean isReviewableBy2 (User editor) {
+        if (editor == null)
+            return false;
+        else if (editor.getRole().canReviewUsers())
+            return state == UserState.NEEDS_REVIEW;
+        else if (editor.getRole().canFinalizeUsers())
+            return true;
+        else 
+            return false;
+    }
+
+    // TODO: rename
+    public boolean isApprovableBy2 (User editor) {
+        if (editor == null)
+            return false;
+        else if (editor.getRole().canAdmitUsers())
+            return state == UserState.REGISTERED;
+        else if (editor.getRole().canFinalizeUsers())
+            return true;
+        else
+            return false;
+    }
+    
+    // TODO: rename
+    public boolean isViewableBy2 (User viewer) {
+        if (viewer == null)
+            return false;
+        else if (viewer == this || viewer.getUserId() == getUserId())
+            return true;
+        else if (viewer.getRole().canViewUsers())
             return true;
         else
             return false;
@@ -483,10 +532,24 @@ public class User {
                 return -1;
             else if (b == null)
                 return 1;
-            
+       
+            /*
             int alevel = (a.isAdmin() ? 2 : 0) + (a.isAdmissions() ? 1 : 0);
             int blevel = (b.isAdmin() ? 2 : 0) + (b.isAdmissions() ? 1 : 0);
             return blevel - alevel;
+            */
+            
+            //return b.getRole().getName().compareToIgnoreCase(a.getRole().getName());
+           
+            int alevel = a.getRole().getLevel();
+            int blevel = b.getRole().getLevel();
+            
+            if (alevel < blevel)
+                return 1;
+            else if (alevel > blevel)
+                return -1;
+            else
+                return b.getRole().getName().compareToIgnoreCase(a.getRole().getName());
             
             /*
             if (a.isAdmin() == b.isAdmin())

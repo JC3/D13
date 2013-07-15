@@ -30,7 +30,7 @@ try {
     // no such user. do nothing.
     return;
 }
-if (!editee.isEditableBy(editor) && !editee.isViewableBy(editor))
+if (!editee.isEditableBy2(editor) && !editee.isViewableBy2(editor))
     return; // permission denied. do nothing.
 if (defaults == null)
     defaults = new SurveyBean(editee);
@@ -50,10 +50,25 @@ String error_html = (error == null ? null : Util.html(error));
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="disorient.css">
 <title>Disorient</title>
+<script language="JavaScript" type="text/javascript">
+function setVisible (id, visible) {
+    document.getElementById(id).style.display = (visible ? 'block' : 'none');
+}
+function isChecked (id) {
+    return document.getElementById(id).checked;
+}
+function updateVisibility () {
+    var b = isChecked("tixWanted_1");
+    setVisible("numWanted", b);
+    b = isChecked("tixForSale_1");
+    setVisible("numForSale", b);
+}
+</script>
 </head>
-<body>
+<body onload="updateVisibility();">
 
 <dis:header/>
+<div class="nav"><a href="<%=Util.html(success_target) %>">Go Back</a></div>
 
 <% if (error != null) { %>
 <div class="error">Error: <%=error_html%></div>
@@ -79,14 +94,14 @@ to expand shade as necessary.</p>
 List<Question> qs = ApprovalQuestions.getQuestions();
 QuestionForm.writeQuestions(out, qs, defaults, true);
 %>
-<% if (editee.isEditableBy(editor)) { %>
+<% if (editee.isEditableBy2(editor)) { %>
 <div style="text-align:center"><input class="dbutton" type="submit" value="Continue"></div>
 <% } %>
 </form>
 
-<a href="home.jsp">Home</a>
-
 </div>
 
+<div class="nav"><a href="<%=Util.html(success_target) %>">Go Back</a></div>
+<dis:footer/>
 </body>
 </html>

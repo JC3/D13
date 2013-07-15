@@ -33,6 +33,10 @@ public class RegistrationBean {
     private String vehicleComments;
     private boolean needRideTo;
     private boolean needRideFrom;
+    private boolean tixForSale;
+    private String numForSale;
+    private boolean tixWanted;
+    private String numWanted;
     private Long groupLeaderId;
     private String personalProject;
     private String comments;
@@ -287,6 +291,38 @@ public class RegistrationBean {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public boolean isTixForSale() {
+        return tixForSale;
+    }
+
+    public String getNumForSale() {
+        return numForSale;
+    }
+
+    public boolean isTixWanted() {
+        return tixWanted;
+    }
+
+    public String getNumWanted() {
+        return numWanted;
+    }
+
+    public void setTixForSale(boolean tixForSale) {
+        this.tixForSale = tixForSale;
+    }
+
+    public void setNumForSale(String numForSale) {
+        this.numForSale = numForSale;
+    }
+
+    public void setTixWanted(boolean tixWanted) {
+        this.tixWanted = tixWanted;
+    }
+
+    public void setNumWanted(String numWanted) {
+        this.numWanted = numWanted;
     }
     
 }
