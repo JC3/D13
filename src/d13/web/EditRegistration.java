@@ -60,7 +60,7 @@ public class EditRegistration {
                         
             if (sendmail)
                 QueuedEmail.queueNotification(QueuedEmail.TYPE_REVIEW, editee);
-            
+           
         } catch (InvocationTargetException x) {
             
             failed = true;

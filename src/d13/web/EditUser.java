@@ -107,7 +107,7 @@ public class EditUser {
                 editee.setLocationOther(bean.getLocationOther());
                 editee.setEmergencyContact(bean.getEmergencyContact());
                 HibernateUtil.getCurrentSession().merge(editee);
-                                     
+                
             } else {
                 
                 throw new IllegalArgumentException("Invalid action.");

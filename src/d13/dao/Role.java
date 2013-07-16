@@ -13,6 +13,7 @@ public class Role {
     public static String REVIEW_USERS = "reviewu";
     public static String ADMIT_USERS = "admitu";
     public static String FINALIZE_USERS = "finalizeu";
+    public static String VIEW_LOGS = "viewlogs";
     
     private long roleId;
     private String name = "";
@@ -22,6 +23,7 @@ public class Role {
     private boolean reviewUsers;
     private boolean admitUsers;
     private boolean finalizeUsers;
+    private boolean viewLogs;
     private Set<String> rights; 
     
     Role () {
@@ -62,6 +64,10 @@ public class Role {
     public boolean canFinalizeUsers () {
         return finalizeUsers;
     }
+   
+    public boolean canViewLogs () {
+        return viewLogs;
+    }
     
     public Set<String> getRights () {
         if (rights == null) {
@@ -71,6 +77,7 @@ public class Role {
             if (reviewUsers) rights.add(REVIEW_USERS);
             if (admitUsers) rights.add(ADMIT_USERS);
             if (finalizeUsers) rights.add(FINALIZE_USERS);
+            if (viewLogs) rights.add(VIEW_LOGS);
             rights = Collections.unmodifiableSet(rights);
         }
         return rights;

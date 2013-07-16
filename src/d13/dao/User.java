@@ -1,5 +1,6 @@
 package d13.dao;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -47,9 +48,11 @@ public class User {
     public RegistrationForm registration;
     public ApprovalSurvey approval;
     public UserState state = UserState.NEW_USER;
+    public DateTime approvedOn;
     public String adminComment;
     public boolean termsAgreed;
     public Set<Cell> cells = new HashSet<Cell>(0);
+    public List<ActivityLogEntry> activityLog = new ArrayList<ActivityLogEntry>();
     
     User () {
     }
@@ -198,6 +201,11 @@ public class User {
         return state;
     }
     
+    @DataView(i=13, n="Approval Date") 
+    public DateTime getApprovedOn () {
+        return approvedOn;
+    }
+    
     @DataView(i=14, n="Administrator Comment")
     public String getAdminComment() {
         return adminComment;
@@ -260,6 +268,15 @@ public class User {
         this.state = (state == null ? UserState.NEW_USER : state);       
     }
     
+    public void setApprovedOnNow () {
+        approvedOn = DateTime.now();
+    }
+    
+    public void setApprovedOnNowIfNotSet () {
+        if (approvedOn == null)
+            setApprovedOnNow();
+    }
+    
     public void setAdminComment(String adminComment) {
         this.adminComment = adminComment;
     }
@@ -267,7 +284,29 @@ public class User {
     public void setTermsAgreed (boolean termsAgreed) {
         this.termsAgreed = termsAgreed;
     }
+   
+    public List<ActivityLogEntry> getActivityLog () {
+        return Collections.unmodifiableList(activityLog);
+    }
+
+    public void addActivityLogEntry (ActivityLogEntry entry) {
+        if (entry != null)
+            activityLog.add(entry);
+    }
     
+    public void addBasicActivityLogEntry (String description) {
+        addActivityLogEntry(new ActivityLogEntry(this, description));
+    }
+    
+    public void addBasicActivityLogEntry (String description, User who) {
+        addActivityLogEntry(new ActivityLogEntry(this, description, who));
+    }
+
+    public void addStateActivityLogEntry (User editor, UserState old) {
+        String description = String.format("Changed from %s to %s.", old.toString(), state.toString());
+        addActivityLogEntry(new ActivityLogEntry(this, description, editor));
+    }
+
     /*
     public boolean isEditableBy (User editor) {
         if (editor == null)
@@ -346,14 +385,23 @@ public class User {
             return false;
     }
 
+    public boolean isFinalizableBy (User editor) {
+        if (editor == null)
+            return false;
+        else if (editor.getRole().canFinalizeUsers())
+            return (state != UserState.NEW_USER && state != UserState.REGISTERED);
+        else
+            return false;
+    }
+    
     // TODO: rename
     public boolean isApprovableBy2 (User editor) {
         if (editor == null)
             return false;
         else if (editor.getRole().canAdmitUsers())
-            return state == UserState.REGISTERED;
+            return (state == UserState.REGISTERED || state == UserState.APPROVE_PENDING || state == UserState.REJECT_PENDING);
         else if (editor.getRole().canFinalizeUsers())
-            return true;
+            return (state != UserState.NEW_USER && state != UserState.REGISTERED);
         else
             return false;
     }
@@ -436,6 +484,40 @@ public class User {
 
     }
     
+    public static List<User> findReviewers (Session session) {
+        
+        @SuppressWarnings("unchecked")
+        List<User> users = (List<User>)session
+                .createQuery("from User as user where user.role.reviewUsers = true")
+                .list();
+        
+        return users;
+        
+    }
+    
+    public static List<User> findAdmissions (Session session) {
+        
+        @SuppressWarnings("unchecked")
+        List<User> users = (List<User>)session
+                .createQuery("from User as user where user.role.admitUsers = true")
+                .list();
+        
+        return users;
+
+    }
+    
+    public static List<User> findFinalizers (Session session) {
+        
+        @SuppressWarnings("unchecked")
+        List<User> users = (List<User>)session
+                .createQuery("from User as user where user.role.finalizeUsers = true")
+                .list();
+        
+        return users;
+
+    }
+    
+    /*
     public static List<User> findAdmins (Session session) {
         
         @SuppressWarnings("unchecked")
@@ -471,6 +553,7 @@ public class User {
         return findAdmissions(HibernateUtil.getCurrentSession());
         
     }
+    */
     
     public static void addUser (User user) {
         

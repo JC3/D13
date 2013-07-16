@@ -24,7 +24,7 @@ if (success_target == null || success_target.trim().isEmpty()) success_target = 
 // there will be only one row in result. cols and row.values will be the same size.
 List<String> cols = view.getColumns();
 DataViewer.Row row = view.getRows().get(0);
-    
+
 int profileBorder = view.getProfileBorderIndex();
 int registrationBorder = view.getRegistrationBorderIndex();
 int cellBorder = view.getCellBorderIndex();
@@ -37,8 +37,14 @@ User editee = view.getSingleUser();
 boolean canEdit = editee.isEditableBy2(editor);
 boolean canReview = editee.isReviewableBy2(editor);
 boolean canAdmit = editee.isApprovableBy2(editor);
+boolean canFinalize = editee.isFinalizableBy(editor);
 boolean needsReview = canReview && (editee.getState() == UserState.NEEDS_REVIEW);
 boolean needsAdmit = canAdmit && (editee.getState() == UserState.REGISTERED);
+boolean needsFinalize = canFinalize && (editee.getState() == UserState.APPROVE_PENDING || editee.getState() == UserState.REJECT_PENDING);
+
+List<ActivityLogEntry> logs = null;
+if (editor.getRole().canViewLogs())
+    logs = editee.getActivityLog();
 
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -53,7 +59,12 @@ table.form td.link { font-size: smaller; color: #ff8080; text-align: center; ver
 td.left { text-align: right; vertical-align: top; }
 td.wide { text-align: center; vertical-align: top; }
 table.form td.cell { border: 0; text-indent: 4ex; vertical-align: top; border-top: 1px solid #202020; }
+table.form td.log { border: 0; text-indent: 2ex; vertical-align: top; font-size: smaller; }
+table.form td.log2 { border: 0; text-indent: 4ex; vertical-align: top; font-size: smaller; }
 table.form td.title { text-align: center; font-weight: bold; color: #ff8080; }
+table.form td.status { text-align: center; color: #ff8000; }
+.approved { color: #00ff00; font-weight: bold; }
+.rejected { color: #ff0000; font-weight: bold; }
 </style>
 <script language="JavaScript" type="text/javascript">
 function checkc () {
@@ -63,8 +74,7 @@ function checkc () {
         return false;
     }
     if (!document.getElementById("c1").checked ||
-        !document.getElementById("c2").checked ||
-        !document.getElementById("c3").checked) {
+        !document.getElementById("c2").checked) {
         alert("You must read and check the checkboxes.");
         return false;
     }
@@ -85,6 +95,10 @@ marked as "Reviewed", this user cannot be accepted or rejected!</p></div>
 <% } else if (needsAdmit) { %>
 <div class="notice"><p>This user's registration application is complete. Please review the form below then use the buttons
 at the bottom to make an approval decision.</p></div>
+<% } else if (needsFinalize) {%>
+<div class="notice"><p>This user has been approved/rejected and that decision is pending. Please review the form below then use
+the buttons at the bottom to confirm a final decision. For a user to be officially accepted or rejected, you <em>must</em> confirm
+here.</div>
 <% } %>
 
 <table class="form">
@@ -122,9 +136,26 @@ at the bottom to make an approval decision.</p></div>
 <%   } %>
 <% } %>
 
+<% if (logs != null) { %>
+<tr><td class="key" colspan="2">Activity Log:
+  <% if (logs.isEmpty()) { %>
+     <tr><td class="log" colspan="2">Empty.
+  <% } else {
+       DefaultDataConverter ddc = new DefaultDataConverter();
+       for (ActivityLogEntry e:logs) { 
+          String datestr = Util.html(ddc.asString(e.getTime()));
+          String whostr = Util.html(e.getByWho().getEmail());
+          String descstr = Util.html(e.getDescription()); %>
+          <tr><td class="log" colspan="2"><%=datestr%>, <a href="mailto:<%=whostr%>"><%=whostr%></a>:
+          <tr><td class="log2" colspan="2"><%=descstr%>
+  <%   }
+     } %>
+<% } %>
+
 </table>
 
 <% if (needsReview) { %>
+<% /*==========================================================================================================*/ %>
 <form action="do_approval.jsp" method="post">
 <input type="hidden" name="fail_target" value="<%= Util.html(fail_target) %>">
 <input type="hidden" name="success_target" value="<%= Util.html(success_target) %>">
@@ -135,7 +166,9 @@ at the bottom to make an approval decision.</p></div>
 <tr><td class="wide" style="padding-top: 1ex;"><input class="dbutton" type="submit" value="Looks good!">
 </table>
 </form>
-<% } else if (needsAdmit) { %>
+<% /*==========================================================================================================*/ %>
+<% } else if (canAdmit && !needsFinalize) { %>
+<% /*==========================================================================================================*/ %>
 <form action="do_approval.jsp" method="post">
 <input type="hidden" name="fail_target" value="<%= Util.html(fail_target) %>">
 <input type="hidden" name="success_target" value="<%= Util.html(success_target) %>">
@@ -144,18 +177,65 @@ at the bottom to make an approval decision.</p></div>
 <tr><td colspan="2" class="title">Approve / Reject User
 <tr><td class="left"><input class="dcheckbox" type="checkbox" name="c1" id="c1" value="1"><td>I have thoroughly reviewed the above application and if I approve it, I believe that <%=Util.html(editee.getRealName()) %> is a DOer who will positively contribute to our camp.
 <tr><td class="left"><input class="dcheckbox" type="checkbox" name="c2" id="c2" value="1"><td>I understand that I have been trusted with the responsibility to enforce our maximum camper limit so that we can provide <%=Util.html(editee.getRealName()) %> with food, water, power, and a place to live for a week.
-<tr><td class="left"><input class="dcheckbox" type="checkbox" name="c3" id="c3" value="1"><td>I understand that once I approve/reject a user, the user will be notified immediately and only an administrator may change their status.
 <% if (!editee.isInCells()) { %>
 <tr><td colspan="2" style="text-align:center;"><span style="color: red;">Warning: This user has not signed up for any volunteer cells!</span>
 <% } %>
 <tr><td colspan="2" style="text-align:center;">Action: <select class="dselect" name="action" id="action">
     <option value="">--- Select Action ---</option>
-    <option value="approve">Approve</option>
-    <option value="reject">Reject</option>
+    <option value="approve"<%= editee.getState() == UserState.APPROVE_PENDING ? " selected" : "" %>>Approve</option>
+    <option value="reject"<%= editee.getState() == UserState.REJECT_PENDING ? " selected" : "" %>>Reject</option>
 </select>
 <tr><td class="wide" colspan="2"><input class="dbutton" type="submit" value="Apply" onclick="return checkc();">
 </table>
 </form>
+<% /*==========================================================================================================*/ %>
+<% } else if (canFinalize) { %>
+<% /*==========================================================================================================*/ %>
+<form action="do_approval.jsp" method="post">
+<input type="hidden" name="fail_target" value="<%= Util.html(fail_target) %>">
+<input type="hidden" name="success_target" value="<%= Util.html(success_target) %>">
+<input type="hidden" name="user_id" value="<%= editee.getUserId() %>">
+<table class="form" style="margin-top: 1ex;">
+<tr><td colspan="2" class="title">Confirm Approve / Reject User
+<tr><td colspan="2" class="status">This user is: <%
+boolean selectApprove = false, selectReject = false;
+String labelApprove = "Confirm Approve", labelReject = "Confirm Reject";
+switch (editee.getState()) {
+case APPROVE_PENDING: 
+    out.println("<span class=\"approved\">Pending Approval</span>");
+    selectApprove = true;
+    break;
+case REJECT_PENDING: 
+    out.println("<span class=\"rejected\">Pending Rejection</span>");
+    selectReject = true;
+    break;
+case APPROVED: 
+    out.println("<span class=\"approved\">Approved (Finalized)</span>");
+    selectApprove = true;
+    labelApprove = "Approved";
+    labelReject = "Change to Rejected";
+    break;
+case REJECTED: 
+    out.println("<span class=\"rejected\">Rejected (Finalized)</span>");
+    selectReject = true;
+    labelApprove = "Change to Approved";
+    labelReject = "Rejected";
+    break;
+default: 
+    break; // shouldn't happen
+}
+%>
+<tr><td class="left"><input class="dcheckbox" type="checkbox" name="c1" id="c1" value="1"><td>I understand that the admissions team has made a decision regarding <%=editee.getRealName() %> based on their review, and I will try to honor that decision if it is best for Disorient, regardless of my personal feelings.
+<tr><td class="left"><input class="dcheckbox" type="checkbox" name="c2" id="c2" value="1"><td>I understand that <%=editee.getRealName() %> will be notified immediately of this decision. While I can change the decision later, I accept all responsibility for any drama that may result.
+<tr><td colspan="2" style="text-align:center;">Action: <select class="dselect" name="action" id="action">
+    <option value="">--- Select Action ---</option>
+    <option value="final_approve"<%= selectApprove ? " selected" : "" %>><%=labelApprove %></option>
+    <option value="final_reject"<%= selectReject ? " selected" : "" %>><%=labelReject %></option>
+</select>
+<tr><td class="wide" colspan="2"><input class="dbutton" type="submit" value="Apply" onclick="return checkc();">
+</table>
+</form>
+<% /*==========================================================================================================*/ %>
 <% } %>
 
 <div class="nav"><a href="<%=Util.html(success_target) %>">Go Back</a></div>

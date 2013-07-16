@@ -12,6 +12,7 @@
         <property name="reviewUsers" not-null="true"/>
         <property name="admitUsers" not-null="true"/>
         <property name="finalizeUsers" not-null="true"/>
+        <property name="viewLogs" not-null="true"/>
     </class>
 
     <class name="d13.dao.RuntimeOptions$RuntimeOption" table="options">
@@ -90,6 +91,14 @@
         
     </class>
     
+    <class name="d13.dao.ActivityLogEntry" table="activity_log">
+        <id name="entryId"><generator class="native"/></id>
+        <property name="time" not-null="true" type="d13.dao.types.DateTimeType"/>
+        <many-to-one name="toWho" class="d13.dao.User" not-null="true"/>
+        <many-to-one name="byWho" class="d13.dao.User"/>
+        <property name="description"/>
+    </class>
+    
     <class name="d13.dao.User" table="users">
         <id name="userId"><generator class="native"/></id>
         <property name="email" length="254" not-null="true" unique="true"/>
@@ -109,11 +118,17 @@
         <one-to-one name="registration" class="d13.dao.RegistrationForm" cascade="save-update"/>
         <one-to-one name="approval" class="d13.dao.ApprovalSurvey" cascade="save-update"/>
         <property name="state" type="d13.dao.types.UserStateType" not-null="true"/>
+        <property name="approvedOn" type="d13.dao.types.DateTimeType"/>
         <property name="adminComment" type="text"/>
         <set name="cells" table="users_cells">
             <key column="userId"/>
             <many-to-many column="cellId" class="d13.dao.Cell"/>
         </set>
+        <list name="activityLog" cascade="all">
+            <key column="toWho"/>
+            <index column="`index`"/>
+            <one-to-many class="d13.dao.ActivityLogEntry"/>
+        </list>
     </class>
     
     <class name="d13.dao.Cell" table="cells">

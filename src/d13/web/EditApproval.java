@@ -44,29 +44,62 @@ public class EditApproval {
         boolean action_approve = "approve".equalsIgnoreCase(context.getRequest().getParameter("action"));
         boolean action_reject = "reject".equalsIgnoreCase(context.getRequest().getParameter("action"));
         boolean action_review = "review".equalsIgnoreCase(context.getRequest().getParameter("action"));
+        boolean action_final_approve = "final_approve".equalsIgnoreCase(context.getRequest().getParameter("action"));
+        boolean action_final_reject = "final_reject".equalsIgnoreCase(context.getRequest().getParameter("action"));
+   
+        UserState oldState = user.getState();
         
-        if (action_approve || action_reject) {
+        if (action_final_approve || action_final_reject) {
+        
+            // TODO: error message if already finalized to reduce confusion on concurrent edits
 
-            // TODO: error message if user already approved or rejected, to notify admins that an editing
-            // conflict just occurred.
+            if (!user.isFinalizableBy(session.getUser())) {
+                failed = true;
+                errorMessage = "Permission denied.";
+                return;
+            }
             
+            if (action_final_approve && user.getState() != UserState.APPROVED) {
+                user.setState(UserState.APPROVED);
+                user.setApprovedOnNowIfNotSet();
+                QueuedEmail.queueNotification(QueuedEmail.TYPE_APPROVED, user);
+            } else if (action_final_reject && user.getState() != UserState.REJECTED) { 
+                user.setState(UserState.REJECTED);
+                QueuedEmail.queueNotification(QueuedEmail.TYPE_REJECTED, user);
+            }
+         
+        } else if (action_approve || action_reject) {
+
+            // note: it's ok to change status from approval (pending) to reject (pending)
+            // or vice versa.
+                      
             if (!user.isApprovableBy2(session.getUser())) {
                 failed = true;
                 errorMessage = "Permission denied.";
                 return; // permission denied
             }
-          
-            if (action_approve && user.getState() != UserState.APPROVED) {
-                user.setState(UserState.APPROVED);
-                QueuedEmail.queueNotification(QueuedEmail.TYPE_APPROVED, user);
-            } else if (action_reject && user.getState() != UserState.REJECTED) { 
-                user.setState(UserState.REJECTED);
-                QueuedEmail.queueNotification(QueuedEmail.TYPE_REJECTED, user);
-            }
+            
+            boolean notify = (user.getState() != UserState.APPROVE_PENDING && user.getState() != UserState.REJECT_PENDING);
+            
+            if (action_approve)
+                user.setState(UserState.APPROVE_PENDING);
+            else if (action_reject)
+                user.setState(UserState.REJECT_PENDING);
+            
+            if (notify)
+                QueuedEmail.queueNotification(QueuedEmail.TYPE_FINALIZE, user);
+            
+            //if (action_approve && user.getState() != UserState.APPROVED) {
+            //    user.setState(UserState.APPROVED);
+            //    QueuedEmail.queueNotification(QueuedEmail.TYPE_APPROVED, user);
+            //} else if (action_reject && user.getState() != UserState.REJECTED) { 
+            //    user.setState(UserState.REJECTED);
+            //    QueuedEmail.queueNotification(QueuedEmail.TYPE_REJECTED, user);
+            //}
             
         } else if (action_review) {
         
-            // TODO: error message if already reviewed, same reason as above.
+            // TODO: error message if already reviewed to reduce confusion on concurrent edits
             
             if (!user.isReviewableBy2(session.getUser())) {
                 failed = true;
@@ -87,6 +120,9 @@ public class EditApproval {
         
         }                    
     
+        if (user.getState() != oldState)
+            user.addStateActivityLogEntry(session.getUser(), oldState);
+        
     }
     
     public boolean isFailed () {

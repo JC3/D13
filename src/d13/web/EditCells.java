@@ -36,7 +36,7 @@ public class EditCells {
                 throw new SecurityException("Permission denied.");
             
             applyCellChanges(context.getRequest().getParameterMap(), editee);
-            
+
         } catch (Throwable t) {
             
             failed = true;

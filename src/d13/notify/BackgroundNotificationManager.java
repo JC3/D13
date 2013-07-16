@@ -20,7 +20,7 @@ public class BackgroundNotificationManager implements ServletContextListener {
 
     public static String RT_ENABLE_NOTIFY = "notify.enabled"; // "1" to enable, else disable
     
-    private static final int POLL_INTERVAL = 3000;
+    private static final int POLL_INTERVAL = 60000;
 
     private ExecutorService executor;
     private Notifier notifier;
@@ -177,9 +177,11 @@ public class BackgroundNotificationManager implements ServletContextListener {
                 tx = session.beginTransaction();
                 user = queued.fetchUser(session);
                 if (queued.getType() == QueuedEmail.TYPE_REVIEW)
-                    recipients = User.findAdmins(session);
+                    recipients = User.findReviewers(session);
                 else if (queued.getType() == QueuedEmail.TYPE_ACCEPTED)
                     recipients = User.findAdmissions(session);
+                else if (queued.getType() == QueuedEmail.TYPE_FINALIZE)
+                    recipients = User.findFinalizers(session);
                 else
                     recipients = null;
                 tx.commit();
@@ -203,6 +205,9 @@ public class BackgroundNotificationManager implements ServletContextListener {
                 break;
             case QueuedEmail.TYPE_ACCEPTED:
                 AcceptedNotificationEmail.sendNow(user, recipients, config);
+                break;
+            case QueuedEmail.TYPE_FINALIZE:
+                PendingNotificationEmail.sendNow(user, recipients, config);
                 break;
             case QueuedEmail.TYPE_APPROVED:
                 ApprovalEmail.sendNow(user, config);
