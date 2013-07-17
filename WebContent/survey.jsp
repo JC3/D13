@@ -80,9 +80,9 @@ function updateVisibility () {
 need a little more information. Please fill out this form so that we can gather all the necessary
 information for a smooth and seamless DISOR13NT. We will be sending out emails periodically to
 keep camp members updated.</p>
-
-<p>While Disorient provides all tent campers with shade, we require that each camper purchase and
-bring with them one 10 by 10 orange tarp (<a href="http://www.tents-canopy.com/orange-tarp-10x10.html">http://www.tents-canopy.com/orange-tarp-10x10.html</a>) 
+ 
+<p>While Disorient tries to provide all our tent campers with shade, we require that each camper purchase and
+bring with them one (or more!) 10 by 10 orange tarp (<a href="http://www.tents-canopy.com/orange-tarp-10x10.html">http://www.tents-canopy.com/orange-tarp-10x10.html</a>) 
 to expand shade as necessary.</p> 
 
 <form action="do_editsurvey.jsp" method="post">

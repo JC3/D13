@@ -35,6 +35,9 @@ if (user != null) {
     if (role_html.isEmpty()) role_html = null;
 }
 
+PageContext pageContext = (PageContext)getJspContext();
+String root = pageContext.getServletContext().getContextPath();
+
 /*List<NavButton> buttons = new ArrayList<NavButton>();
 
 if (nav == null || nav.isEmpty()) {
@@ -48,7 +51,7 @@ if (nav == null || nav.isEmpty()) {
 <table class="header" width="100%" cellspacing="0" cellpadding="0">
 <tr>
   <td width="100%">
-      <img src="media/logo.gif" alt="Disorient Camp Admin">
+      <img src="<%=root%>/media/logo.gif" alt="Disorient Registration">
   </td>
   <td>
       <div class="you">
@@ -59,7 +62,7 @@ if (nav == null || nav.isEmpty()) {
       <% if (role_html != null) { %>
       <span class="rolenotify">Role: <%=role_html %></span><br>
       <% } %>
-      <a href="do_logout.jsp">Log Out</a>
+      <a href="<%=root%>/do_logout.jsp">Log Out</a>
 <% } %>
       </div>
   </td>

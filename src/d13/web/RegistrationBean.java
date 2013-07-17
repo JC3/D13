@@ -25,7 +25,7 @@ public class RegistrationBean {
     private String departureTime;
     private Long drivingFromToId;
     private String drivingFromToIdOther;
-    private boolean rv;
+    private Long rvTypeId;
     private boolean driving;
     private String rideSpaceTo;
     private String rideSpaceFrom;
@@ -129,8 +129,8 @@ public class RegistrationBean {
         return drivingFromToIdOther;
     }
 
-    public boolean isRv() {
-        return rv;
+    public Long getRvTypeId() {
+        return rvTypeId;
     }
 
     public boolean isDriving() {
@@ -249,8 +249,8 @@ public class RegistrationBean {
         this.drivingFromToIdOther = drivingFromToIdOther;
     }
 
-    public void setRv(boolean rv) {
-        this.rv = rv;
+    public void setRvTypeId(Long rvTypeId) {
+        this.rvTypeId = rvTypeId;
     }
 
     public void setDriving(boolean driving) {

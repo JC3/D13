@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import d13.dao.Location;
+import d13.dao.RVSelection;
 
 public class RegistrationQuestions {
 
@@ -53,7 +54,7 @@ public class RegistrationQuestions {
         
         // end if
         
-        q = Question.newDropList("arrivalDate", "Date of arrival on the playa.", null);
+        q = Question.newDropList("arrivalDate", "Date of arrival on the playa.", "Want to arrive early and help Alpha Camp build Disorient?");
         q.addChoice("8/19", "8/19/2013");
         q.addChoice("8/20", "8/20/2013");
         q.addChoice("8/21", "8/21/2013");
@@ -73,7 +74,7 @@ public class RegistrationQuestions {
         q.addChoice("Late Night", "Night");
         qs.add(q);
         
-        q = Question.newDropList("departureDate", "Date of departure from the playa.", null);
+        q = Question.newDropList("departureDate", "Date of departure from the playa.", "Remember, you can get up to a $250 rebate if you stay for Disengage!");
         q.addChoice("8/31", "8/31/2013");
         q.addChoice("9/1", "9/1/2013");
         q.addChoice("9/2", "9/2/2013");
@@ -99,9 +100,17 @@ public class RegistrationQuestions {
         q.addOtherChoice(Location.OTHER.toDisplayString(), Location.OTHER.toDBId());
         qs.add(q);
 
-        q = Question.newSingleChoice("rv", "Are you staying in an R.V.?", null);
+        /*q = Question.newSingleChoice("rv", "Are you staying in an R.V.?", null);
         q.addChoice("Yes", 1);
         q.addChoice("No", 0);
+        qs.add(q);*/
+        
+        q = Question.newSingleChoice("rvTypeId", 
+                "Are you *responsible* for an R.V.?", 
+                "The person responsible for each R.V. will be responsible for paying the fee for that R.V. Please coordinate with the others in your R.V. to determine who will be responsible. <em>All R.V. fees must be paid or we will not place your R.V.!</em>");
+        q.addChoice("No, and I am not staying in an R.V.", RVSelection.NOT_STAYING_IN.toDBId());
+        q.addChoice("No, but I am staying in somebody else's R.V.", RVSelection.STAYING_IN.toDBId());
+        q.addChoice("Yes, I am responsible for one R.V.", RVSelection.RESPONSIBLE.toDBId());
         qs.add(q);
         
         q = Question.newSingleChoice("driving", "Are you planning on bringing a vehicle to the playa?", null);

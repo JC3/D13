@@ -73,7 +73,7 @@
 		<property name="departureTime"/>
 		<property name="drivingFromTo" type="d13.dao.types.LocationType"/>
 		<property name="drivingFromToOther" type="text"/>
-		<property name="rv"/>
+		<property name="rvType" type="d13.dao.types.RVSelectionType"/>
 		<property name="driving"/>
 		<property name="rideSpaceTo"/>
 		<property name="rideSpaceFrom"/>

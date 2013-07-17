@@ -48,6 +48,11 @@ public class EditRegistration {
             HibernateUtil.getCurrentSession().evict(form);
             HibernateUtil.getCurrentSession().evict(editee);
             BeanUtils.copyProperties(form, bean);
+            // hack to produce error message for rv question change
+            if (context.getRequest().getParameter("rvTypeId") == null ||
+                context.getRequest().getParameter("rvTypeId").trim().isEmpty())
+                throw new IllegalArgumentException("You must specify whether you are staying in an R.V. or not.");
+            // end hack - can be removed once RVSelection.NEEDS_CLARIFICATION is no longer needed.
             form.validateMisc();
             if (!form.isCompleted())
                 form.setCompletionTimeNow();

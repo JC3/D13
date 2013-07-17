@@ -30,7 +30,7 @@ public class RegistrationForm {
     private String departureTime = "";
     private Location drivingFromTo;
     private String drivingFromToOther;
-    private boolean rv;
+    private RVSelection rvType = RVSelection.NOT_STAYING_IN;
     private boolean driving;
     private String rideSpaceTo = "";
     private String rideSpaceFrom = "";
@@ -180,8 +180,12 @@ public class RegistrationForm {
     }
 
     @DataView(i=19, n="R.V.?")
-    public boolean isRv() {
-        return rv;
+    public RVSelection getRvType() {
+        return rvType;
+    }
+    
+    public Long getRvTypeId () {
+        return rvType == null ? null : (long)rvType.toDBId();
     }
 
     @DataView(i=20, n="Driving?")
@@ -347,8 +351,19 @@ public class RegistrationForm {
         setDrivingFromToOther(drivingFromToOther);
     }
 
-    public void setRv(boolean rv) {
-        this.rv = rv;
+    public void setRvType(RVSelection rvType) {
+        if (rvType == null)
+            throw new IllegalArgumentException("R.V. selection must be specified.");
+        this.rvType = rvType;
+    }
+    
+    public void setRvTypeId (Long id) {
+        if (id == null)
+            throw new IllegalArgumentException("R.V. selection must be specified.");
+        RVSelection sel = RVSelection.fromDBId((int)(long)id);
+        if (sel == null)
+            throw new IllegalArgumentException("Invalid ID for RV selection.");
+        this.rvType = sel;
     }
 
     public void setDriving(boolean driving) {

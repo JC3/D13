@@ -24,6 +24,13 @@ public class BackgroundNotificationManager implements ServletContextListener {
 
     private ExecutorService executor;
     private Notifier notifier;
+    private int pollInterval = POLL_INTERVAL;
+    private Boolean enableOverride = null;
+    
+    public void overrideConfiguration (boolean enable, int pollInterval) {
+        this.enableOverride = enable;
+        this.pollInterval = pollInterval;
+    }
     
     @Override public void contextInitialized (ServletContextEvent e) {
         executor = Executors.newSingleThreadExecutor();
@@ -37,7 +44,7 @@ public class BackgroundNotificationManager implements ServletContextListener {
         executor = null;
     }
     
-    private static class Notifier implements Runnable {
+    private class Notifier implements Runnable {
 
         private final Object timer = new Object();
         private volatile boolean terminate = false;
@@ -47,7 +54,7 @@ public class BackgroundNotificationManager implements ServletContextListener {
             do {
                 synchronized (timer) {
                     try {
-                        timer.wait(POLL_INTERVAL);
+                        timer.wait(pollInterval);
                     } catch (InterruptedException x) {
                     }
                 }                
@@ -65,20 +72,29 @@ public class BackgroundNotificationManager implements ServletContextListener {
 
             // load configuration
             
-            session = HibernateUtil.openSession();
-            boolean enabled = "1".equals(RuntimeOptions.getOption(RT_ENABLE_NOTIFY, "1", session));
-            if (enabled && enablestate != 1) {
-                enablestate = 1;
-                System.out.println("Notifications enabled.");
-            } else if (!enabled && enablestate != 0) {
-                enablestate = 0;
-                System.out.println("Notifications disabled.");
+            boolean enabled;
+            try {
+                session = HibernateUtil.openSession();
+                if (enableOverride != null)
+                    enabled = enableOverride;
+                else
+                    enabled = "1".equals(RuntimeOptions.getOption(RT_ENABLE_NOTIFY, "1", session));
+                if (enabled && enablestate != 1) {
+                    enablestate = 1;
+                    System.out.println("Notifications enabled.");
+                } else if (!enabled && enablestate != 0) {
+                    enablestate = 0;
+                    System.out.println("Notifications disabled.");
+                }
+                if (enabled)
+                    config = Configuration.fromDatabase(session);
+                session.close();
+                session = null;
+            } catch (Throwable t) {
+                System.err.println("When loading configuration options: " + t.getMessage());
+                enabled = false;
             }
-            if (enabled)
-                config = Configuration.fromDatabase(session);
-            session.close();
-            session = null;
-            
+                
             if (!enabled)
                 return !terminate;
             
