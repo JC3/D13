@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.hibernate.Hibernate;
 
 import d13.dao.QueuedEmail;
 import d13.dao.RegistrationForm;
@@ -44,7 +45,9 @@ public class EditRegistration {
             RegistrationForm form = editee.getRegistration();
             boolean sendmail = false;
             
+            
             // validate all before updating
+            Hibernate.initialize(editee.getRvDueItemNoInit()); // hack forces init of rv due item which may be updated by registration form changes
             HibernateUtil.getCurrentSession().evict(form);
             HibernateUtil.getCurrentSession().evict(editee);
             BeanUtils.copyProperties(form, bean);

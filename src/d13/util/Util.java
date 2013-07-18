@@ -9,6 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringEscapeUtils;
 
 public class Util {
+    
+    public static String intAmountToString (int cents) {
+        
+        float dollars = (float)cents / 100.f;
+        return String.format("$%.2f", dollars);
+        
+    }
 
     public static String getCompleteUrl (HttpServletRequest request) {
         StringBuffer requestURL = request.getRequestURL();

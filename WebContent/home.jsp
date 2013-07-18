@@ -43,9 +43,8 @@ if (!user.isTermsAgreed()) {
 <div class="notice">Your registration application has been reviewed and approved (yay!), but you have not filled out your approval
 survey yet. This is required. Please click "approval survey" below to do this!</div>
   <% } else { %>
-<div class="message">Your registration application has been reviewed and approved, and you're all ready to go! We're currently working
-on our due payment service and will notify you when it's ready. Sit tight! Please <a href="mailto:camp@disorient.info?subject=Disorient 2013">contact us</a>
-if you have any questions. See you on the playa!!</div>
+<div class="message">Your registration application has been reviewed and approved, and you have filled out your approval survey (thanks!).
+All that's left is to pay your dues. Please click "pay dues" below to do this! See you on the playa!</div>
   <% } %>
 <% } else if (user.getState() == UserState.REJECTED) { %>
 <div class="error">We're sorry, your registration application has not been approved. We still want to see you on the playa,
@@ -82,6 +81,7 @@ here periodically for status updates!</div>
   <% } else { %>
     <li><a href="survey.jsp">Edit Approval Survey</a>
   <% } %>
+  <li><b>NEXT STEP: <a href="dues.jsp">Pay dues!</a></b>
 <% } %>
 </ul>
 <% } %>

@@ -31,28 +31,31 @@ public class User {
      * approval/rejection email sent? (when or null -- will use this to mass send emails when implemented)
      */
 
-    public long userId;
-    public String email;
-    public Role role;
-    public String passwordSalt;
-    public String passwordHash;
-    public DateTime created;
-    public DateTime lastLogin;
-    public Gender gender;
-    public String realName;
-    public String playaName;
-    public Location location;
-    public String locationOther;
-    public String phone;
-    public String emergencyContact;
-    public RegistrationForm registration;
-    public ApprovalSurvey approval;
-    public UserState state = UserState.NEW_USER;
-    public DateTime approvedOn;
-    public String adminComment;
-    public boolean termsAgreed;
-    public Set<Cell> cells = new HashSet<Cell>(0);
-    public List<ActivityLogEntry> activityLog = new ArrayList<ActivityLogEntry>();
+    private long userId;
+    private String email;
+    private Role role;
+    private String passwordSalt;
+    private String passwordHash;
+    private DateTime created;
+    private DateTime lastLogin;
+    private Gender gender;
+    private String realName;
+    private String playaName;
+    private Location location;
+    private String locationOther;
+    private String phone;
+    private String emergencyContact;
+    private RegistrationForm registration;
+    private ApprovalSurvey approval;
+    private UserState state = UserState.NEW_USER;
+    private DateTime approvedOn;
+    private String adminComment;
+    private boolean termsAgreed;
+    private Set<Cell> cells = new HashSet<Cell>(0);
+    private List<ActivityLogEntry> activityLog = new ArrayList<ActivityLogEntry>();
+    private DueItem personalDue;
+    private DueItem rvDue;
+    private List<Invoice> invoices;
     
     User () {
     }
@@ -94,7 +97,7 @@ public class User {
         return userId;
     }
     
-    @DataView(i=2, n="Email", email=true)
+    @DataView(i=20, n="Email", email=true)
     public String getEmail() {
         return email;
     }
@@ -113,7 +116,7 @@ public class User {
             return role;
     }
     
-    @DataView(i=2, n="Role")
+    @DataView(i=20, n="Role")
     public String getRoleDisplay () {
         if (getRole().isSpecial())
             return getRole().getName();
@@ -121,27 +124,27 @@ public class User {
             return null;
     }
     
-    @DataView(i=3, n="Created")
+    @DataView(i=30, n="Created")
     public DateTime getCreated() {
         return created;
     }
     
-    @DataView(i=4, n="Last Login")
+    @DataView(i=40, n="Last Login")
     public DateTime getLastLogin() {
         return lastLogin;
     }
     
-    @DataView(i=5, n="Gender")
+    @DataView(i=50, n="Gender")
     public Gender getGender() {
         return gender;
     }
     
-    @DataView(i=6, n="Real Name")
+    @DataView(i=60, n="Real Name")
     public String getRealName() {
         return realName;
     }
     
-    @DataView(i=7, n="Playa Name")
+    @DataView(i=70, n="Playa Name")
     public String getPlayaName() {
         return playaName;
     }
@@ -154,7 +157,7 @@ public class User {
         return locationOther;
     }
     
-    @DataView(i=8, n="Location")
+    @DataView(i=80, n="Location")
     public String getLocationDisplay () {
         if (location == null)
             return "";
@@ -164,12 +167,12 @@ public class User {
             return location.toDisplayString();
     }
     
-    @DataView(i=9, n="Phone")
+    @DataView(i=90, n="Phone")
     public String getPhone() {
         return phone;
     }
     
-    @DataView(i=10, n="Emergency Contact", longtext=true)
+    @DataView(i=100, n="Emergency Contact", longtext=true)
     public String getEmergencyContact() {
         return emergencyContact;
     }
@@ -180,9 +183,14 @@ public class User {
         return registration;
     }
     
-    @DataView(i=12, n="Registration Form", value=CompleteIncompleteBooleanConverter.class)
+    @DataView(i=120, n="Registration Form", value=CompleteIncompleteBooleanConverter.class)
     public boolean isRegistrationComplete () {
         return registration != null && registration.isCompleted();
+    }
+    
+    @DataView(i=125, n="Registered On")
+    public DateTime getRegisteredOn () {
+        return registration == null ? null : registration.getCompletionTime();
     }
     
     public ApprovalSurvey getApproval() {
@@ -191,29 +199,58 @@ public class User {
         return approval;
     }
     
-    @DataView(i=13, n="Approval Survey", value=CompleteIncompleteBooleanConverter.class)
+    @DataView(i=130, n="Approval Survey", value=CompleteIncompleteBooleanConverter.class)
     public boolean isApprovalComplete () {
         return approval != null && approval.isCompleted();
     }
     
-    @DataView(i=1, n="Status")
+    @DataView(i=10, n="Status")
     public UserState getState() {
         return state;
     }
     
-    @DataView(i=13, n="Approval Date") 
+    @DataView(i=130, n="Approved On") 
     public DateTime getApprovedOn () {
         return approvedOn;
     }
     
-    @DataView(i=14, n="Administrator Comment")
+    @DataView(i=140, n="Administrator Comment")
     public String getAdminComment() {
         return adminComment;
     }
     
-    @DataView(i=11, n="Read Terms?")
+    @DataView(i=110, n="Read Terms?")
     public boolean isTermsAgreed () {
         return termsAgreed;
+    }
+    
+    public DueItem getPersonalDueItem () {
+        if (state != UserState.APPROVED)
+            return null;
+        else if (personalDue == null)
+            personalDue = DueItem.newPersonalItem(this);
+        return personalDue;
+    }
+    
+    public DueItem getRvDueItem () {
+        if (state != UserState.APPROVED)
+            return null;
+        else if (rvDue == null)
+            rvDue = DueItem.newRVItem(this);
+        return rvDue;
+    }
+    
+    void setRvDueOwed (boolean owed) {
+        if (rvDue != null)
+            rvDue.setPaymentRequired(owed);
+    }
+    
+    public DueItem getPersonalDueItemNoInit () {
+        return personalDue;
+    }
+    
+    public DueItem getRvDueItemNoInit () {
+        return rvDue;
     }
     
     public void setEmail(String email) {
@@ -515,6 +552,28 @@ public class User {
         
         return users;
 
+    }
+    
+    public static List<User> findUnpaidPersonalDues () {
+ 
+        @SuppressWarnings("unchecked")
+        List<User> users = (List<User>)HibernateUtil.getCurrentSession()
+                .createQuery("from User as user where user.state = " + UserState.APPROVED.toDBId() + " and user.personalDue.paymentRequired = true and user.personalDue.paymentComplete = false order by lower(user.realName) asc")
+                .list();
+        
+        return users;
+        
+    }
+    
+    public static List<User> findUnpaidRVDues () {
+        
+        @SuppressWarnings("unchecked")
+        List<User> users = (List<User>)HibernateUtil.getCurrentSession()
+                .createQuery("from User as user where user.state = " + UserState.APPROVED.toDBId() + " and user.rvDue.paymentRequired = true and user.rvDue.paymentComplete = false order by lower(user.realName) asc")
+                .list();
+        
+        return users;
+   
     }
     
     /*

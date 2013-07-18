@@ -106,6 +106,7 @@ h1 {
   depends on the your timely accurate delivery of information and payment of camp
   dues.</p>
 
+  <a name="dues"></a>
   <h1>Camp Dues</h1>
   
   <p>Camp dues help us achieve our lofty goals on budget and include your meals, water, art,
@@ -115,10 +116,10 @@ h1 {
   are:</p>
 
   <ul>
-    <li><strong>Tier 1:</strong> $325 if paid by Midnight on July 20th
-    <li><strong>Tier 2:</strong> $375 if paid by Midnight July 27th
-    <li><strong>Tier 3:</strong> $425 if paid by Midnight August 3rd
-    <li><strong>Tier 4:</strong> $475 if paid after Midnight August 3rd
+    <li><strong>Tier 1:</strong> $325 if paid by Midnight (Eastern Time) on July 20th
+    <li><strong>Tier 2:</strong> $375 if paid by Midnight (Eastern Time)  July 27th
+    <li><strong>Tier 3:</strong> $425 if paid by Midnight (Eastern Time)  August 3rd
+    <li><strong>Tier 4:</strong> $475 if paid after Midnight (Eastern Time)  August 3rd
     <li><strong>RV campers:</strong> Fee per RV is
     $750. You will be provided connection to our biodiesel generator grid, as the
     use of onboard generators is prohibited due to the exhaust produced at tent-level.
@@ -127,6 +128,9 @@ h1 {
     clean and fresh throughout the duration of Burning Man. <em>PLEASE NOTE: There are a
     <strong>limited amount</strong> of slots for RVs and RV slots will be given on a first come first
     serve basis, so register early!</em>
+    <li>You will have a grace period of <strong>7 days</strong> after you are approved to pay the tier that
+    was active <strong>at the time you originally registered</strong>! After that period is over, your tier
+    will be determined by the date of your payment.
   </ul>
 
   <p>Campers have the opportunity to earn back a rebate for each day

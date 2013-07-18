@@ -67,6 +67,10 @@ public class RegistrationForm {
     public boolean isCompleted () {
         return completionTime != null;
     }
+    
+    public DateTime getCompletionTime () {
+        return completionTime;
+    }
 
     @DataView(i=1, n="Helped Off Playa", longtext=true)
     public String getHelpedOffPlaya() {
@@ -354,6 +358,7 @@ public class RegistrationForm {
     public void setRvType(RVSelection rvType) {
         if (rvType == null)
             throw new IllegalArgumentException("R.V. selection must be specified.");
+        user.setRvDueOwed(rvType == RVSelection.RESPONSIBLE); // note: requires hack to initialize user's rvDueItem from db in EditRegistration.
         this.rvType = rvType;
     }
     
@@ -363,6 +368,7 @@ public class RegistrationForm {
         RVSelection sel = RVSelection.fromDBId((int)(long)id);
         if (sel == null)
             throw new IllegalArgumentException("Invalid ID for RV selection.");
+        user.setRvDueOwed(sel == RVSelection.RESPONSIBLE); // note: same as above
         this.rvType = sel;
     }
 

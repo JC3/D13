@@ -3,6 +3,24 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping default-access="field">
 
+<!--
+    <class name="d13.dao.Invoice" table="invoices">
+        <id name="invoiceId"><generator class="native/"/></id>
+        
+    </class>
+
+    <class name="d13.dao.DueItem" table="dues_owed">
+        <id name="itemId"><generator class="native"/></id>
+        <property name="type"/>
+        <property name="paymentRequired"/>
+        <property name="amount"/>
+        <property name="registrationDate" type="d13.dao.types.DateTimeType"/>
+        <property name="approvalDate" type="d13.dao.types.DateTimeType"/>
+        <many-to-one name="invoice" class="d13.dao.Invoice"/>
+        <property name="invoicedAmount"/>
+    </class>
+-->
+
     <class name="d13.dao.Role" table="roles">
         <id name="roleId"><generator class="native"/></id>
         <property name="name" not-null="true"/>
@@ -129,6 +147,10 @@
             <index column="`index`"/>
             <one-to-many class="d13.dao.ActivityLogEntry"/>
         </list>
+        <!-- 
+        <many-to-one name="personalDue" class="d13.dao.DueItem" cascade="all"/>
+        <many-to-one name="rvDue" class="d13.dao.DueItem" cascade="all"/>
+        -->
     </class>
     
     <class name="d13.dao.Cell" table="cells">

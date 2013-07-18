@@ -109,6 +109,10 @@ public abstract class Email {
     
     protected abstract String getBody ();
 
+    protected boolean isHtml () {
+        return false;
+    }
+    
     private final void send (List<InternetAddress> recipients) throws Exception {
    
         if (recipients.isEmpty())
@@ -134,7 +138,7 @@ public abstract class Email {
         
         // message subject and body
         message.setSubject(getSubject());
-        message.setText(getBody());
+        message.setContent(getBody(), (isHtml() ? "text/html" : "text/plain") + "; charset=us-ascii");
         
         // send it
         Transport t = session.getTransport(config.ssl ? "smtps" : "smtp");
