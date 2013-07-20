@@ -79,6 +79,11 @@ if ("create".equalsIgnoreCase(action)) {
         response.sendRedirect("dues.jsp");
         return;
     }
+    
+    if (invoice.getInvoiceAmount() == 0) {
+        response.sendRedirect("dues.jsp");
+        return;
+    }
 
 }
 
