@@ -28,6 +28,12 @@ public class Initialize {
         RuntimeOptions.setOption("notify.mail_from", "camp@disorient.info");
         RuntimeOptions.setOption("notify.base_url", "http://camp.disorient.info");
         
+        RuntimeOptions.setOption("dues.paypal_email", "dues@disorient.info");
+        RuntimeOptions.setOption("dues.paypal_site", "https://www.paypal.com/cgi-bin/webscr");
+        RuntimeOptions.setOption("dues.paypal_notify", "http://camp.disorient.info/pay/notify.jsp");
+        RuntimeOptions.setOption("dues.paypal_cancel", "http://camp.disorient.info/pay/cancel.jsp");
+        RuntimeOptions.setOption("dues.paypal_return", "http://camp.disorient.info/pay/success.jsp");
+
         if (User.findByEmail("jason@disorient.info") == null) {        
             User user = new User("jason@disorient.info");
             //user.setAdmin(true);

@@ -4,7 +4,6 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import d13.dao.DueCalculator;
-import d13.dao.DueItem;
 
 public class DuesTest {
 
@@ -16,13 +15,13 @@ public class DuesTest {
         System.out.println(dt.withZone(DateTimeZone.forID("UTC")));
         
         System.out.println(dt.minusMinutes(30));
-       
+      
         DateTime reg = new DateTime(2013, 7, 1, 20, 42, 0, DateTimeZone.forID("America/New_York"));
         DateTime app = new DateTime(2013, 8, 1, 20, 42, 0, DateTimeZone.forID("America/New_York"));
         dt = new DateTime(2013, 7, 1, 0, 30, 0, DateTimeZone.forID("America/New_York"));
         for (int n = 0; n < 60; ++ n) {
             DateTime dto = dt.plusDays(n);
-            DueCalculator.Amount amount = DueCalculator.calculateAmount(reg, app, DueItem.TYPE_PERSONAL, dto);
+            DueCalculator.Amount amount = DueCalculator.calculateAmount(reg, app, DueCalculator.TYPE_PERSONAL, dto);
             System.out.println("  " + dto + " " + amount.getTierName() + " " + ((float)amount.getAmount() / 100.f));
         }
         

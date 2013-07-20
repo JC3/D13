@@ -3,23 +3,42 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping default-access="field">
 
-<!--
     <class name="d13.dao.Invoice" table="invoices">
-        <id name="invoiceId"><generator class="native/"/></id>
-        
+        <id name="invoiceId"><generator class="native"/></id>
+        <list name="items" cascade="all">
+            <key column="invoice"/>
+            <index column="invoiceIndex"/>
+            <one-to-many class="d13.dao.InvoiceItem"/>
+        </list>
+        <property name="status" not-null="true"/>
+        <many-to-one name="creator" class="d13.dao.User" not-null="true"/>
+        <property name="created" type="d13.dao.types.DateTimeType" not-null="true"/>
+        <property name="invoiceAmount" not-null="true"/>
+        <property name="paypalTransactionId" type="string"/>
+        <property name="paypalSenderEmail" type="string"/>
+        <property name="paypalSenderFirstName" type="string"/>
+        <property name="paypalSenderLastName" type="string"/>
+        <property name="paypalTransactionStatus" type="string"/>
+        <property name="paypalTimestamp" type="string"/>
+        <property name="paypalAmount" not-null="true"/>
+    </class>
+    
+    <class name="d13.dao.InvoiceItem" table="invoice_items">
+        <id name="invoiceItemId"><generator class="native"/></id>
+        <many-to-one name="invoice" class="d13.dao.Invoice" not-null="true"/>
+        <many-to-one name="due" class="d13.dao.DueItem" not-null="true"/>
+        <property name="amount" not-null="true"/>
+        <property name="description" type="string"/>
     </class>
 
     <class name="d13.dao.DueItem" table="dues_owed">
         <id name="itemId"><generator class="native"/></id>
-        <property name="type"/>
-        <property name="paymentRequired"/>
-        <property name="amount"/>
-        <property name="registrationDate" type="d13.dao.types.DateTimeType"/>
-        <property name="approvalDate" type="d13.dao.types.DateTimeType"/>
-        <many-to-one name="invoice" class="d13.dao.Invoice"/>
-        <property name="invoicedAmount"/>
+        <many-to-one name="user" class="d13.dao.User"/>
+        <property name="active" not-null="true"/>
+        <property name="open" not-null="true"/>
+        <many-to-one name="paidInvoice" class="d13.dao.Invoice"/>
+        <property name="customAmount" not-null="true"/>
     </class>
--->
 
     <class name="d13.dao.Role" table="roles">
         <id name="roleId"><generator class="native"/></id>
@@ -147,10 +166,14 @@
             <index column="`index`"/>
             <one-to-many class="d13.dao.ActivityLogEntry"/>
         </list>
-        <!-- 
         <many-to-one name="personalDue" class="d13.dao.DueItem" cascade="all"/>
         <many-to-one name="rvDue" class="d13.dao.DueItem" cascade="all"/>
-        -->
+        <property name="customDueComments" type="text"/>
+        <list name="invoices" cascade="all">
+            <key column="creator"/>
+            <index column="creatorIndex"/>
+            <one-to-many class="d13.dao.Invoice"/>
+        </list>
     </class>
     
     <class name="d13.dao.Cell" table="cells">

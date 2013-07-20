@@ -1,80 +1,76 @@
 package d13.dao;
 
-import org.joda.time.DateTime;
-
 public class DueItem {
+    
+    public static final int NO_CUSTOM_AMOUNT = -1;
 
-    public static final int TYPE_PERSONAL = 0;
-    public static final int TYPE_RV = 1;
-    public static final int AMOUNT_AUTO = -1;
-        
     private long itemId;
-    private int type;
-    private boolean paymentRequired;
-    private int amount; // if AMOUNT_AUTO then amount is calculated based on type, approval date, and current date
-    private DateTime registrationDate;
-    private DateTime approvalDate;
-    private Invoice invoice;
-    private int invoicedAmount;
- 
+    private User user;
+    private boolean active = false;
+    private boolean open = true;
+    private Invoice paidInvoice;
+    private int customAmount = NO_CUSTOM_AMOUNT;
+    
     DueItem () {
     }
     
-    public static DueItem newPersonalItem (User user) {
-        if (user.getState() != UserState.APPROVED || user.getApprovedOn() == null)
-            throw new IllegalArgumentException("Cannot create due item: User is not approved.");
-        DueItem item = new DueItem();
-        item.type = TYPE_PERSONAL;
-        item.paymentRequired = true;
-        item.amount = AMOUNT_AUTO;
-        item.registrationDate = user.getRegisteredOn();
-        item.approvalDate = user.getApprovedOn();
-        item.invoice = null;
-        item.invoicedAmount = 0;
-        return item;
+    public DueItem (User user) {
+        this.user = user;
     }
-    
-    public static DueItem newRVItem (User user) {
-        if (user.getState() != UserState.APPROVED || user.getApprovedOn() == null)
-            throw new IllegalArgumentException("Cannot create due item: User is not approved.");
-        if (!user.isRegistrationComplete())
-            throw new IllegalArgumentException("Cannot create due item: User registration form is not complete.");
-        if (user.getRegistration().getRvType() == RVSelection.NEED_CLARIFICATION)
-            throw new IllegalArgumentException("Cannot create due item: User needs to clarify RV status in registration form.");
-        DueItem item = new DueItem();
-        item.type = TYPE_RV;
-        item.paymentRequired = (user.getRegistration().getRvType() == RVSelection.RESPONSIBLE);
-        item.amount = AMOUNT_AUTO;
-        item.registrationDate = user.getRegisteredOn();
-        item.approvalDate = user.getApprovedOn();
-        item.invoice = null;
-        item.invoicedAmount = 0;
-        return item;
-    }
-    
-    public long getItemId () {
+
+    public long getItemId() {
         return itemId;
     }
     
-    void setPaymentRequired (boolean required) {
-        paymentRequired = required;
+    public User getUser () {
+        return user;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public boolean isPaid () {
+        return paidInvoice != null || customAmount == 0;
     }
     
-    public boolean isOutstanding () {
-        
-        return (paymentRequired && invoice != null);
-        
+    public Invoice getPaidInvoice () {
+        return paidInvoice;
     }
     
-    public DueCalculator.Amount calculateAmountOwed () {
-        
-        if (!isOutstanding())
-            return null;
-        else if (amount >= 0)
-            return new DueCalculator.Amount("Special Rate", amount);
-        else
-            return DueCalculator.calculateAmount(registrationDate, approvalDate, type);
-        
+    public boolean isCustom () {
+        return customAmount >= 0;
     }
-   
+    
+    public int getCustomAmount () {
+        return customAmount;
+    }
+
+    public boolean isPayable () {
+        // due must be active
+        // due must be open (i.e. not currently being processed)
+        // due must be unpaid
+        return isActive() && isOpen() && !isPaid();
+    }
+    
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
+    }
+
+    public void setPaidInvoice(Invoice paidInvoice) {
+        this.paidInvoice = paidInvoice;
+    }
+    
+    public void setCustomAmount (int amount) {
+        this.customAmount = amount;
+    }
+    
 }

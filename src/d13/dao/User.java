@@ -55,7 +55,8 @@ public class User {
     private List<ActivityLogEntry> activityLog = new ArrayList<ActivityLogEntry>();
     private DueItem personalDue;
     private DueItem rvDue;
-    private List<Invoice> invoices;
+    private String customDueComments;
+    private List<Invoice> invoices = new ArrayList<Invoice>();
     
     User () {
     }
@@ -227,22 +228,26 @@ public class User {
     public DueItem getPersonalDueItem () {
         if (state != UserState.APPROVED)
             return null;
-        else if (personalDue == null)
-            personalDue = DueItem.newPersonalItem(this);
+        else if (personalDue == null) {
+            personalDue = new DueItem(this);
+            personalDue.setActive(true);
+        }
         return personalDue;
     }
     
     public DueItem getRvDueItem () {
         if (state != UserState.APPROVED)
             return null;
-        else if (rvDue == null)
-            rvDue = DueItem.newRVItem(this);
+        else if (rvDue == null) {
+            rvDue = new DueItem(this);
+            rvDue.setActive(registration != null && registration.getRvType() == RVSelection.RESPONSIBLE);
+        }
         return rvDue;
     }
     
     void setRvDueOwed (boolean owed) {
         if (rvDue != null)
-            rvDue.setPaymentRequired(owed);
+            rvDue.setActive(owed);
     }
     
     public DueItem getPersonalDueItemNoInit () {
@@ -251,6 +256,22 @@ public class User {
     
     public DueItem getRvDueItemNoInit () {
         return rvDue;
+    }
+    
+    public String getCustomDueComments () {
+        return customDueComments;
+    }
+    
+    public boolean isPaid () {
+        return isPersonalPaid() && isRvPaid();
+    }
+    
+    public boolean isPersonalPaid () {
+        return !getPersonalDueItem().isActive() || getPersonalDueItem().isPaid();
+    }
+    
+    public boolean isRvPaid () {
+        return !getRvDueItem().isActive() || getRvDueItem().isPaid();
     }
     
     public void setEmail(String email) {
@@ -321,7 +342,15 @@ public class User {
     public void setTermsAgreed (boolean termsAgreed) {
         this.termsAgreed = termsAgreed;
     }
-   
+    
+    public void setCustomDueComments (String comments) {
+        this.customDueComments = comments;
+    }
+    
+    public List<Invoice> getInvoices () {
+        return Collections.unmodifiableList(invoices);
+    }
+    
     public List<ActivityLogEntry> getActivityLog () {
         return Collections.unmodifiableList(activityLog);
     }
@@ -343,6 +372,8 @@ public class User {
         String description = String.format("Changed from %s to %s.", old.toString(), state.toString());
         addActivityLogEntry(new ActivityLogEntry(this, description, editor));
     }
+    
+    
 
     /*
     public boolean isEditableBy (User editor) {
@@ -554,6 +585,7 @@ public class User {
 
     }
     
+    /*
     public static List<User> findUnpaidPersonalDues () {
  
         @SuppressWarnings("unchecked")
@@ -575,6 +607,7 @@ public class User {
         return users;
    
     }
+    */
     
     /*
     public static List<User> findAdmins (Session session) {

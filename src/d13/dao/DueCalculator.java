@@ -9,14 +9,20 @@ import org.joda.time.Duration;
 
 public class DueCalculator {
 
-    private static class Tier {
-        DateTime end;
-        int      amount;
-        String   name;
-        Tier (DateTime end, int amount, String name) {
+    public static class Tier {
+        private DateTime end;
+        private int      amount;
+        private String   name;
+        private Tier (DateTime end, int amount, String name) {
             this.end = end;
             this.amount = amount;
             this.name = name;
+        }
+        public String getName () {
+            return name;
+        }
+        public int getAmount () {
+            return amount;
         }
     }
     
@@ -58,11 +64,14 @@ public class DueCalculator {
         
     }
     
+    public static final int TYPE_PERSONAL = 0;
+    public static final int TYPE_RV = 1;
+    
     public static Amount calculateAmount (DateTime registered, DateTime approved, int type, DateTime now) {
         
-        if (type == DueItem.TYPE_RV)
+        if (type == TYPE_RV)
             return new Amount(rvTier);
-        else if (type == DueItem.TYPE_PERSONAL) {
+        else if (type == TYPE_PERSONAL) {
             Duration period = new Duration(approved, now);
             if (period.getStandardDays() < GRACE_PERIOD_DAYS)
                 return new Amount(findPersonalTier(registered));
@@ -70,6 +79,30 @@ public class DueCalculator {
                 return new Amount(findPersonalTier(now));
         } else
             throw new IllegalArgumentException("Unknown due item type specified.");
+        
+    }
+    
+    public static List<Tier> getPersonalTiers (DateTime registered, DateTime approved, DateTime now) {
+        
+        List<Tier> tiers = new ArrayList<Tier>();
+        
+        Duration period = new Duration(approved, now);
+        if (period.getStandardDays() < GRACE_PERIOD_DAYS)
+            tiers.add(findPersonalTier(registered));
+        else
+            tiers.add(findPersonalTier(now));
+        
+        for (Tier tier:personalTiers)
+            if (tier.amount > tiers.get(0).amount)
+                tiers.add(tier);
+        
+        return tiers;
+        
+    }
+    
+    public static Tier getRVTier () {
+        
+        return rvTier;
         
     }
     
