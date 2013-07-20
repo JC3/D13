@@ -56,6 +56,7 @@ public class DataViewer {
                     String valuestr = converter.asString(value);
                     return (valuestr == null ? "" : valuestr);
                 } catch (Throwable t) {
+                    t.printStackTrace();
                     return "<ERROR>";
                 }
             }

@@ -194,7 +194,7 @@ h1 {
     <li>All Disorient Campers get to select their work on a
     particular camp project when registering and are expected to take an active role in
     everyone's playa experience. So, help out anywhere you can and find a
-    project you like. &nbsp;There will be an opportunity to fine-tune your participation
+    project you like. There will be an opportunity to fine-tune your participation
     once you are approved and individual project details and needs are assessed.
     
     <li>All Disorient campers this year, will be divided into

@@ -42,9 +42,13 @@ if (!user.isTermsAgreed()) {
   <% if (!user.isApprovalComplete()) { %>
 <div class="notice">Your registration application has been reviewed and approved (yay!), but you have not filled out your approval
 survey yet. This is required. Please click "approval survey" below to do this!</div>
+  <% } else if (user.isPaid()) { %>
+<div class="message">Your registration application has been reviewed and approved, and you have filled out your approval survey
+and paid your dues. You're all done here! Please keep your information here updated and keep an eye out for important emails.
+See you on the playa!</div>
   <% } else { %>
 <div class="message">Your registration application has been reviewed and approved, and you have filled out your approval survey (thanks!).
-All that's left is to pay your dues. Please click "pay dues" below to do this! See you on the playa!</div>
+All that's left is to pay your dues. Please click "pay dues" below to do this!</div>
   <% } %>
 <% } else if (user.getState() == UserState.REJECTED) { %>
 <div class="error">We're sorry, your registration application has not been approved. We still want to see you on the playa,
@@ -81,7 +85,11 @@ here periodically for status updates!</div>
   <% } else { %>
     <li><a href="survey.jsp">Edit Approval Survey</a>
   <% } %>
-  <li><b>NEXT STEP: <a href="dues.jsp">Pay dues!</a></b>
+  <% if (!user.isPaid()) { %>
+    <li><b>NEXT STEP: <a href="dues.jsp">Pay dues!</a></b>
+  <% } else { %>
+    <li><a href="dues.jsp">Due Payments</a>
+  <% } %>
 <% } %>
 </ul>
 <% } %>

@@ -21,16 +21,6 @@ import d13.web.DataView;
 
 public class User {
     
-    /*
-     * when profile last modified
-     * when registration first completed
-     * when registration last modified
-     * when cells last modified
-     * reviewed by / when
-     * approved rejected by / when
-     * approval/rejection email sent? (when or null -- will use this to mass send emails when implemented)
-     */
-
     private long userId;
     private String email;
     private Role role;
@@ -57,6 +47,7 @@ public class User {
     private DueItem rvDue;
     private String customDueComments;
     private List<Invoice> invoices = new ArrayList<Invoice>();
+    private boolean receiveNotifications = true;
     
     User () {
     }
@@ -85,12 +76,20 @@ public class User {
         c.removeUser(this);
     }
     
+    void addInvoice (Invoice invoice) {
+        invoices.add(invoice);
+    }
+    
     public boolean isInCell (Cell c) {
         return cells.contains(c);
     }
     
     public boolean isInCells () {
         return !cells.isEmpty();
+    }
+    
+    public boolean isReceiveNotifications () {
+        return receiveNotifications;
     }
     
     @DataView(i=0, n="ID")
@@ -262,16 +261,48 @@ public class User {
         return customDueComments;
     }
     
+    @DataView(i=132, n="Dues Paid?")
+    public String getPaidDisplay () {
+        if (isPaid())
+            return "Paid";
+        else if (isPersonalPaid())
+            return "RV Unpaid";
+        else if (isRvPaid())
+            return "Personal Unpaid";
+        else
+            return "Unpaid";
+    }
+    
+    @DataView(i=134, n="Camp Fee Paid On")
+    public DateTime getPersonalPaidDate () {
+        if (personalDue == null)
+            return null;
+        else if (personalDue.getPaidInvoice() == null)
+            return null;
+        else
+            return personalDue.getPaidInvoice().getCreated();
+    }
+
+    @DataView(i=136, n="RV Fee Paid On")
+    public DateTime getRvPaidDate () {
+        if (rvDue == null)
+            return null;
+        else if (rvDue.getPaidInvoice() == null)
+            return null;
+        else
+            return rvDue.getPaidInvoice().getCreated();
+    }
+
     public boolean isPaid () {
         return isPersonalPaid() && isRvPaid();
     }
     
     public boolean isPersonalPaid () {
-        return !getPersonalDueItem().isActive() || getPersonalDueItem().isPaid();
+        return getPersonalDueItem() != null && (!getPersonalDueItem().isActive() || getPersonalDueItem().isPaid());
     }
     
     public boolean isRvPaid () {
-        return !getRvDueItem().isActive() || getRvDueItem().isPaid();
+        return getRvDueItem() != null && (!getRvDueItem().isActive() || getRvDueItem().isPaid());
     }
     
     public void setEmail(String email) {
@@ -552,33 +583,33 @@ public class User {
 
     }
     
-    public static List<User> findReviewers (Session session) {
+    public static List<User> findReviewersForEmail (Session session) {
         
         @SuppressWarnings("unchecked")
         List<User> users = (List<User>)session
-                .createQuery("from User as user where user.role.reviewUsers = true")
+                .createQuery("from User as user where user.receiveNotifications = true and user.role.reviewUsers = true")
                 .list();
         
         return users;
         
     }
     
-    public static List<User> findAdmissions (Session session) {
+    public static List<User> findAdmissionsForEmail (Session session) {
         
         @SuppressWarnings("unchecked")
         List<User> users = (List<User>)session
-                .createQuery("from User as user where user.role.admitUsers = true")
+                .createQuery("from User as user where user.receiveNotifications = true and user.role.admitUsers = true")
                 .list();
         
         return users;
 
     }
     
-    public static List<User> findFinalizers (Session session) {
+    public static List<User> findFinalizersForEmail (Session session) {
         
         @SuppressWarnings("unchecked")
         List<User> users = (List<User>)session
-                .createQuery("from User as user where user.role.finalizeUsers = true")
+                .createQuery("from User as user where user.receiveNotifications = true and user.role.finalizeUsers = true")
                 .list();
         
         return users;

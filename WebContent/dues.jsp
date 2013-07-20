@@ -87,6 +87,7 @@ function checkForm () {
 </head>
 <body>
 <dis:header/>
+<div class="nav"><a href="home.jsp">Go Back</a></div>
 
 <% if (error != null) { %>
 <div class="error">Error: <%=error_html%></div>

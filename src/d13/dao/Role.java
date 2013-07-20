@@ -14,6 +14,7 @@ public class Role {
     public static String ADMIT_USERS = "admitu";
     public static String FINALIZE_USERS = "finalizeu";
     public static String VIEW_LOGS = "viewlogs";
+    public static String EDIT_DUES = "editdues";
     
     private long roleId;
     private String name = "";
@@ -24,6 +25,7 @@ public class Role {
     private boolean admitUsers;
     private boolean finalizeUsers;
     private boolean viewLogs;
+    private boolean editDues;
     private Set<String> rights; 
     
     Role () {
@@ -69,6 +71,10 @@ public class Role {
         return viewLogs;
     }
     
+    public boolean canEditDues () {
+        return editDues;
+    }
+    
     public Set<String> getRights () {
         if (rights == null) {
             rights = new HashSet<String>();
@@ -78,6 +84,7 @@ public class Role {
             if (admitUsers) rights.add(ADMIT_USERS);
             if (finalizeUsers) rights.add(FINALIZE_USERS);
             if (viewLogs) rights.add(VIEW_LOGS);
+            if (editDues) rights.add(EDIT_DUES);
             rights = Collections.unmodifiableSet(rights);
         }
         return rights;

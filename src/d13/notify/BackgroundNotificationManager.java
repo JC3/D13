@@ -193,11 +193,11 @@ public class BackgroundNotificationManager implements ServletContextListener {
                 tx = session.beginTransaction();
                 user = queued.fetchUser(session);
                 if (queued.getType() == QueuedEmail.TYPE_REVIEW)
-                    recipients = User.findReviewers(session);
+                    recipients = User.findReviewersForEmail(session);
                 else if (queued.getType() == QueuedEmail.TYPE_ACCEPTED)
-                    recipients = User.findAdmissions(session);
+                    recipients = User.findAdmissionsForEmail(session);
                 else if (queued.getType() == QueuedEmail.TYPE_FINALIZE)
-                    recipients = User.findFinalizers(session);
+                    recipients = User.findFinalizersForEmail(session);
                 else
                     recipients = null;
                 tx.commit();

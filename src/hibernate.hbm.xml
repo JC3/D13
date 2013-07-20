@@ -3,6 +3,13 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping default-access="field">
 
+    <class name="d13.dao.RawIPNLogEntry" table="ipn_log">
+        <id name="entryId"><generator class="native"/></id>
+        <property name="received" type="d13.dao.types.DateTimeType" not-null="true"/>
+        <property name="data" type="text"/>
+        <property name="reply" type="string"/>
+    </class>
+
     <class name="d13.dao.Invoice" table="invoices">
         <id name="invoiceId"><generator class="native"/></id>
         <list name="items" cascade="all">
@@ -50,6 +57,7 @@
         <property name="admitUsers" not-null="true"/>
         <property name="finalizeUsers" not-null="true"/>
         <property name="viewLogs" not-null="true"/>
+        <property name="editDues" not-null="true"/>
     </class>
 
     <class name="d13.dao.RuntimeOptions$RuntimeOption" table="options">
@@ -169,11 +177,12 @@
         <many-to-one name="personalDue" class="d13.dao.DueItem" cascade="all"/>
         <many-to-one name="rvDue" class="d13.dao.DueItem" cascade="all"/>
         <property name="customDueComments" type="text"/>
-        <list name="invoices" cascade="all">
+        <list name="invoices" inverse="true">
             <key column="creator"/>
             <index column="creatorIndex"/>
             <one-to-many class="d13.dao.Invoice"/>
         </list>
+        <property name="receiveNotifications" not-null="true"/>
     </class>
     
     <class name="d13.dao.Cell" table="cells">

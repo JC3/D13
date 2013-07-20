@@ -26,13 +26,17 @@ if ("create".equalsIgnoreCase(action)) {
 
         BillingManager.NewInvoiceFormInput input = new BillingManager.NewInvoiceFormInput();
     
-        input.personalAmount = Integer.parseInt(request.getParameter("personal_amount"));
-        if (input.personalAmount == -1)
-            input.personalAmount = (int)(100.0f * Float.parseFloat(request.getParameter("personal_other")) + 0.5f);
+        if (request.getParameter("personal_amount") != null) {
+	        input.personalAmount = Integer.parseInt(request.getParameter("personal_amount"));
+	        if (input.personalAmount == -1)
+	            input.personalAmount = (int)(100.0f * Float.parseFloat(request.getParameter("personal_other")) + 0.5f);
+        }
 
-        input.rvAmount = Integer.parseInt(request.getParameter("rv_amount"));
-        if (input.rvAmount == -1)
-            input.rvAmount = (int)(100.0f * Float.parseFloat(request.getParameter("rv_other")) + 0.5f);
+        if (request.getParameter("rv_amount") != null) {
+	        input.rvAmount = Integer.parseInt(request.getParameter("rv_amount"));
+	        if (input.rvAmount == -1)
+	            input.rvAmount = (int)(100.0f * Float.parseFloat(request.getParameter("rv_other")) + 0.5f);
+        }
         
         int count = Integer.parseInt(request.getParameter("personal_count"));
         for (int n = 0; n < count; ++ n) {
@@ -52,6 +56,8 @@ if ("create".equalsIgnoreCase(action)) {
         return;
         
     } catch (Throwable t) {
+        
+        t.printStackTrace();
 
         sess.setAttribute(SessionData.SA_DUES_ERROR, t.getMessage());
         response.sendRedirect("dues.jsp");
@@ -160,7 +166,7 @@ div.note {
 
 <p>To pay, please click here:
 <div style="text-align:center;">
-<form action="<%=Util.html(paypal_site)%>" method="post" target="_top">
+<form name="_xclick" action="<%=Util.html(paypal_site)%>" method="post" target="_top">
 <input type="hidden" name="business" value="<%=Util.html(paypal_email)%>">
 <input type="hidden" name="cmd" value="_xclick">
 <input type="hidden" name="amount" value="<%=invoice_total%>">
@@ -168,10 +174,10 @@ div.note {
 <input type="hidden" name="item_name" value="Disorient Camp Dues">
 <input type="hidden" name="item_number" value="<%=invoice_id%>">
 <input type="hidden" name="notify_url" value="<%=Util.html(paypal_notify)%>">
-<input type="hidden" name="bn" value="Disorient_BuyNow_WPS_US">
+<!--<input type="hidden" name="bn" value="Disorient_BuyNow_WPS_US">-->
 <input type="hidden" name="no_shipping" value="1">
 <input type="hidden" name="return" value="<%=Util.html(paypal_return)%>">
-<input type="hidden" name="rm" value="2">
+<!--<input type="hidden" name="rm" value="2">-->
 <input type="hidden" name="cancel_return" value="<%=Util.html(paypal_cancel)%>">
 <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
 <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">

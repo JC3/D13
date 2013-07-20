@@ -20,13 +20,13 @@ public class HQLTest {
             System.out.println(o.getEmail());*/
         
         System.out.println("reviewUsers:");
-        for (User u:User.findReviewers(s))
+        for (User u:User.findReviewersForEmail(s))
             System.out.println("  " + u.getEmail() + " - " + u.getRoleDisplay());
         System.out.println("admitUsers:");
-        for (User u:User.findAdmissions(s))
+        for (User u:User.findAdmissionsForEmail(s))
             System.out.println("  " + u.getEmail() + " - " + u.getRoleDisplay());
         System.out.println("finalizeUsers:");
-        for (User u:User.findFinalizers(s))
+        for (User u:User.findFinalizersForEmail(s))
             System.out.println("  " + u.getEmail() + " - " + u.getRoleDisplay());
         
         HibernateUtil.commitTransaction();

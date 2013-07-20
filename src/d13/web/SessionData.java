@@ -27,6 +27,8 @@ public class SessionData {
     public static final String SA_SURVEY_DEFAULTS = "jsp.approval.defaults";
     public static final String SA_DUES_ERROR = "jsp.dues.error";
     public static final String SA_DUES_INVOICE_ID = "jsp.dueconfirm.invoice_id";
+    public static final String SA_EDIT_DUES_ERROR = "jsp.editdues.error";
+    public static final String SA_EDIT_DUES_DEFAULTS = "jsp.editdues.defaults";
 
     //private static final String SA_EMAIL = "info.disorient.SessionData.email";
     private static final String SA_USERID = "info.disorient.SessionData.userid";

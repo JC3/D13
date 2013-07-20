@@ -131,11 +131,11 @@ String sortLink (int index) {
 <table cellspacing="0" class="summary">
 <tr>
 
-    <th class="standard" colspan="4">Actions
+    <th class="standard" colspan="5">Actions
 <% for (int n = 0; n < cols.size(); ++ n) { %>
     <th class="<%=cls.get(n)%>"><a href="<%=sortLink(n)%>"><%=Util.html(cols.get(n)) %></a>
 <% } %>
-    <th class="standard" colspan="4">Actions
+    <th class="standard" colspan="5">Actions
 
 <% for (DataViewer.Row row:rows) { 
 
@@ -145,6 +145,7 @@ String sortLink (int index) {
     boolean review =
             (row.user.getState() == UserState.NEEDS_REVIEW && row.user.isReviewableBy2(sess.getUser())) ||
             (row.user.getState() == UserState.REGISTERED && row.user.isApprovableBy2(sess.getUser()));
+    boolean dues = row.user.getState() == UserState.APPROVED && sess.getUser().getRole().canEditDues();
     
     String query = ("u=" + row.user.getUserId() + "&next=" + this_url);
     
@@ -159,6 +160,7 @@ String sortLink (int index) {
     <td class="standard"><div><%if (personal) {%><a href="personal.jsp?<%=query%>">Profile</a><%}%></div>
     <td class="standard"><div><%if (registration) {%><a href="registration.jsp?<%=query%>">Registration</a><%}%></div>
     <td class="standard"><div><%if (cells) {%><a href="cells.jsp?<%=query%>">Cells</a><%}%></div>
+    <td class="standard"><div><%if (dues) {%><a href="editdues.jsp?<%=query%>">Dues</a><%}%></div>
     <td class="standard"><div><a href="details.jsp?<%=query%>"><%=review?"Review":"Details"%></a></div>
     
     <% for (int n = 0; n < row.values.size(); ++ n) { String str=row.values.get(n); %>
@@ -174,6 +176,7 @@ String sortLink (int index) {
     <td class="standard"><div><%if (personal) {%><a href="personal.jsp?<%=query%>">Profile</a><%}%></div>
     <td class="standard"><div><%if (registration) {%><a href="registration.jsp?<%=query%>">Registration</a><%}%></div>
     <td class="standard"><div><%if (cells) {%><a href="cells.jsp?<%=query%>">Cells</a><%}%></div>
+    <td class="standard"><div><%if (dues) {%><a href="editdues.jsp?<%=query%>">Dues</a><%}%></div>
     <td class="standard"><div><a href="details.jsp?<%=query%>"><%=review?"Review":"Details"%></a></div>
 
 <% } %>

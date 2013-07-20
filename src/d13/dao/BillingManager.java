@@ -1,10 +1,23 @@
 package d13.dao;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.joda.time.DateTime;
 
 import d13.util.HibernateUtil;
@@ -121,39 +134,9 @@ public class BillingManager {
         return getOpenItems(user, DateTime.now());
         
     }
-    /*
-    public static List<User> findUnpaidPersonalDues () {
- 
-        @SuppressWarnings("unchecked")
-        List<User> users = (List<User>)HibernateUtil.getCurrentSession()
-                .createQuery("from User as user where user.state = " + UserState.APPROVED.toDBId() + " and user.personalDue.paymentRequired = true and user.personalDue.paymentComplete = false order by lower(user.realName) asc")
-                .list();
-        
-        return users;
-        
-    }
-    
-    public static List<User> findUnpaidRVDues () {
-        
-        @SuppressWarnings("unchecked")
-        List<User> users = (List<User>)HibernateUtil.getCurrentSession()
-                .createQuery("from User as user where user.state = " + UserState.APPROVED.toDBId() + " and user.rvDue.paymentRequired = true and user.rvDue.paymentComplete = false order by lower(user.realName) asc")
-                .list();
-        
-        return users;
-   
-    }
-    */
-   
+
     
     public static List<User> getUsersWithOpenPersonalDues () {
-       
-        /*
-        @SuppressWarnings("unchecked")
-        List<User> users = (List<User>)HibernateUtil.getCurrentSession()
-                .createQuery("from User as user where user.state = " + UserState.APPROVED.toDBId() + " and user.personalDue.active = true and (user.personalDue.paidInvoice is not null or user.personalDue.customAmount = 0) order by lower(user.realName) asc")
-                .list();
-        */
         
         @SuppressWarnings("unchecked")
         List<User> all = (List<User>)HibernateUtil.getCurrentSession()
@@ -270,7 +253,8 @@ public class BillingManager {
         invoice.setStatus(Invoice.STATUS_IN_PROGRESS);
         invoice.setCreator(creator);
         invoice.setCreated(now);
-  
+        creator.addInvoice(invoice);
+        
         int total = 0;
         for (PaymentItem p:pitems) {
             invoice.addInvoiceItem(p.due, p.invoiceAmount, p.description); 
@@ -284,6 +268,162 @@ public class BillingManager {
         return invoice;
         
     }
+   
     
+    private static String getRC (HttpResponse response) throws Exception {
+        
+        InputStream is = response.getEntity().getContent();
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String result = "", line = null;
+        
+        while ((line = br.readLine()) != null)
+            result += line;
+        
+        return result;
+        
+    }
+
+    /*
+    item_number=8
+    residence_country=US
+    verify_sign=Ak.va-5qy2TtpfHuN7PrMDF0dq2cAawT9vFOOB0AfH4Rbye2pJFXdqHi
+    business=jason.cipriani-facilitator@gmail.com
+    payment_status=Completed
+    transaction_subject=Disorient Camp Dues
+    protection_eligibility=Ineligible
+    shipping=0.00
+    payer_id=MRJC8HSD6GAYG
+    first_name=Dis
+    payer_email=discamper@yopmail.com
+    mc_fee=9.73
+    txn_id=8NT380167Y0430610
+    quantity=1
+    receiver_email=jason.cipriani-facilitator@gmail.com
+    notify_version=3.7
+    txn_type=web_accept
+    mc_gross=325.00
+    payer_status=verified
+    mc_currency=USD
+    test_ipn=1
+    custom=
+    payment_date=00:46:12 Jul 20, 2013 PDT
+    payment_fee=9.73
+    charset=windows-1252
+    payment_gross=325.00
+    ipn_track_id=477cc4504af38
+    tax=0.00
+    handling_amount=0.00
+    item_name=Disorient Camp Dues
+    last_name=Camper
+    payment_type=instant
+    receiver_id=2NQX4D6LLGHV8*/
+   
+    private static void handlePaymentOK (HttpServletRequest request) throws Exception {
+       
+        Invoice invoice = Invoice.findById(Long.parseLong(request.getParameter("item_number")));
+        String txn_id = request.getParameter("txn_id");
+        
+        // TODO: notify administrator about any of the errors below
+        
+        // filter out test mode
+        if ("1".equals(request.getParameter("test_ipn")) && !"1".equals(RuntimeOptions.getOption("dues.allow_test", "0"))) {
+            System.out.println("BILLING: " + txn_id + " " + invoice.getInvoiceId() + " ignoring test_ipn.");
+            return;
+        }
+        
+        // validate from address
+        String paypal_receiver = RuntimeOptions.getOption("dues.paypal_email", "dues@disorient.info");
+        String actual_receiver = request.getParameter("business");
+        if (!paypal_receiver.equalsIgnoreCase(actual_receiver)) {
+            System.out.println("BILLING: " + txn_id + " " + invoice.getInvoiceId() + " ignoring, receiver " + actual_receiver + " should be " + paypal_receiver);
+            return;
+        }
+        
+        // validate payment status
+        if (!"completed".equalsIgnoreCase(request.getParameter("payment_status"))) {
+            System.out.println("BILLING: " + txn_id + " " + invoice.getInvoiceId() + " ignoring payment status of " + request.getParameter("payment_status"));
+            return;
+        }
+       
+        // validate amount
+        int amount = (int)(100.f * Float.parseFloat(request.getParameter("payment_gross")) + 0.5f);
+        if (amount < invoice.getInvoiceAmount()) {
+            System.out.println("BILLING: " + txn_id + " " + invoice.getInvoiceId() + " ignoring, amount " + amount + " should be " + invoice.getInvoiceAmount());
+            return;
+        }
+        
+        // validate invoice status
+        if (invoice.getStatus() != Invoice.STATUS_IN_PROGRESS && invoice.getStatus() != Invoice.STATUS_PENDING) {
+            // todo: email admin about this because it could be a duplicate payment
+            System.out.println("BILLING: " + txn_id + " " + invoice.getInvoiceId() + " ignoring already complete invoice.");
+            return;
+        }
+        
+        // mark invoice as paid
+        invoice.setStatus(Invoice.STATUS_COMPLETE);
+        invoice.setPaypalAmount(amount);
+        invoice.setPaypalSenderEmail(request.getParameter("payer_email"));
+        invoice.setPaypalSenderFirstName(request.getParameter("first_name"));
+        invoice.setPaypalSenderLastName(request.getParameter("last_name"));
+        invoice.setPaypalTimestamp(request.getParameter("payment_date"));
+        invoice.setPaypalTransactionId(txn_id);
+        invoice.setPaypalTransactionStatus(request.getParameter("payment_status"));
+        
+        // mark individual items as paid
+        for (InvoiceItem item:invoice.getItems()) {
+            item.getDue().setOpen(false);
+            item.getDue().setPaidInvoice(invoice);
+        }
+        
+        // TODO: send dues received email
+        
+    }
+    
+    
+    private static void handlePaymentFail (HttpServletRequest request, String response) throws Exception {
+        
+        // TODO: implement this. it's what happens if paypal response fails. should notify administrators.
+        
+    }
+    
+    
+    public static void handleIPN (HttpServletRequest request) throws Exception {
+        
+        // todo: move default values to BillingManager (also move from dueconfirm.jsp)
+        String paypal_site = RuntimeOptions.getOption("dues.paypal_site", "https://www.paypal.com/cgi-bin/webscr");
+
+        HttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost(paypal_site);
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        StringBuilder logparams = new StringBuilder();
+        
+        // construct response
+        params.add(new BasicNameValuePair("cmd", "_notify-validate")); //You need to add this parameter to tell PayPal to verify
+        for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements();) {
+            String name = e.nextElement();
+            String value = request.getParameter(name);
+            params.add(new BasicNameValuePair(name, value));
+            logparams.append(name).append("=").append(value).append("&");
+        }
+        post.setEntity(new UrlEncodedFormEntity(params));
+        
+        // submit and read reply
+        String rc;
+        try {
+            rc = getRC(client.execute(post)).trim();
+            if ("VERIFIED".equals(rc))
+                handlePaymentOK(request);
+            else
+                handlePaymentFail(request, rc);
+        } catch (Exception t) {
+            RawIPNLogEntry.addEntry(logparams.toString(), t.getMessage());
+            throw t;
+        }
+         
+        // log for our records
+        RawIPNLogEntry.addEntry(logparams.toString(), rc);
+        
+    }
+   
     
 }
