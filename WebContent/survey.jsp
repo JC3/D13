@@ -81,10 +81,12 @@ need a little more information. Please fill out this form so that we can gather 
 information for a smooth and seamless DISOR13NT. We will be sending out emails periodically to
 keep camp members updated.</p>
  
-<p>While Disorient tries to provide all our tent campers with shade, we require that each tent camper purchase and
-bring with them one (or more!) 10 by 10 orange tarp (<a href="http://www.tents-canopy.com/orange-tarp-10x10.html">http://www.tents-canopy.com/orange-tarp-10x10.html</a>) 
-to expand shade as necessary.</p> 
-
+<p>We try our best to provide all tent campers with shade to live under, however on the playa, 
+the more shade, the better.  Campers should try and bring extra fabric, tarps, etc. to extend
+shade and build walls as necessary.  If you are planning to purchase tarps for your personal 
+use on playa, please consider getting 10'x10' or 10'x20' orange tarps (<a href="http://www.tents-canopy.com/orange-tarp-10x10.html">http://www.tents-canopy.com/orange-tarp-10x10.html</a>)
+as those will work well with the current camp shade structure.</p>
+ 
 <form action="do_editsurvey.jsp" method="post">
 <input type="hidden" name="fail_target" value="<%= Util.html(fail_target) %>">
 <input type="hidden" name="success_target" value="<%= Util.html(success_target) %>">

@@ -17,6 +17,8 @@ DataViewer view = new DataViewer(pageContext, sess);
 if (view.isFailed())
     return; // user should not be here
 
+UserStatistics.Statistics stats = UserStatistics.calculateStatistics();
+    
 String this_url = Util.html(java.net.URLEncoder.encode(Util.getCompleteUrl(request), "us-ascii"));
 
 List<String> cols = view.getColumns();
@@ -39,10 +41,21 @@ if (!csv_link.contains("download")) { // hack
         csv_link += "&download";
 }
 
+String qf = request.getParameter("qf");
+String sortby = request.getParameter("sortby");
 %>
 <%!
-String sortLink (int index) {
-    return "view_data.jsp?sortby=" + index;
+String sortLink (String qf, int index) {
+    return "view_data.jsp" + makeQuery(qf, Integer.toString(index));
+}
+String makeQuery (String qf, String sortby) {
+    StringBuilder query = new StringBuilder("?");
+    if (qf != null && qf != "")
+        query.append("qf=").append(qf).append("&");
+    if (sortby != null && sortby != "")
+        query.append("sortby=").append(sortby).append("&");
+    query.deleteCharAt(query.length() - 1);
+    return query.toString();
 }
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -54,6 +67,9 @@ String sortLink (int index) {
 <style type="text/css">
 /*td { border-bottom: 1px solid black; border-right: 1px solid #e0e0e0; white-space: nowrap; vertical-align: top; }*/
 /*th { border-bottom: 1px solid black; border-right: 1px solid #e0e0e0; font-weight: bold; white-space: nowrap; }*/
+h1 {
+    font-size: larger;
+}
 .summary {
     background: #101010;
     border: 1px solid #303030;
@@ -93,16 +109,96 @@ String sortLink (int index) {
     margin: 0;
     padding: 0;
 }
+hr.sub {
+    border-top: 1px solid #303030;
+}
+#stats {
+    font-size: smaller;
+}
 </style>
 </head>
 <body>
 
 <dis:header/>
+
 <div class="nav">
-  <a href="home.jsp">Home</a> | 
-  <a href="<%=Util.html(csv_link) %>">Download as CSV</a>
+  <a href="home.jsp">Home</a> | <a href="<%=Util.html(csv_link) %>">Download as CSV</a>
 </div>
 
+<hr class="sub">
+
+<div style="border:0;margin:0;padding:0;">
+
+<div style="border:0;margin:0;padding:0;float:left;">
+<h1>Statistics:</h1>
+<table cellspacing="0" class="summary" id="stats">
+<tr>
+  <th class="standard">
+  <th class="standard">Total
+  <th class="standard">Return
+  <th class="standard">New
+  <th class="standard">Virgins
+<%!
+  void statsRow (JspWriter out, String name, UserStatistics.UserCount s) throws java.io.IOException {
+     out.print(String.format("<tr><td class=\"standard\">%s", Util.html(name)));
+     out.print(String.format("<td>%d<td>%d<td>%d<td>%d", s.total, s.total - s.disorientVirgins, s.disorientVirgins, s.bmVirgins));
+  }
+%>
+<% statsRow(out, "Registered (including approved)", stats.registered); %>
+<% statsRow(out, "Approved", stats.approved); %>
+<% statsRow(out, "RVs Registered (including approved)", stats.rvsRegistered); %>
+<% statsRow(out, "RVs Approved", stats.rvsApproved); %>
+<% statsRow(out, "Need registration review", stats.needReview); %>
+<% statsRow(out, "Need admissions review", stats.needAdmitted); %>
+<% statsRow(out, "Need admission confirmed", stats.needFinalized); %>
+<% statsRow(out, "Need any action", stats.needAction); %>
+</table>
+</div>
+
+<div style="border:0;margin:0;padding:0;padding-left:4ex;float:left;">
+<h1>Filters:</h1>
+<ul>
+  <li><a href="view_data.jsp<%=makeQuery("1", sortby)%>">Only users that need registration applications reviewed.</a>
+  <li><a href="view_data.jsp<%=makeQuery("2", sortby)%>">Only users that need to be approved or rejected.</a>
+  <li><a href="view_data.jsp<%=makeQuery("3", sortby)%>">Only users that need to be finalized.</a>
+  <li><a href="view_data.jsp<%=makeQuery("4", sortby)%>">Only users that have been approved.</a>
+  <li><a href="view_data.jsp<%=makeQuery("5", sortby)%>">Only users that own RVs.</a>
+  <li><a href="view_data.jsp<%=makeQuery("6", sortby)%>">Only users that need to pay their dues.</a>
+  <li><a href="view_data.jsp<%=makeQuery("7", sortby)%>">Only users that need to complete their approval surveys.</a>
+</ul>
+<h1>Other Views:</h1>
+<ul>
+  <li><a href="view_cells.jsp">View Cells</a>
+  <li><a href="view_groups.jsp">View Camper Groups</a>
+</ul>
+</div>
+
+<div style="border:0;margin:0;padding:0;padding-left:4ex;float:left;width:30ex;">
+<h1>Email:</h1>
+<textarea class="dtextarea" style="width:100%;" readonly>
+<% 
+boolean first = true;
+for (DataViewer.Row row:rows) {
+    if (first)
+        first = false;
+    else
+        out.println(",");
+    out.print(Util.html(row.user.getEmail()));
+} 
+%>
+</textarea>
+<p style="font-size:smaller;">
+This is a list of all email addresses displayed 
+in table below, which you can copy and paste 
+into your email client.</p>
+</div>
+
+<div style="border:0;margin:0;padding:0;clear:both;"></div>
+
+</div>
+
+<hr class="sub">
+<h1>Users:</h1>
 
 <!-- 
 <form action="<%=Util.getCompleteUrl(request) %>" method="get">
@@ -133,7 +229,7 @@ String sortLink (int index) {
 
     <th class="standard" colspan="5">Actions
 <% for (int n = 0; n < cols.size(); ++ n) { %>
-    <th class="<%=cls.get(n)%>"><a href="<%=sortLink(n)%>"><%=Util.html(cols.get(n)) %></a>
+    <th class="<%=cls.get(n)%>"><a href="<%=sortLink(qf, n)%>"><%=Util.html(cols.get(n)) %></a>
 <% } %>
     <th class="standard" colspan="5">Actions
 

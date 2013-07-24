@@ -61,7 +61,7 @@ public class BillingManager {
             item.choices.add(choice);
         }
         
-        for (DueCalculator.Tier tier:DueCalculator.getPersonalTiers(user.getRegisteredOn(), user.getApprovedOn(), when)) {
+        for (DueCalculator.Tier tier:DueCalculator.getPersonalTiers(user.getRegisteredOn(), user.getGracePeriodStart(), when)) {
             if (tier.getAmount() >= customAmount) {
                 PaymentChoice choice = new PaymentChoice();
                 choice.description = tier.getName();

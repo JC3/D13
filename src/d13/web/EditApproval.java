@@ -62,6 +62,7 @@ public class EditApproval {
             if (action_final_approve && user.getState() != UserState.APPROVED) {
                 user.setState(UserState.APPROVED);
                 user.setApprovedOnNowIfNotSet();
+                user.setGracePeriodStart(user.getApprovedOn());
                 QueuedEmail.queueNotification(QueuedEmail.TYPE_APPROVED, user);
             } else if (action_final_reject && user.getState() != UserState.REJECTED) { 
                 user.setState(UserState.REJECTED);

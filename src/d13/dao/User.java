@@ -39,6 +39,7 @@ public class User {
     private ApprovalSurvey approval;
     private UserState state = UserState.NEW_USER;
     private DateTime approvedOn;
+    private DateTime gracePeriodStart;
     private String adminComment;
     private boolean termsAgreed;
     private Set<Cell> cells = new HashSet<Cell>(0);
@@ -209,9 +210,14 @@ public class User {
         return state;
     }
     
-    @DataView(i=130, n="Approved On") 
+    @DataView(i=131, n="Approved On") 
     public DateTime getApprovedOn () {
         return approvedOn;
+    }
+    
+    @DataView(i=135, n="Grace Period Start")
+    public DateTime getGracePeriodStart () {
+        return gracePeriodStart;
     }
     
     @DataView(i=140, n="Administrator Comment")
@@ -261,7 +267,7 @@ public class User {
         return customDueComments;
     }
     
-    @DataView(i=132, n="Dues Paid?")
+    @DataView(i=137, n="Dues Paid?")
     public String getPaidDisplay () {
         if (isPaid())
             return "Paid";
@@ -273,7 +279,7 @@ public class User {
             return "Unpaid";
     }
     
-    @DataView(i=134, n="Camp Fee Paid On")
+    @DataView(i=138, n="Camp Fee Paid On")
     public DateTime getPersonalPaidDate () {
         if (personalDue == null)
             return null;
@@ -283,7 +289,7 @@ public class User {
             return personalDue.getPaidInvoice().getCreated();
     }
 
-    @DataView(i=136, n="RV Fee Paid On")
+    @DataView(i=139, n="RV Fee Paid On")
     public DateTime getRvPaidDate () {
         if (rvDue == null)
             return null;
@@ -364,6 +370,10 @@ public class User {
     public void setApprovedOnNowIfNotSet () {
         if (approvedOn == null)
             setApprovedOnNow();
+    }
+        
+    public void setGracePeriodStart (DateTime when) {
+        gracePeriodStart = when;
     }
     
     public void setAdminComment(String adminComment) {

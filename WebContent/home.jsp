@@ -98,6 +98,17 @@ here periodically for status updates!</div>
 <strong>For Administrators:</strong><br><ul>
 <!-- <li><a href="admin_users.jsp">Manage Users</a> -->
 <li><a href="view_data.jsp">View Registration Data</a>
+<ul>
+  <li><a href="view_data.jsp?qf=1">Only users that need registration applications reviewed.</a>
+  <li><a href="view_data.jsp?qf=2">Only users that need to be approved or rejected.</a>
+  <li><a href="view_data.jsp?qf=3">Only users that need to be finalized.</a>
+  <li><a href="view_data.jsp?qf=4">Only users that have been approved.</a>
+  <li><a href="view_data.jsp?qf=5">Only users that own RVs.</a>
+  <li><a href="view_data.jsp?qf=6">Only users that need to pay their dues.</a>
+  <li><a href="view_data.jsp?qf=7">Only users that need to complete their approval surveys.</a>
+</ul>
+<li><a href="view_cells.jsp">View Cells</a>
+<li><a href="view_groups.jsp">View Camper Groups</a>
 <li><a href="adminhelp.jsp">Help</a>
 </ul>
 <% } %>

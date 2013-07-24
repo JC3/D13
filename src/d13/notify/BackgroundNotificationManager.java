@@ -9,6 +9,7 @@ import javax.servlet.ServletContextListener;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.joda.time.DateTime;
 
 import d13.dao.QueuedEmail;
 import d13.dao.RuntimeOptions;
@@ -51,14 +52,14 @@ public class BackgroundNotificationManager implements ServletContextListener {
         
         @Override public void run () {
 
-            do {
+            while (!terminate && processEmails()) {
                 synchronized (timer) {
                     try {
                         timer.wait(pollInterval);
                     } catch (InterruptedException x) {
                     }
                 }                
-            } while (!terminate && processEmails());
+            }
             
         }
 
@@ -231,6 +232,27 @@ public class BackgroundNotificationManager implements ServletContextListener {
             case QueuedEmail.TYPE_REJECTED:
                 RejectionEmail.sendNow(user, config);
                 break;
+            }
+            
+            // 7/23/2013: update user's grace period start time with current time if
+            // approval email was sent successfully. this is more fair to user's when
+            // there are delays in the notification emails.
+            if (queued.getType() == QueuedEmail.TYPE_APPROVED) {
+                session = HibernateUtil.openSession();
+                tx = null;
+                try {
+                    tx = session.beginTransaction();
+                    user = queued.fetchUser(session);
+                    user.setGracePeriodStart(DateTime.now());
+                    tx.commit();
+                } catch (Throwable t) {
+                    if (tx != null) tx.rollback();
+                    throw t;
+                } finally {
+                    session.close();
+                    session = null;
+                    tx = null;
+                }
             }
             
         }

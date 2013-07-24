@@ -18,6 +18,7 @@ import d13.dao.ApprovalSurvey;
 import d13.dao.Cell;
 import d13.dao.RegistrationForm;
 import d13.dao.User;
+import d13.dao.UserSearchFilter;
 import d13.util.Util;
 
 public class DataViewer {
@@ -28,6 +29,7 @@ public class DataViewer {
         boolean longtext;
         boolean email;
         public abstract String getString (Object o);
+        public abstract Object getObject (Object o);
         @Override public int compareTo (ViewDescriptor other) {
             if (other == null)
                 return -1;
@@ -61,6 +63,16 @@ public class DataViewer {
                 }
             }
         }
+        public Object getObject (Object o) {
+            if (o != null) {
+                try {
+                    return read.invoke(o);
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+            }
+            return null;
+        }
     }
     
     private static class CellViewDescriptor extends ViewDescriptor {
@@ -71,12 +83,19 @@ public class DataViewer {
             else
                 return ((User)o).isInCell(cell) ? "Yes" : "";
         }
+        public Object getObject (Object o) {
+            if (o == null || !(o instanceof User))
+                return false;
+            else
+                return ((User)o).isInCell(cell);
+        }
     }
     
     public static class Row {
         public User user;
         public List<String> values;
         public List<String> hrefs;
+        private List<Object> sortvalues;
     }
     
     private boolean failed;
@@ -173,8 +192,10 @@ public class DataViewer {
         List<String> columns = new ArrayList<String>();
        
         for (List<ViewDescriptor> vds:lists)
-            for (ViewDescriptor vd:vds)
+            for (ViewDescriptor vd:vds) {
                 columns.add(vd.field);
+                
+            }
         
         return columns;
         
@@ -205,11 +226,13 @@ public class DataViewer {
         row.user = user;
         row.values = new ArrayList<String>();
         row.hrefs = new ArrayList<String>();
-                
+        row.sortvalues = new ArrayList<Object>();
+        
         for (ViewDescriptor vd:userProps) {
             String str = vd.getString(user);
             row.values.add(str);
             row.hrefs.add(href(str, vd.email));
+            row.sortvalues.add(vd.getObject(user));
         }
         
         RegistrationForm rform = user.isRegistrationComplete() ? user.getRegistration() : null;
@@ -217,6 +240,7 @@ public class DataViewer {
             String str = vd.getString(rform);
             row.values.add(str);
             row.hrefs.add(href(str, vd.email));
+            row.sortvalues.add(vd.getObject(rform));
         }
 
         if (!nocells) {
@@ -224,6 +248,7 @@ public class DataViewer {
                 String str = vd.getString(user);
                 row.values.add(str);
                 row.hrefs.add(href(str, vd.email));
+                row.sortvalues.add(vd.getObject(user));
             }
         }
         
@@ -232,6 +257,7 @@ public class DataViewer {
             String str = vd.getString(aform);
             row.values.add(str);
             row.hrefs.add(href(str, vd.email));
+            row.sortvalues.add(vd.getObject(aform));
         }
         
         return row;
@@ -258,10 +284,31 @@ public class DataViewer {
 
         @Override public int compare (Row a, Row b) {
             try {
-                return a.values.get(index).compareToIgnoreCase(b.values.get(index));
+                //return a.values.get(index).compareToIgnoreCase(b.values.get(index));
+                return compareObjects(a.sortvalues.get(index), b.sortvalues.get(index));
             } catch (Throwable t) {
                 return 0;
             }
+        }
+        
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        private static int compareObjects (Object a, Object b) {
+          
+            if (a == b)
+                return 0;
+            else if (a == null || b == null)
+                return a == null ? -1 : 1;
+           
+            if (a.getClass().equals(b.getClass())) {
+                if (a instanceof Comparable) {
+                    Comparable ac = (Comparable)a;
+                    Comparable bc = (Comparable)b;
+                    return ac.compareTo(bc);
+                }
+            }
+            
+            return a.toString().compareTo(b.toString());
+            
         }
         
     }
@@ -324,10 +371,18 @@ public class DataViewer {
             downloadCSV = (context.getRequest().getParameter("download") != null);
             
             int sortby = intParam(context.getRequest().getParameter("sortby"));
+            int qf = intParam(context.getRequest().getParameter("qf"));
             
-            for (User user:User.findAll()) {
-                if (user.isViewableBy2(current))
-                    rows.add(getDataViewRow(user, current, (flags & FLAG_NO_CELLS) != 0));
+            try {
+                for (User user:/*User.findAll()*/ UserSearchFilter.quickFilter(qf)) {
+                    if (user.isViewableBy2(current))
+                        rows.add(getDataViewRow(user, current, (flags & FLAG_NO_CELLS) != 0));
+                }
+            } catch (Exception x) {
+                System.err.println("ERROR while getting user list: " + x.getMessage());
+                x.printStackTrace();
+                failed = true;
+                return;
             }
             
             Collections.sort(rows, new ColumnValueComparator(sortby));

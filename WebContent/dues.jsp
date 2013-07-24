@@ -95,9 +95,11 @@ function checkForm () {
 
 <div class="form">
 
-<p>Please review your due payment information below. You may pay for higher tiers or enter
-custom amounts. You may pay other campers' dues below as well. If you choose to do so, select their names
-below.</p>
+<p>Please review your due payment information below. Our camp is paid for by donations and dues from
+our campers, if you would like to make an additional financial contribution to camp, you may pay
+for higher tiers or enter custom amounts below. You may pay other campers' dues as well. If you are
+paying for another camper, select their name(s) below.</p>
+
 <p>On the next page, you will be able to review and confirm your payment details and pay 
 with PayPal.</p>
 

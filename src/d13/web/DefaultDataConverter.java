@@ -12,7 +12,7 @@ import d13.dao.UserState;
 
 public class DefaultDataConverter implements DataConverter {
 
-    private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("M/dd/yyyy KK:mm a");
+    private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("M/dd/yyyy hh:mm a");
     private static final DateTimeZone tz = DateTimeZone.forID("America/New_York");
     
     @Override public String asString (Object object) {

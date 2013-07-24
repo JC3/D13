@@ -164,6 +164,7 @@
         <one-to-one name="approval" class="d13.dao.ApprovalSurvey" cascade="save-update"/>
         <property name="state" type="d13.dao.types.UserStateType" not-null="true"/>
         <property name="approvedOn" type="d13.dao.types.DateTimeType"/>
+        <property name="gracePeriodStart" type="d13.dao.types.DateTimeType"/>
         <property name="adminComment" type="text"/>
         <set name="cells" table="users_cells">
             <key column="userId"/>
