@@ -372,9 +372,16 @@ public class DataViewer {
             
             int sortby = intParam(context.getRequest().getParameter("sortby"));
             int qf = intParam(context.getRequest().getParameter("qf"));
+            String search = context.getRequest().getParameter("search");
+            search = (search == null ? "" : search.trim());
             
             try {
-                for (User user:/*User.findAll()*/ UserSearchFilter.quickFilter(qf)) {
+                List<User> users;
+                if (search != "")
+                    users = UserSearchFilter.search(search);
+                else
+                    users = UserSearchFilter.quickFilter(qf);
+                for (User user:users) {
                     if (user.isViewableBy2(current))
                         rows.add(getDataViewRow(user, current, (flags & FLAG_NO_CELLS) != 0));
                 }

@@ -43,17 +43,20 @@ if (!csv_link.contains("download")) { // hack
 
 String qf = request.getParameter("qf");
 String sortby = request.getParameter("sortby");
+String search = request.getParameter("search");
 %>
 <%!
-String sortLink (String qf, int index) {
-    return "view_data.jsp" + makeQuery(qf, Integer.toString(index));
+String sortLink (String qf, int index, String search) {
+    return "view_data.jsp" + makeQuery(qf, Integer.toString(index), search);
 }
-String makeQuery (String qf, String sortby) {
+String makeQuery (String qf, String sortby, String search) {
     StringBuilder query = new StringBuilder("?");
     if (qf != null && qf != "")
         query.append("qf=").append(qf).append("&");
     if (sortby != null && sortby != "")
         query.append("sortby=").append(sortby).append("&");
+    if (search != null && search != "")
+        try { query.append("search=").append(java.net.URLEncoder.encode(search, "us-ascii")).append("&"); } catch (Exception x) { }
     query.deleteCharAt(query.length() - 1);
     return query.toString();
 }
@@ -158,13 +161,14 @@ hr.sub {
 <div style="border:0;margin:0;padding:0;padding-left:4ex;float:left;">
 <h1>Filters:</h1>
 <ul>
-  <li><a href="view_data.jsp<%=makeQuery("1", sortby)%>">Only users that need registration applications reviewed.</a>
-  <li><a href="view_data.jsp<%=makeQuery("2", sortby)%>">Only users that need to be approved or rejected.</a>
-  <li><a href="view_data.jsp<%=makeQuery("3", sortby)%>">Only users that need to be finalized.</a>
-  <li><a href="view_data.jsp<%=makeQuery("4", sortby)%>">Only users that have been approved.</a>
-  <li><a href="view_data.jsp<%=makeQuery("5", sortby)%>">Only users that own RVs.</a>
-  <li><a href="view_data.jsp<%=makeQuery("6", sortby)%>">Only users that need to pay their dues.</a>
-  <li><a href="view_data.jsp<%=makeQuery("7", sortby)%>">Only users that need to complete their approval surveys.</a>
+  <li><a href="view_data.jsp<%=makeQuery(null, sortby, null)%>">All users.</a>
+  <li><a href="view_data.jsp<%=makeQuery("1", sortby, null)%>">Only users that need registration applications reviewed.</a>
+  <li><a href="view_data.jsp<%=makeQuery("2", sortby, null)%>">Only users that need to be approved or rejected.</a>
+  <li><a href="view_data.jsp<%=makeQuery("3", sortby, null)%>">Only users that need to be finalized.</a>
+  <li><a href="view_data.jsp<%=makeQuery("4", sortby, null)%>">Only users that have been approved.</a>
+  <li><a href="view_data.jsp<%=makeQuery("5", sortby, null)%>">Only users that own RVs.</a>
+  <li><a href="view_data.jsp<%=makeQuery("6", sortby, null)%>">Only users that need to pay their dues.</a>
+  <li><a href="view_data.jsp<%=makeQuery("7", sortby, null)%>">Only users that need to complete their approval surveys.</a>
 </ul>
 <h1>Other Views:</h1>
 <ul>
@@ -200,36 +204,20 @@ into your email client.</p>
 <hr class="sub">
 <h1>Users:</h1>
 
-<!-- 
-<form action="<%=Util.getCompleteUrl(request) %>" method="get">
-<table border=1>
-<tr><td colspan="3">Filters:
-<tr>
-<td>User State:<br>
-  <input type="checkbox">New User<br>
-  <input type="checkbox">Needs Review<br>
-  <input type="checkbox">Approved<br>
-  <input type="checkbox">Rejected<br>
-  <input type="checkbox" checked>ALL<br>
-<td>Forms:<br>
-  <input type="checkbox">Registration Complete<br>
-  <input type="checkbox">Approval Survey Complete<br>
-  <input type="checkbox" checked>ALL<br>
-<td>Cells:<br>
-  <input type="radio" name="fc">No Cells<br>
-  <input type="radio" name="fc">Any Cells<br> 
-<tr><td colspan="3"><input type="submit" value="Apply">
-<tr><td colspan="3"><a href="<%=Util.html(csv_link) %>">Download as CSV</a>
-</table>
-</form>
--->
+<div style="width:100%;white-space:nowrap;border:0;margin:0;padding:0;">
+<form action="view_data.jsp" method="get">
+<% if (sortby != null && sortby != "") { %>
+<input type="hidden" name="sortby" value="<%=Util.html(sortby)%>">
+<% } %>
+Find: <input type="text" name="search" class="dtext" style="width:20ex;" value="<%=Util.html(search)%>"> <input type="submit" value="Search" class="dbutton" style="width:10ex;">
+</form></div>
 
 <table cellspacing="0" class="summary">
 <tr>
 
     <th class="standard" colspan="5">Actions
 <% for (int n = 0; n < cols.size(); ++ n) { %>
-    <th class="<%=cls.get(n)%>"><a href="<%=sortLink(qf, n)%>"><%=Util.html(cols.get(n)) %></a>
+    <th class="<%=cls.get(n)%>"><a href="<%=sortLink(qf, n, search)%>"><%=Util.html(cols.get(n)) %></a>
 <% } %>
     <th class="standard" colspan="5">Actions
 

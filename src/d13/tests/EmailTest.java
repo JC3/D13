@@ -23,10 +23,10 @@ public class EmailTest {
         
         Configuration c = Configuration.fromDatabase(HibernateUtil.getCurrentSession());
         
-        AcceptedNotificationEmail.sendNow(user, r, c);
-        ReviewNotificationEmail.sendNow(user, r, c);
+        //AcceptedNotificationEmail.sendNow(user, r, c);
+        //ReviewNotificationEmail.sendNow(user, r, c);
         ApprovalEmail.sendNow(r.get(0), c);
-        RejectionEmail.sendNow(r.get(0), c);
+        //RejectionEmail.sendNow(r.get(0), c);
         HibernateUtil.commitTransaction();
         
     }

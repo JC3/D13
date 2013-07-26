@@ -2,6 +2,10 @@ package d13.dao;
 
 import java.util.List;
 
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
+
 import d13.util.HibernateUtil;
 
 public class UserSearchFilter {
@@ -73,7 +77,7 @@ public class UserSearchFilter {
                 "(user.rvDue.active=false or user.rvDue.paidInvoice is not null or user.rvDue.customAmount=0))";
             break;
         case QUICK_NEED_SURVEY:
-            querystr = "left outer join user.approval a where a.completionTime is null";
+            querystr = "left outer join user.approval a where user.state = " + UserState.APPROVED.toDBId() + " and a.completionTime is null";
             break;
         default:
             throw new IllegalArgumentException("Invalid quick filter index " + filter);
@@ -86,6 +90,22 @@ public class UserSearchFilter {
                 .createQuery("select user from User as user " + querystr)
                 .list();
         
+        return users;
+        
+    }
+    
+    public static List<User> search (String text) {
+ 
+        Criterion email = Restrictions.ilike("email", text, MatchMode.ANYWHERE);
+        Criterion real = Restrictions.ilike("realName", text, MatchMode.ANYWHERE);
+        Criterion playa = Restrictions.ilike("playaName", text, MatchMode.ANYWHERE);
+        
+        @SuppressWarnings("unchecked")
+        List<User> users = (List<User>)HibernateUtil.getCurrentSession()
+                .createCriteria(User.class)
+                .add(Restrictions.or(email, Restrictions.or(playa, real)))
+                .list();
+   
         return users;
         
     }
