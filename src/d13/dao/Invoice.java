@@ -132,6 +132,19 @@ public class Invoice {
     public void addInvoiceItem(DueItem due, int amount, String description) {
         items.add(new InvoiceItem(this, due, amount, description));
     }
+
+    public InvoiceItem findItem (DueItem due) {
+        for (InvoiceItem item:items) {
+            DueItem d = item.getDue();
+            if (d == due)
+                return item;
+            else if (d == null)
+                continue;
+            else if (d.getItemId() == due.getItemId())
+                return item;
+        }
+        return null;
+    }
     
     public static Invoice findById (Long id) {
         

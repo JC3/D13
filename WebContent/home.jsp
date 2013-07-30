@@ -109,6 +109,7 @@ here periodically for status updates!</div>
 </ul>
 <li><a href="view_cells.jsp">View Cells</a>
 <li><a href="view_groups.jsp">View Camper Groups</a>
+<li><a href="view_finance.jsp">View Dues Report</a>
 <li><a href="adminhelp.jsp">Help</a>
 </ul>
 <% } %>

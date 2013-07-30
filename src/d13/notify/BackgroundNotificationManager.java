@@ -82,17 +82,17 @@ public class BackgroundNotificationManager implements ServletContextListener {
                     enabled = "1".equals(RuntimeOptions.getOption(RT_ENABLE_NOTIFY, "1", session));
                 if (enabled && enablestate != 1) {
                     enablestate = 1;
-                    System.out.println("Notifications enabled.");
+                    System.out.println("MAIL: Notifications enabled.");
                 } else if (!enabled && enablestate != 0) {
                     enablestate = 0;
-                    System.out.println("Notifications disabled.");
+                    System.out.println("MAIL: Notifications disabled.");
                 }
                 if (enabled)
                     config = Configuration.fromDatabase(session);
                 session.close();
                 session = null;
             } catch (Throwable t) {
-                System.err.println("When loading configuration options: " + t.getMessage());
+                System.err.println("MAIL: When loading configuration options: " + t.getMessage());
                 enabled = false;
             }
                 
@@ -118,10 +118,12 @@ public class BackgroundNotificationManager implements ServletContextListener {
                     tx = null;
                 }
             } catch (Throwable t) {
-                System.err.println("When retrieving notification queue: " + t.getMessage());
+                System.err.println("MAIL: When retrieving notification queue: " + t.getMessage());
                 //t.printStackTrace();
                 return !terminate;
             }
+
+            System.out.println("MAIL: Processing " + queued.size() + " notification(s)...");
             
             for (QueuedEmail q:queued) {
             
@@ -148,7 +150,7 @@ public class BackgroundNotificationManager implements ServletContextListener {
                     try {
                         sendMail(q, config);
                     } catch (Throwable t) {
-                        System.err.println("When sending email [#" + q.getQnId() + "]: " + t.getMessage());
+                        System.err.println("MAIL: When sending email [#" + q.getQnId() + "]: " + t.getMessage());
                         //t.printStackTrace();
                         error = t.getMessage();
                         if (error == null) error = "";
@@ -172,11 +174,14 @@ public class BackgroundNotificationManager implements ServletContextListener {
                     }
                     
                 } catch (Throwable t) {
-                    System.err.println("When processing notification [#" + q.getQnId() + "]: " + t.getMessage());
+                    System.err.println("MAIL: When processing notification [#" + q.getQnId() + "]: " + t.getMessage());
                     //t.printStackTrace();
                 }
                 
             }
+            
+            if (!queued.isEmpty())
+                System.out.println("MAIL: Finished processing queue.");
             
             return !terminate;
             
@@ -266,4 +271,50 @@ public class BackgroundNotificationManager implements ServletContextListener {
         
     }
 
+    /*private static class RateLimiter {
+        
+        static final int RATE_LIMIT_OK = 0;
+        static final int RATE_LIMIT_EXCEEDED = 1;
+        static final int RATE_LIMIT_ERROR = 2;
+        
+        private static final int MAX_PER_HOUR = 90;
+        
+        @SuppressWarnings("unused")
+        private static class Entry {
+            long entryId;
+            DateTime entryTime = DateTime.now();
+        }
+       
+        static void addEntry () {
+            
+            Session s = null;
+            Transaction tx = null;
+       
+            try {
+                s = HibernateUtil.openSession();
+                DateTime now = DateTime.now();
+                tx = s.beginTransaction();
+                // remove old entries
+                int removed = s.createQuery("delete from Entry where entryTime < " + now.getMillis()).executeUpdate();
+                System.err.println("MAIL: RateLimiter removed " + removed + " old entr" + (removed == 1 ? "y" : "ies") + ".");
+                // add new entry
+                s.persist(new Entry());
+                tx.commit();
+            } catch (Throwable t) {
+                if (tx != null) tx.rollback();
+                System.err.println("MAIL: While adding rate limit entry: " + t.getMessage());
+            } finally {
+                if (s != null) s.close();
+            }
+            
+        }
+        
+        static int checkStatus () {
+            
+            Session 
+            
+        }
+        
+    }*/
+    
 }

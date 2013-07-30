@@ -2,7 +2,12 @@
     PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping default-access="field">
-
+<!-- 
+    <class name="d13.notify.BackgroundNotificationManager$RateLimiter$Entry" table="notification_quota_track">
+        <id name="entryId"><generator class="native"/></id>
+        <property name="entryTime" not-null="true" type="d13.dao.types.DateTimeType"/>
+    </class>
+-->
     <class name="d13.dao.RawIPNLogEntry" table="ipn_log">
         <id name="entryId"><generator class="native"/></id>
         <property name="received" type="d13.dao.types.DateTimeType" not-null="true"/>

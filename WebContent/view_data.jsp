@@ -174,6 +174,7 @@ hr.sub {
 <ul>
   <li><a href="view_cells.jsp">View Cells</a>
   <li><a href="view_groups.jsp">View Camper Groups</a>
+  <li><a href="view_finance.jsp">View Dues Reports</a>
 </ul>
 </div>
 
