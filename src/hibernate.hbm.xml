@@ -33,6 +33,7 @@
         <property name="paypalTransactionStatus" type="string"/>
         <property name="paypalTimestamp" type="string"/>
         <property name="paypalAmount" not-null="true"/>
+        <property name="paypalFee" not-null="true"/>
     </class>
     
     <class name="d13.dao.InvoiceItem" table="invoice_items">

@@ -20,6 +20,7 @@ public class FinanceReport {
     private boolean failed;
     private final List<DuesByUser> duesByUser = new ArrayList<DuesByUser>();
     private final Totals totals = new Totals();
+    private List<Invoice> invoices;
     
     public static class DuesByUser implements Comparable<DuesByUser> {
         public User user;
@@ -77,6 +78,7 @@ public class FinanceReport {
         public int rvTotal;
         public int rvPaid;
         public Map<String,Integer> personalByTier = new TreeMap<String,Integer>();
+        public int paypalFees;
     }
      
     public FinanceReport (SessionData session) {
@@ -87,8 +89,13 @@ public class FinanceReport {
         }
         
         List<User> users = UserSearchFilter.quickFilter(UserSearchFilter.QUICK_APPROVED);
-
         computeDuesByUser(users);
+        
+        invoices = Invoice.findAllPaid();
+        
+        totals.paypalFees = 0;
+        for (Invoice invoice:invoices)
+            totals.paypalFees += invoice.getPaypalFee();
         
     }
     
@@ -102,6 +109,10 @@ public class FinanceReport {
     
     public Totals getTotals () {
         return totals;
+    }
+    
+    public List<Invoice> getInvoices () {
+        return invoices;
     }
     
     private void computeDuesByUser (List<User> users) {

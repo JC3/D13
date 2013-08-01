@@ -61,6 +61,9 @@ td.s {
 #stats {
     font-size: smaller;
 }
+h1 {
+    font-size: larger;
+}
 </style>
 </head>
 <body>
@@ -70,6 +73,7 @@ td.s {
   <a href="home.jsp">Home</a>
 </div>
 
+<h1>Summary:</h1>
 <table class="summary">
 <tr>
   <th>
@@ -98,10 +102,23 @@ td.s {
   <td class="r"><%= Util.intAmountToString(tot.personalTotal + tot.rvTotal) %>
   <td class="r"><%= Util.intAmountToString(tot.personalPaid + tot.rvPaid) %>
   <td class="r"><%= Util.intAmountToString((tot.personalTotal + tot.rvTotal) - (tot.personalPaid + tot.rvPaid)) %>
+<tr>
+  <td>PayPal Fees
+  <td class="r">
+  <td class="r">(<%= Util.intAmountToString(tot.paypalFees) %>)
+  <td class="r">
+<tr>
+  <td>Net
+  <td class="r"><%= Util.intAmountToString(tot.personalTotal + tot.rvTotal - tot.paypalFees) %>
+  <td class="r"><%= Util.intAmountToString(tot.personalPaid + tot.rvPaid - tot.paypalFees) %>
+  <td class="r"><%= Util.intAmountToString((tot.personalTotal + tot.rvTotal) - (tot.personalPaid + tot.rvPaid)) %>
+<tr>
+  <td colspan="4" class="s">Note: Net Total subtracts paid PayPal fees, does not estimate fees for unpaid dues.
 </table>
 
 <hr>
 
+<h1>Individual Dues:</h1>
 <table class="summary">
 <tr>
   <th>ID
@@ -148,6 +165,43 @@ td.s {
   <td>
   <td>
 
+</table>
+
+<hr>
+
+<h1>Completed Transactions:</h1>
+
+<table class="summary">
+<tr>
+    <th>Invoice ID
+    <th>Invoice Date
+    <th>User Email
+    <th>User Name
+    <th class="r">Invoice Amount
+    <th class="r">PayPal Sender
+    <th class="r">PayPal First Name
+    <th class="r">PayPal Last Name
+    <th class="r">PayPal Transaction
+    <th class="r">PayPal Status
+    <th class="r">PayPal Amount
+    <th class="r">PayPal Fee
+    <th class="r">PayPal Date
+<% for (Invoice i:fr.getInvoices()) { %>
+<tr>
+    <td><%= i.getInvoiceId() %>
+    <td><%= dd.asString(i.getCreated()) %>
+    <td><%= Util.html(i.getCreator().getEmail()) %>
+    <td><%= Util.html(i.getCreator().getRealName()) %>
+    <td class="r"><%= Util.intAmountToString(i.getInvoiceAmount()) %>
+    <td class="r"><%= Util.html(i.getPaypalSenderEmail()) %>
+    <td class="r"><%= Util.html(i.getPaypalSenderFirstName()) %>
+    <td class="r"><%= Util.html(i.getPaypalSenderLastName()) %>
+    <td class="r"><%= Util.html(i.getPaypalTransactionId()) %>
+    <td class="r"><%= Util.html(i.getPaypalTransactionStatus()) %>
+    <td class="r"><%= Util.intAmountToString(i.getPaypalAmount()) %>
+    <td class="r"><%= Util.intAmountToString(i.getPaypalFee()) %>
+    <td class="r"><%= Util.html(i.getPaypalTimestamp()) %>
+<% } %> 
 </table>
 
 <div class="nav">

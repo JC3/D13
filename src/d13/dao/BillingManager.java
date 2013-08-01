@@ -359,9 +359,13 @@ public class BillingManager {
             return;
         }
         
+        // get fee
+        int fee = (int)(100.0f * Float.parseFloat(request.getParameter("payment_fee")) + 0.5f);
+        
         // mark invoice as paid
         invoice.setStatus(Invoice.STATUS_COMPLETE);
         invoice.setPaypalAmount(amount);
+        invoice.setPaypalFee(fee);
         invoice.setPaypalSenderEmail(request.getParameter("payer_email"));
         invoice.setPaypalSenderFirstName(request.getParameter("first_name"));
         invoice.setPaypalSenderLastName(request.getParameter("last_name"));

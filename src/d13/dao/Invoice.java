@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 
 import d13.util.HibernateUtil;
@@ -29,6 +31,7 @@ public class Invoice {
     private String paypalTransactionStatus;
     private String paypalTimestamp;
     private int paypalAmount;
+    private int paypalFee;
     
     Invoice () {
     }
@@ -81,6 +84,10 @@ public class Invoice {
         return paypalAmount;
     }
     
+    public int getPaypalFee() {
+        return paypalFee;
+    }
+    
     public List<InvoiceItem> getItems () {
         return Collections.unmodifiableList(items);
     }
@@ -129,6 +136,10 @@ public class Invoice {
         this.paypalAmount = paypalAmount;
     }
     
+    public void setPaypalFee(int paypalFee) {
+        this.paypalFee = paypalFee;
+    }
+    
     public void addInvoiceItem(DueItem due, int amount, String description) {
         items.add(new InvoiceItem(this, due, amount, description));
     }
@@ -162,6 +173,19 @@ public class Invoice {
         
         return invoice;
 
+    }
+    
+    public static List<Invoice> findAllPaid () {
+        
+        @SuppressWarnings("unchecked")
+        List<Invoice> invoices = (List<Invoice>)HibernateUtil.getCurrentSession()
+                .createCriteria(Invoice.class)
+                .add(Restrictions.eq("status", STATUS_COMPLETE))
+                .addOrder(Order.asc("created"))
+                .list();
+        
+        return invoices;
+        
     }
 
 }

@@ -1,5 +1,7 @@
 package d13.dao;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 
 import d13.util.HibernateUtil;
@@ -49,6 +51,13 @@ public class RawIPNLogEntry {
                 t.printStackTrace();
             }
         }
+    }
+   
+    @SuppressWarnings("unchecked")
+    public static List<RawIPNLogEntry> findAll () {
+        return (List<RawIPNLogEntry>)HibernateUtil.getCurrentSession()
+                .createCriteria(RawIPNLogEntry.class)
+                .list();
     }
     
 }
