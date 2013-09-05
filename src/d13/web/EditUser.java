@@ -6,6 +6,7 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import d13.dao.Gender;
 import d13.dao.Location;
+import d13.dao.RuntimeOptions;
 import d13.dao.User;
 import d13.util.HibernateUtil;
 import d13.util.Util;
@@ -36,6 +37,9 @@ public class EditUser {
             BeanUtils.populate(bean, context.getRequest().getParameterMap());
             
             if (create) {
+                
+                if (RuntimeOptions.Global.isRegistrationClosed())
+                    throw new IllegalArgumentException("Sorry, registration is closed.");
                 
                 // add the user to the database
                 User user = new User(bean.getEmail());
@@ -72,7 +76,7 @@ public class EditUser {
 
                 if (!editee.isEditableBy2(editor))
                     throw new SecurityException("Permission denied.");
-
+                
                 // if we don't have permission to edit user's email/password, just silently ignore changes below.
                 boolean loginEdit = editee.isLoginEditableBy(editor);
                 

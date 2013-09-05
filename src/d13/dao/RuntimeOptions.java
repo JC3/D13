@@ -47,4 +47,16 @@ public class RuntimeOptions {
         return getOption(name, null, HibernateUtil.getCurrentSession());
     }
     
+    public static class Global {
+        
+        public static boolean isRegistrationClosed () {
+            return isRegistrationClosed(HibernateUtil.getCurrentSession());
+        }
+        
+        public static boolean isRegistrationClosed (Session session) {
+            return "1".equals(getOption("closed", "0"));
+        }
+        
+    }
+    
 }

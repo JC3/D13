@@ -28,6 +28,8 @@ if (success_target == null || success_target.trim().isEmpty()) success_target = 
 boolean editLogin;
 
 if (newuser) {
+    if (RuntimeOptions.Global.isRegistrationClosed())
+        return; // shouldn't be here
     editor = null;
     editee = null;
     editLogin = true;

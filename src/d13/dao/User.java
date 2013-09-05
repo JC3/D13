@@ -474,6 +474,8 @@ public class User {
     public boolean isEditableBy2 (User editor) {
         if (editor == null)
             return false;
+        else if (!editor.getRole().canEditUsers() && RuntimeOptions.Global.isRegistrationClosed())
+            return false;
         else if (editor == this || editor.getUserId() == getUserId())
             return true;
         else if (editor.getRole().canEditUsers())
@@ -486,6 +488,8 @@ public class User {
     public boolean isReviewableBy2 (User editor) {
         if (editor == null)
             return false;
+        else if (RuntimeOptions.Global.isRegistrationClosed())
+            return false;
         else if (editor.getRole().canReviewUsers())
             return state == UserState.NEEDS_REVIEW;
         else if (editor.getRole().canFinalizeUsers())
@@ -497,6 +501,8 @@ public class User {
     public boolean isFinalizableBy (User editor) {
         if (editor == null)
             return false;
+        else if (RuntimeOptions.Global.isRegistrationClosed())
+            return false;
         else if (editor.getRole().canFinalizeUsers())
             return (state != UserState.NEW_USER && state != UserState.REGISTERED);
         else
@@ -506,6 +512,8 @@ public class User {
     // TODO: rename
     public boolean isApprovableBy2 (User editor) {
         if (editor == null)
+            return false;
+        else if (RuntimeOptions.Global.isRegistrationClosed())
             return false;
         else if (editor.getRole().canAdmitUsers())
             return (state == UserState.REGISTERED || state == UserState.APPROVE_PENDING || state == UserState.REJECT_PENDING);

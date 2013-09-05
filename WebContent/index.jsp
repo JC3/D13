@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ page import="d13.web.*" %>
+<%@ page import="d13.dao.RuntimeOptions" %>
 <%@ page import="d13.util.Util" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="dis" %>
@@ -11,6 +12,8 @@ if (sess.isLoggedIn()) {
     response.sendRedirect("home.jsp");
     return;
 }
+
+boolean closed = RuntimeOptions.Global.isRegistrationClosed();
 
 String error = (String)sess.getAndClearAttribute(SessionData.SA_LOGIN_ERROR);
 String message = request.getParameterMap().containsKey("loggedout") ? "You have been logged out." : null; //(String)sess.getAndClearAttribute(SessionData.SA_LOGIN_MESSAGE);
@@ -50,10 +53,10 @@ String next_html = (next == null ? "" : StringEscapeUtils.escapeHtml(next));
     <td>Email Address:
     <td><input class="dtext" type="text" name="email" value="<%=email_html%>">
 <tr class="section">
-    <td><input class="dradio" type="radio" name="existing" value="0" <%=existing?"":"checked" %>>I am a new user.
+    <td><% if (!closed) { %><input class="dradio" type="radio" name="existing" value="0" <%=existing?"":"checked" %>>I am a new user.<% } %>
     <td>
 <tr>
-    <td><input class="dradio" type="radio" id="existing" name="existing" value="1" <%=existing?"checked":"" %>>I am an existing user. Password:
+    <td><input class="dradio" type="radio" id="existing" name="existing" value="1" <%=(existing||closed)?"checked":"" %>>I am an existing user. Password:
     <td><input class="dtext" type="password" name="password" onKeyUp="document.getElementById('existing').checked=true;">
 <tr class="section">
     <td colspan="2" style="text-align:center"><input class="dbutton" type="submit" value="Continue">
