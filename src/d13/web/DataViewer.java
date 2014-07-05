@@ -49,6 +49,7 @@ public class DataViewer {
     private static class BeanViewDescriptor extends ViewDescriptor {
         Method read;
         DataConverter converter;
+        @Override
         public String getString (Object o) {
             if (o == null) {
                 return "";
@@ -63,6 +64,7 @@ public class DataViewer {
                 }
             }
         }
+        @Override
         public Object getObject (Object o) {
             if (o != null) {
                 try {
@@ -77,12 +79,14 @@ public class DataViewer {
     
     private static class CellViewDescriptor extends ViewDescriptor {
         Cell cell;
+        @Override
         public String getString (Object o) {
             if (o == null || !(o instanceof User))
                 return "";
             else
                 return ((User)o).isInCell(cell) ? "Yes" : "";
         }
+        @Override
         public Object getObject (Object o) {
             if (o == null || !(o instanceof User))
                 return false;

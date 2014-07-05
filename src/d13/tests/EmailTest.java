@@ -4,15 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import d13.dao.User;
-import d13.notify.AcceptedNotificationEmail;
 import d13.notify.ApprovalEmail;
-import d13.notify.RejectionEmail;
 import d13.notify.Email.Configuration;
-import d13.notify.ReviewNotificationEmail;
 import d13.util.HibernateUtil;
 
 public class EmailTest {
 
+    @SuppressWarnings("unused")
     public static final void main (String[] args) throws Throwable {
         
         HibernateUtil.beginTransaction();

@@ -1,6 +1,5 @@
 package d13.tests;
 
-import java.net.URL;
 import java.util.List;
 
 import d13.dao.Invoice;
