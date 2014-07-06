@@ -83,6 +83,12 @@ function checkForm () {
 <% } %>
     return true;
 }
+function hideShowOther (basename) {
+    var selitem = document.getElementById(basename + "_custom");
+    var textbox = document.getElementById(basename + "_other");
+    textbox.style.visibility = selitem.selected ? 'visible' : 'hidden';
+    textbox.disabled = !selitem.selected;
+}
 </script>
 </head>
 <body>
@@ -122,14 +128,14 @@ with PayPal.</p>
 <tr>
   <td class="item"><%=Util.html(item.description)%>
   <td class="middle">
-    <select class="dselect" name="<%=Util.html(item.field)%>_amount">
+    <select class="dselect" name="<%=Util.html(item.field)%>_amount" onchange="hideShowOther('<%=Util.html(item.field)%>');">
     <% for (BillingManager.PaymentChoice choice:item.choices) { %>
       <option value="<%=choice.amount%>"><%=Util.html(choice.description)%> (<%=Util.intAmountToString(choice.amount)%>)</option>
     <% } %>
       <option value="-1" id="<%=Util.html(item.field)%>_custom">Other (Please Specify):</option>
     </select>
   <td class="right">
-    <input class="dtext" type="text" name="<%=Util.html(item.field)%>_other" id="<%=Util.html(item.field)%>_other">
+    <input class="dtext" type="text" name="<%=Util.html(item.field)%>_other" id="<%=Util.html(item.field)%>_other" disabled style="visibility:hidden;">
   <% } %>
 <% } %> 
   

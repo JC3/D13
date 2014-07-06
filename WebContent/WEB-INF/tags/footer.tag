@@ -1,4 +1,5 @@
 <%@ tag language="java" pageEncoding="ISO-8859-1"%>
+<%@ tag import="d13.ThisYear" %>
 </div><!-- #dbody -->
 <div id="dfooter">
 
@@ -10,7 +11,11 @@
 </div>
 
 <div style="float:right;border:0;margin:0;padding:0;" class="contact">
-If you have any questions, <a href="mailto:camp@disorient.info?subject=Disorent 2013 Registration">contact us</a>.
+If you have any questions, <a href="mailto:camp@disorient.info?subject=Disorient <%=ThisYear.CAMP_YEAR %> Registration">contact us</a>.
+</div>
+
+<div style="float:none;text-align:center;" class="version">
+<%=ThisYear.CAMP_YEAR %>-v1
 </div>
 
 </div>

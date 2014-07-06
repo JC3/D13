@@ -6,10 +6,6 @@ import d13.dao.User;
 
 public class SurveyBean {
 
-    private String sharingWith;
-    private String livingIn;
-    private String livingInOther;
-    private String livingSpaceSize;
     private String mealPreference;
     private String placementRequest;
     private boolean disengage9_1;
@@ -34,18 +30,6 @@ public class SurveyBean {
         //System.out.println(toString()); // TODO: remove this
     }
     
-    public String getSharingWith() {
-        return sharingWith;
-    }
-    public String getLivingIn() {
-        return livingIn;
-    }
-    public String getLivingInOther() {
-        return livingInOther;
-    }
-    public String getLivingSpaceSize() {
-        return livingSpaceSize;
-    }
     public String getMealPreference() {
         return mealPreference;
     }
@@ -66,18 +50,6 @@ public class SurveyBean {
     }
     public boolean isDisengageNone() {
         return disengageNone;
-    }
-    public void setSharingWith(String sharingWith) {
-        this.sharingWith = sharingWith;
-    }
-    public void setLivingIn(String livingIn) {
-        this.livingIn = livingIn;
-    }
-    public void setLivingInOther(String livingInOther) {
-        this.livingInOther = livingInOther;
-    }
-    public void setLivingSpaceSize(String livingSpaceSize) {
-        this.livingSpaceSize = livingSpaceSize;
     }
     public void setMealPreference(String mealPreference) {
         this.mealPreference = mealPreference;

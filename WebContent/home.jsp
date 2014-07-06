@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page trimDirectiveWhitespaces="true" %>
+<%@ page import="d13.ThisYear" %>
 <%@ page import="d13.web.*" %>
 <%@ page import="d13.dao.*" %>
 <%@ page import="d13.util.Util" %>
@@ -66,7 +67,7 @@ here periodically for status updates!</div>
 
 <div class="content">
 <% if (user.getState() != UserState.REJECTED) { %>
-<strong>Burning Man 2013 Camp Registration:</strong><br>
+<strong>Burning Man <%=ThisYear.CAMP_YEAR %> Camp Registration:</strong><br>
 <ul>
 <li><a href="terms.jsp">Rules and Info</a>
 <% if (!user.isRegistrationComplete()) { %>

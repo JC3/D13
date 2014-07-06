@@ -31,6 +31,10 @@ public class RegistrationForm {
     private Location drivingFromTo;
     private String drivingFromToOther;
     private RVSelection rvType = RVSelection.NOT_STAYING_IN;
+    private String sharingWith;
+    private String livingIn;
+    private String livingInOther;
+    private String livingSpaceSize;
     private boolean driving;
     private String rideSpaceTo = "";
     private String rideSpaceFrom = "";
@@ -72,87 +76,87 @@ public class RegistrationForm {
         return completionTime;
     }
 
-    @DataView(i=1, n="Helped Off Playa", longtext=true)
+    @DataView(i=10, n="Helped Off Playa", longtext=true)
     public String getHelpedOffPlaya() {
         return helpedOffPlaya;
     }
 
-    @DataView(i=2, n="Helped Alpha?")
+    @DataView(i=20, n="Helped Alpha?")
     public boolean isHelpedAlphaCamp() {
         return helpedAlphaCamp;
     }
 
-    @DataView(i=3, n="Helped DPW?")
+    @DataView(i=30, n="Helped DPW?")
     public boolean isHelpedCampBuild() {
         return helpedCampBuild;
     }
 
-    @DataView(i=4, n="Helped Disengage?")
+    @DataView(i=40, n="Helped Disengage?")
     public boolean isHelpedDisengage() {
         return helpedDisengage;
     }
 
-    @DataView(i=5, n="Helped Lead?")
+    @DataView(i=50, n="Helped Lead?")
     public boolean isHelpedLeadRoles() {
         return helpedLeadRoles;
     }
 
-    @DataView(i=6, n="Helped Love Ministry?")
+    @DataView(i=60, n="Helped Love Ministry?")
     public boolean isHelpedLoveMinistry() {
         return helpedLoveMinistry;
     }
 
-    @DataView(i=7, n="Helped LNT?")
+    @DataView(i=70, n="Helped LNT?")
     public boolean isHelpedLNT() {
         return helpedLNT;
     }
 
-    @DataView(i=8, n="Helped Other?")
+    @DataView(i=80, n="Helped Other?")
     public boolean isHelpedOther() {
         return helpedOther;
     }
 
-    @DataView(i=9, n="Helped Other", longtext=true)
+    @DataView(i=90, n="Helped Other", longtext=true)
     public String getHelpedOtherOther() {
         return helpedOtherOther;
     }
 
-    @DataView(i=10, n="Dis Virgin?")
+    @DataView(i=100, n="Dis Virgin?")
     public boolean isDisorientVirgin() {
         return disorientVirgin;
     }
 
-    @DataView(i=11, n="BM Virgin?")
+    @DataView(i=110, n="BM Virgin?")
     public boolean isBmVirgin() {
         return bmVirgin;
     }
 
-    @DataView(i=12, n="Sponsor", longtext=true)
+    @DataView(i=120, n="Sponsor", longtext=true)
     public String getSponsor() {
         return sponsor;
     }
 
-    @DataView(i=13, n="Sponsor For", longtext=true)
+    @DataView(i=130, n="Sponsor For", longtext=true)
     public String getSponsorFor() {
         return sponsorFor;
     }
 
-    @DataView(i=14, n="Arrival Date")
+    @DataView(i=140, n="Arrival Date")
     public String getArrivalDate() {
         return arrivalDate;
     }
 
-    @DataView(i=15, n="Arrival Time")
+    @DataView(i=150, n="Arrival Time")
     public String getArrivalTime() {
         return arrivalTime;
     }
 
-    @DataView(i=16, n="Departure Date")
+    @DataView(i=160, n="Departure Date")
     public String getDepartureDate() {
         return departureDate;
     }
 
-    @DataView(i=17, n="Departure Time")
+    @DataView(i=170, n="Departure Time")
     public String getDepartureTime() {
         return departureTime;
     }
@@ -173,7 +177,7 @@ public class RegistrationForm {
         return getDrivingFromToOther();
     }
     
-    @DataView(i=18, n="From/To Location")
+    @DataView(i=180, n="From/To Location")
     public String getDrivingFromToDisplay () {
         if (drivingFromTo == null)
             return "";
@@ -183,7 +187,7 @@ public class RegistrationForm {
             return drivingFromTo.toDisplayString();
     }
 
-    @DataView(i=19, n="R.V.?")
+    @DataView(i=190, n="R.V.?")
     public RVSelection getRvType() {
         return rvType;
     }
@@ -192,42 +196,62 @@ public class RegistrationForm {
         return rvType == null ? null : (long)rvType.toDBId();
     }
 
-    @DataView(i=20, n="Driving?")
+    @DataView(i=191, n="Sharing Space With", longtext=true)
+    public String getSharingWith() {
+        return sharingWith;
+    }
+
+    @DataView(i=192, n="Living In")
+    public String getLivingIn() {
+        return livingIn;
+    }
+    
+    @DataView(i=193, n="Living In (Other)")
+    public String getLivingInOther() {
+        return livingInOther;
+    }
+
+    @DataView(i=194, n="Living Space Size", longtext=true)
+    public String getLivingSpaceSize() {
+        return livingSpaceSize;
+    }
+
+    @DataView(i=200, n="Driving?")
     public boolean isDriving() {
         return driving;
     }
 
-    @DataView(i=21, n="Ride Space To?")
+    @DataView(i=210, n="Ride Space To?")
     public String getRideSpaceTo() {
         return rideSpaceTo;
     }
 
-    @DataView(i=22, n="Ride Space From?")
+    @DataView(i=220, n="Ride Space From?")
     public String getRideSpaceFrom() {
         return rideSpaceFrom;
     }
 
-    @DataView(i=23, n="Parking At Camp?")
+    @DataView(i=230, n="Parking At Camp?")
     public boolean isParkAtCamp() {
         return parkAtCamp;
     }
 
-    @DataView(i=24, n="Vehicle Comments", longtext=true)
+    @DataView(i=240, n="Vehicle Comments", longtext=true)
     public String getVehicleComments() {
         return vehicleComments;
     }
 
-    @DataView(i=25, n="Need Ride To?")
+    @DataView(i=250, n="Need Ride To?")
     public boolean isNeedRideTo() {
         return needRideTo;
     }
 
-    @DataView(i=26, n="Need Ride From?")
+    @DataView(i=260, n="Need Ride From?")
     public boolean isNeedRideFrom() {
         return needRideFrom;
     }
 
-    @DataView(i=227, n="Group Leader")
+    @DataView(i=2270, n="Group Leader")
     public User getGroupLeader() {
         return groupLeader;
     }
@@ -236,12 +260,12 @@ public class RegistrationForm {
         return groupLeader == null ? null : groupLeader.getUserId();
     }
 
-    @DataView(i=228, n="Personal Projects", longtext=true)
+    @DataView(i=2280, n="Personal Projects", longtext=true)
     public String getPersonalProject() {
         return personalProject;
     }
 
-    @DataView(i=229, n="User's Comments", longtext=true)
+    @DataView(i=2290, n="User's Comments", longtext=true)
     public String getComments() {
         return comments;
     }
@@ -250,7 +274,7 @@ public class RegistrationForm {
         return tixForSale;
     }
 
-    @DataView(i=100, n="Tickets For Sale")
+    @DataView(i=1000, n="Tickets For Sale")
     public int getNumForSale() {
         return tixForSale ? numForSale : 0;
     }
@@ -372,6 +396,22 @@ public class RegistrationForm {
         this.rvType = sel;
     }
 
+    public void setSharingWith(String sharingWith) {
+        this.sharingWith = sharingWith;
+    }
+
+    public void setLivingIn(String livingIn) {
+        this.livingIn = Util.require(livingIn, "Living space type");
+    }
+    
+    public void setLivingInOther (String livingInOther) {
+        this.livingInOther = livingInOther;
+    }
+
+    public void setLivingSpaceSize(String livingSpaceSize) {
+        this.livingSpaceSize = Util.require(livingSpaceSize, "Living space size");
+    }
+
     public void setDriving(boolean driving) {
         this.driving = driving;
     }
@@ -453,6 +493,8 @@ public class RegistrationForm {
             throw new IllegalArgumentException("If this is your first time at Burning Man, it is also your first time with Disorient. Please correct your answers!");
         if (disorientVirgin)
             Util.require(sponsor, "Sponsor name");
+        if ("other".equalsIgnoreCase(livingIn))
+            Util.require(livingInOther, "Other living space type");
         if (tixForSale && numForSale <= 0)
             throw new IllegalArgumentException("Number of tickets for sale must be specified.");
         if (tixWanted && numWanted <= 0)

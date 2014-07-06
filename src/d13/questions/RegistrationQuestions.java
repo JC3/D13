@@ -55,16 +55,16 @@ public class RegistrationQuestions {
         // end if
         
         q = Question.newDropList("arrivalDate", "Date of arrival on the playa.", "Want to arrive early and help Alpha Camp build Disorient?");
-        q.addChoice("8/19", "8/19/2013");
-        q.addChoice("8/20", "8/20/2013");
-        q.addChoice("8/21", "8/21/2013");
-        q.addChoice("8/22", "8/22/2013");
-        q.addChoice("8/23", "8/23/2013");
-        q.addChoice("8/24", "8/24/2013");
-        q.addChoice("8/25", "8/25/2013");
-        q.addChoice("8/26", "8/26/2013");
-        q.addChoice("8/27", "8/27/2013");
-        q.addChoice("8/28", "8/28/2013");
+        q.addChoice("8/18", "8/18/2014");
+        q.addChoice("8/19", "8/19/2014");
+        q.addChoice("8/20", "8/20/2014");
+        q.addChoice("8/21", "8/21/2014");
+        q.addChoice("8/22", "8/22/2014");
+        q.addChoice("8/23", "8/23/2014");
+        q.addChoice("8/24", "8/24/2014");
+        q.addChoice("8/25", "8/25/2014");
+        q.addChoice("8/26", "8/26/2014");
+        q.addChoice("8/27", "8/27/2014");
         qs.add(q);
         
         q = Question.newDropList("arrivalTime", "Time of arrival on the playa.", null);
@@ -75,13 +75,13 @@ public class RegistrationQuestions {
         qs.add(q);
         
         q = Question.newDropList("departureDate", "Date of departure from the playa.", "Remember, you can get up to a $250 rebate if you stay for Disengage!");
-        q.addChoice("8/31", "8/31/2013");
-        q.addChoice("9/1", "9/1/2013");
-        q.addChoice("9/2", "9/2/2013");
-        q.addChoice("9/3", "9/3/2013");
-        q.addChoice("9/4", "9/4/2013");
-        q.addChoice("9/5", "9/5/2013");
-        q.addChoice("9/6", "9/6/2013");
+        q.addChoice("8/30", "8/30/2014");
+        q.addChoice("8/31", "8/31/2014");
+        q.addChoice("9/1", "9/1/2014");
+        q.addChoice("9/2", "9/2/2014");
+        q.addChoice("9/3", "9/3/2014");
+        q.addChoice("9/4", "9/4/2014");
+        q.addChoice("9/5", "9/5/2014");
         qs.add(q);
         
         q = Question.newDropList("departureTime", "Time of departure from the playa.", null);
@@ -113,7 +113,31 @@ public class RegistrationQuestions {
         q.addChoice("Yes, I am responsible for one R.V.", RVSelection.RESPONSIBLE.toDBId());
         qs.add(q);
         
-        q = Question.newSingleChoice("driving", "Are you planning on bringing a vehicle to the playa?", null);
+        //-- added for 2014; TODO: confirm on approval survey
+        
+        q = Question.newLongText("sharingWith",
+                "Who is sharing your space?",
+                "Please provide us with the names and playa names (if they have them) of people who are staying in your tent, R.V., sleeping bag, etc.");
+        qs.add(q);
+
+        q = Question.newSingleChoice("livingIn",
+                "What will you be living in for the duration of the burn?",
+                null);
+        q.addChoice("Tent", "Tent");
+        q.addChoice("R.V.", "R.V.");
+        q.addChoice("TeePee", "TeePee");
+        q.addChoice("Yurt", "Yurt");
+        q.addOtherChoice("Other", "Other");
+        qs.add(q);
+        
+        q = Question.newLongText("livingSpaceSize",
+                "What size is your living space on the playa?",
+                "We need to know your approximate foot print. The height of your tent, yurt, RV or teepee. Any personal shade structures you will be constructing. This will be crucial to making sure all placement needs are honored. The more information you can give us the less likely we are to bother you with more questions. While Disorient provides all tent campers with shade, we require that each camper purchase and bring with them one 10 by 10 orange tarp (<a href=\"http://www.tents-canopy.com/orange-tarp-10x10.html\">http://www.tents-canopy.com/orange-tarp-10x10.html</a>) to expand shade as necessary.");
+        qs.add(q);
+
+        //--
+        
+        q = Question.newSingleChoice("driving", "Are you planning on bringing a vehicle (aside from an R.V.) to the playa?", null);
         q.addChoice("Yes", 1);
         q.addChoice("No", 0);
         qs.add(q);

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page trimDirectiveWhitespaces="true" %>
+<%@ page import="d13.ThisYear" %>
 <%@ page import="d13.dao.*" %>
 <%@ page import="d13.web.*" %>
 <%@ page import="d13.questions.*" %>
@@ -65,7 +66,7 @@ String error_html = (error == null ? null : Util.html(error));
     <td><%=Util.html(editee.getRealName())%>
 <tr>
     <td style="padding-bottom:2ex;">Email:
-    <td style="padding-bottom:2ex;"><a href="mailto:<%=Util.html(editee.getEmail())%>?subject=Disorient 2013 Dues"><%=Util.html(editee.getEmail())%></a>
+    <td style="padding-bottom:2ex;"><a href="mailto:<%=Util.html(editee.getEmail())%>?subject=Disorient <%=ThisYear.CAMP_YEAR %> Dues"><%=Util.html(editee.getEmail())%></a>
 <tr>
     <td>Special Camp Rate?
     <td><input type="checkbox" class="dcheckbox" name="personalCustom" value="1" <%="1".equals(defaults.getPersonalCustom())?"checked":""%>>

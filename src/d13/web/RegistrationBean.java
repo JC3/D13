@@ -26,6 +26,10 @@ public class RegistrationBean {
     private Long drivingFromToId;
     private String drivingFromToIdOther;
     private Long rvTypeId;
+    private String sharingWith;
+    private String livingIn;
+    private String livingInOther;
+    private String livingSpaceSize;
     private boolean driving;
     private String rideSpaceTo;
     private String rideSpaceFrom;
@@ -131,6 +135,22 @@ public class RegistrationBean {
 
     public Long getRvTypeId() {
         return rvTypeId;
+    }
+
+    public String getSharingWith() {
+        return sharingWith;
+    }
+    
+    public String getLivingIn() {
+        return livingIn;
+    }
+    
+    public String getLivingInOther() {
+        return livingInOther;
+    }
+    
+    public String getLivingSpaceSize() {
+        return livingSpaceSize;
     }
 
     public boolean isDriving() {
@@ -251,6 +271,22 @@ public class RegistrationBean {
 
     public void setRvTypeId(Long rvTypeId) {
         this.rvTypeId = rvTypeId;
+    }
+
+    public void setSharingWith(String sharingWith) {
+        this.sharingWith = sharingWith;
+    }
+    
+    public void setLivingIn(String livingIn) {
+        this.livingIn = livingIn;
+    }
+    
+    public void setLivingInOther(String livingInOther) {
+        this.livingInOther = livingInOther;
+    }
+    
+    public void setLivingSpaceSize(String livingSpaceSize) {
+        this.livingSpaceSize = livingSpaceSize;
     }
 
     public void setDriving(boolean driving) {

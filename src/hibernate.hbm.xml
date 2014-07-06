@@ -1,6 +1,21 @@
 <!DOCTYPE hibernate-mapping 
     PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+    
+    <!-- 
+    changes for 2014:
+    
+    alter table approval_surveys drop column sharingWith;
+    alter table approval_surveys drop column livingIn;
+	alter table approval_surveys drop column livingInOther;
+	alter table approval_surveys drop column livingSpaceSize;
+	
+	alter table registration_forms add column `sharingWith` longtext;
+	alter table registration_forms add column `livingIn` varchar(255) DEFAULT NULL;
+	alter table registration_forms add column `livingInOther` varchar(255) DEFAULT NULL;
+	alter table registration_forms add column `livingSpaceSize` longtext;    
+     -->
+    
 <hibernate-mapping default-access="field">
 <!-- 
     <class name="d13.notify.BackgroundNotificationManager$RateLimiter$Entry" table="notification_quota_track">
@@ -84,10 +99,6 @@
         <id name="aformId"><generator class="foreign"><param name="property">user</param></generator></id>
         <one-to-one name="user" class="d13.dao.User" constrained="true"/>
         <property name="completionTime" type="d13.dao.types.DateTimeType"/>
-        <property name="sharingWith" type="text"/>
-        <property name="livingIn" type="string"/>
-        <property name="livingInOther" type="string"/>
-        <property name="livingSpaceSize" type="text"/>
         <property name="mealPreference" type="text"/>
         <property name="placementRequest" type="text"/>
         <property name="disengage9_1" not-null="true"/>
@@ -125,6 +136,10 @@
 		<property name="drivingFromTo" type="d13.dao.types.LocationType"/>
 		<property name="drivingFromToOther" type="text"/>
 		<property name="rvType" type="d13.dao.types.RVSelectionType"/>
+        <property name="sharingWith" type="text"/>
+        <property name="livingIn" type="string"/>
+        <property name="livingInOther" type="string"/>
+        <property name="livingSpaceSize" type="text"/>
 		<property name="driving"/>
 		<property name="rideSpaceTo"/>
 		<property name="rideSpaceFrom"/>

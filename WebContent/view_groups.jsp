@@ -23,7 +23,7 @@ if (!sess.isLoggedIn()) {
 <body>
 <dis:header/>
 
-<div class="error">Under construction. Sorry!</div>
+<div class="error">Under construction (maybe forever). Sorry!</div>
 
 <dis:footer/>
 </body>

@@ -2,7 +2,6 @@ package d13.dao;
 
 import org.joda.time.DateTime;
 
-import d13.util.Util;
 import d13.web.DataView;
 
 public class ApprovalSurvey {
@@ -11,10 +10,6 @@ public class ApprovalSurvey {
     private User user;
     private DateTime completionTime;
     
-    private String sharingWith;
-    private String livingIn;
-    private String livingInOther;
-    private String livingSpaceSize;
     private String mealPreference;
     private String placementRequest;
     private boolean disengage9_1;
@@ -50,26 +45,6 @@ public class ApprovalSurvey {
     
     public DateTime getCompletionTime() {
         return completionTime;
-    }
-
-    @DataView(i=10, n="Sharing Space With", longtext=true)
-    public String getSharingWith() {
-        return sharingWith;
-    }
-
-    @DataView(i=20, n="Living In")
-    public String getLivingIn() {
-        return livingIn;
-    }
-    
-    @DataView(i=25, n="Living In (Other)")
-    public String getLivingInOther() {
-        return livingInOther;
-    }
-
-    @DataView(i=30, n="Living Space Size", longtext=true)
-    public String getLivingSpaceSize() {
-        return livingSpaceSize;
     }
 
     @DataView(i=40, n="Meal Preference", longtext=true)
@@ -129,22 +104,6 @@ public class ApprovalSurvey {
         return completionTime != null;
     }
     
-    public void setSharingWith(String sharingWith) {
-        this.sharingWith = sharingWith;
-    }
-
-    public void setLivingIn(String livingIn) {
-        this.livingIn = Util.require(livingIn, "Living space type");
-    }
-    
-    public void setLivingInOther (String livingInOther) {
-        this.livingInOther = livingInOther;
-    }
-
-    public void setLivingSpaceSize(String livingSpaceSize) {
-        this.livingSpaceSize = Util.require(livingSpaceSize, "Living space size");
-    }
-
     public void setMealPreference(String mealPreference) {
         this.mealPreference = mealPreference;
     }
@@ -192,8 +151,6 @@ public class ApprovalSurvey {
     }
 
     public void validateMisc () throws IllegalArgumentException {
-        if ("other".equalsIgnoreCase(livingIn))
-            Util.require(livingInOther, "Other living space type");
         if (tixForSale && numForSale <= 0)
             throw new IllegalArgumentException("Number of tickets for sale must be specified.");
         if (tixWanted && numWanted <= 0)

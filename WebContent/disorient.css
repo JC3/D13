@@ -66,6 +66,11 @@ div.contact {
 	font-size: 10pt;
 }
 
+div.version {
+	font-size: 10pt;
+    color: #504030;
+}
+
 div.question {
     /*border-top: 1px solid #303030;
     border-bottom: 1px solid #101010;*/

@@ -97,15 +97,16 @@ public class BillingManager {
             customAmount = due.getCustomAmount();
             item.choices.add(choice);
         }
-        
-        DueCalculator.Tier tier = DueCalculator.getRVTier();
-        if (tier.getAmount() >= customAmount) {
-            PaymentChoice choice = new PaymentChoice();
-            choice.description = tier.getName();
-            choice.amount = tier.getAmount();
-            item.choices.add(choice);
-        }
 
+        for (DueCalculator.Tier tier:DueCalculator.getRVTiers(user.getRegisteredOn(), user.getGracePeriodStart(), when)) {
+            if (tier.getAmount() >= customAmount) {
+                PaymentChoice choice = new PaymentChoice();
+                choice.description = tier.getName();
+                choice.amount = tier.getAmount();
+                item.choices.add(choice);
+            }
+        }
+        
         if (!item.choices.isEmpty())
             item.minimumAmount = item.choices.get(0).amount;
         

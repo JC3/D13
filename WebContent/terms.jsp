@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page trimDirectiveWhitespaces="true" %>
+<%@ page import="d13.ThisYear" %>
 <%@ page import="d13.web.*" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="dis" %>
 <%
@@ -64,7 +65,7 @@ h1 {
   through our collaboration in constructing this temporary metropolis of our own and as
   we help others learn to live life in Pornj.</p>
 
-  <p>Welcome D13 Applicants!!</p>
+  <p>Welcome D14 Applicants!!</p>
 
   <h1>Camp Registration</h1>
 
@@ -112,22 +113,29 @@ h1 {
   <p>Camp dues help us achieve our lofty goals on budget and include your meals, water, art,
   communications, electricity and materials. Your camp dues cover only a portion of the
   cost of building, storing, and maintaining Disorient - the rest we generate from
-  fundraising events, individual support, and donations. Our camp dues in 2013
+  fundraising events, individual support, and donations. Our camp dues in <%=ThisYear.CAMP_YEAR %>
   are:</p>
 
   <ul>
-    <li><strong>Tier 1:</strong> $325 if paid by Midnight (Eastern Time) on July 20th
-    <li><strong>Tier 2:</strong> $375 if paid by Midnight (Eastern Time)  July 27th
-    <li><strong>Tier 3:</strong> $425 if paid by Midnight (Eastern Time)  August 3rd
-    <li><strong>Tier 4:</strong> $475 if paid after Midnight (Eastern Time)  August 3rd
-    <li><strong>RV campers:</strong> Fee per RV is
-    $750. You will be provided connection to our biodiesel generator grid, as the
+    <li><strong>Tier 1:</strong> $425 if paid by 11:59 PM (Eastern Time) on July 14th
+    <li><strong>Tier 2:</strong> $475 if paid by 11:59 PM (Eastern Time) on July 24th
+    <li><strong>Tier 3:</strong> $525 if paid by 11:59 PM (Eastern Time) on August 4th
+    <li><strong>Tier 4:</strong> $575 if paid by 11:59 PM (Eastern Time) on August 12th
+    <li><strong>Tier 5:</strong> $625 if paid by 11:59 PM (Eastern Time) on August 19th
+    <li><strong>ANY CAMPER WITH UNPAID DUES AFTER AUGUST 19TH WILL NOT BE PLACED.</strong><br>&nbsp;
+    <li><strong>RV campers:</strong> RV fee is in addition to your camp fee. You will be provided connection to our biodiesel generator grid, as the
     use of onboard generators is prohibited due to the exhaust produced at tent-level.
-    RV fee also covers the ongoing weeklong servicing such as potable H2O
+    RV fee also covers the ongoing week-long servicing such as potable H2O
     replenishments, grey water removal and black water removal to ensure things stay
     clean and fresh throughout the duration of Burning Man. <em>PLEASE NOTE: There are a
     <strong>limited amount</strong> of slots for RVs and RV slots will be given on a first come first
     serve basis, so register early!</em>
+    <ul>
+	    <li><strong>RV Fee Tier 1:</strong> $850 if paid by 11:59 PM (Eastern Time) on July 17th
+	    <li><strong>RV Fee Tier 2:</strong> $900 if paid by 11:59 PM (Eastern Time) on July 31st
+	    <li><strong>RV Fee Tier 3:</strong> $950 if paid by 11:59 PM (Eastern Time) on August 10th
+	    <li><strong>ANY RV WITH UNPAID FEES AFTER AUGUST 10TH WILL NOT BE PLACED AND WILL NOT RECEIVE SERVICE.</strong>
+    </ul><br>&nbsp;
     <li>You will have a grace period of <strong>7 days</strong> after you are approved to pay the tier that
     was active <strong>at the time you originally registered</strong>! After that period is over, your tier
     will be determined by the date of your payment.
@@ -185,7 +193,7 @@ h1 {
   <ul>
   <li>The Puddle: <a href="http://puddle.disorient.info">http://puddle.disorient.info</a>
   <li>Wiki: <a href="http://wiki.disorient.info">http://wiki.disorient.info</a>
-  <li>Email: <a href="mailto:camp@disorient.info?subject=Disorient 2013 Registration">camp [AT] disorient [DOT] info</a>
+  <li>Email: <a href="mailto:camp@disorient.info?subject=Disorient <%=ThisYear.CAMP_YEAR %> Registration">camp [AT] disorient [DOT] info</a>
   </ul>
 
   <h1>Camp Participation</h1>
@@ -255,7 +263,7 @@ h1 {
   </ul>
 
   <p>If you have ?s, suggestions, ideas or concerns please contact us
-  at camp{AT}disorient{DOT}info - and let's talk! ***
+  at camp [AT] disorient [DOT] info - and let's talk! ***
 
   <p><strong>Disorient loves you!!</strong></p>
 </div>

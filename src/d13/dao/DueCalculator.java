@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
+
+import d13.ThisYear;
 
 public class DueCalculator {
 
@@ -13,7 +14,7 @@ public class DueCalculator {
         private DateTime end;
         private int      amount;
         private String   name;
-        private Tier (DateTime end, int amount, String name) {
+        public Tier (DateTime end, int amount, String name) {
             this.end = end;
             this.amount = amount;
             this.name = name;
@@ -36,25 +37,19 @@ public class DueCalculator {
     }
     
     private static final List<Tier> personalTiers = new ArrayList<Tier>();
-    private static final Tier rvTier;
+    private static final List<Tier> rvTiers = new ArrayList<Tier>();
     private static final int GRACE_PERIOD_DAYS = 7;
 
     static {
         
         /*
-        Tier 1: $325 if paid by Midnight on July 20th
-        Tier 2: $375 if paid by Midnight July 27th
-        Tier 3: $425 if paid by Midnight August 3rd
-        Tier 4: $475 if paid after Midnight August 3rd
+        Tier 1: $425 if paid by Midnight on July 7th
+        Tier 2: $475 if paid by Midnight July 21st
+        Tier 3: $525 if paid by after Midnight July 21st
         */
 
-        DateTimeZone tz = DateTimeZone.forID("America/New_York");
-        personalTiers.add(new Tier(new DateTime(2013, 7, 21, 0, 0, 0, tz), 32500, "Tier 1"));
-        personalTiers.add(new Tier(new DateTime(2013, 7, 28, 0, 0, 0, tz), 37500, "Tier 2"));
-        personalTiers.add(new Tier(new DateTime(2013, 8, 4, 0, 0, 0, tz), 42500, "Tier 3"));
-        personalTiers.add(new Tier(null, 47500, "Tier 4"));
-        
-        rvTier = new Tier(null, 75000, "R.V. Fee");
+        ThisYear.setupPersonalTiers(personalTiers);
+        ThisYear.setupRVTiers(rvTiers);
         
     }
    
@@ -69,9 +64,13 @@ public class DueCalculator {
     
     public static Amount calculateAmount (DateTime registered, DateTime approved, int type, DateTime now) {
         
-        if (type == TYPE_RV)
-            return new Amount(rvTier);
-        else if (type == TYPE_PERSONAL) {
+        if (type == TYPE_RV) {
+            Duration period = new Duration(approved, now);
+            if (period.getStandardDays() < GRACE_PERIOD_DAYS)
+                return new Amount(findRVTier(registered));
+            else
+                return new Amount(findRVTier(now));
+        } else if (type == TYPE_PERSONAL) {
             Duration period = new Duration(approved, now);
             if (period.getStandardDays() < GRACE_PERIOD_DAYS)
                 return new Amount(findPersonalTier(registered));
@@ -100,15 +99,37 @@ public class DueCalculator {
         
     }
     
-    public static Tier getRVTier () {
+    public static List<Tier> getRVTiers (DateTime registered, DateTime approved, DateTime now) {
         
-        return rvTier;
+        List<Tier> tiers = new ArrayList<Tier>();
+        
+        Duration period = new Duration(approved, now);
+        if (period.getStandardDays() < GRACE_PERIOD_DAYS)
+            tiers.add(findRVTier(registered));
+        else
+            tiers.add(findRVTier(now));
+        
+        for (Tier tier:rvTiers)
+            if (tier.amount > tiers.get(0).amount)
+                tiers.add(tier);
+        
+        return tiers;
         
     }
     
     private static Tier findPersonalTier (DateTime date) {
         
         for (Tier tier:personalTiers)
+            if (tier.end == null || date.isBefore(tier.end))
+                return tier;
+        
+        throw new IllegalStateException("Internal error. Last tier must have no end date.");
+        
+    }
+    
+    private static Tier findRVTier (DateTime date) {
+        
+        for (Tier tier:rvTiers)
             if (tier.end == null || date.isBefore(tier.end))
                 return tier;
         

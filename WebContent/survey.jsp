@@ -78,7 +78,7 @@ function updateVisibility () {
 
 <p>Hello fellow Pornj Star! We are very excited to share our camp with you this year but we
 need a little more information. Please fill out this form so that we can gather all the necessary
-information for a smooth and seamless DISOR13NT. We will be sending out emails periodically to
+information for a smooth and seamless Disorient. We will be sending out emails periodically to
 keep camp members updated.</p>
  
 <p>We try our best to provide all tent campers with shade to live under, however on the playa, 

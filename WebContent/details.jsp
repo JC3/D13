@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page trimDirectiveWhitespaces="true" %>
+<%@ page import="d13.ThisYear" %>
 <%@ page import="d13.dao.*" %>
 <%@ page import="d13.web.*" %>
 <%@ page import="d13.util.Util" %>
@@ -90,7 +91,7 @@ function checkc () {
 
 <% if (needsReview) { %>
 <div class="notice"><p>This user has just signed up. Please review the form below and click "Looks Good!" at the bottom if
-the application is in order. If there are issues, you may <a href="mailto:<%=Util.html(editee.getEmail())%>?subject=Your Disorient 2013 Registration">contact the user</a> to clear them up first. Until this application is
+the application is in order. If there are issues, you may <a href="mailto:<%=Util.html(editee.getEmail())%>?subject=Your Disorient <%=ThisYear.CAMP_YEAR %> Registration">contact the user</a> to clear them up first. Until this application is
 marked as "Reviewed", this user cannot be accepted or rejected!</p></div>
 <% } else if (needsAdmit) { %>
 <div class="notice"><p>This user's registration application is complete. Please review the form below then use the buttons

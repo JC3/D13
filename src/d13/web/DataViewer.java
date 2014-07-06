@@ -14,6 +14,7 @@ import javax.servlet.jsp.PageContext;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 
+import d13.ThisYear;
 import d13.dao.ApprovalSurvey;
 import d13.dao.Cell;
 import d13.dao.RegistrationForm;
@@ -219,7 +220,7 @@ public class DataViewer {
     
     private static String href (String val, boolean email) {
         if (email)
-            return "mailto:" + val + "?subject=Disorient 2013 Registration";
+            return "mailto:" + val + "?subject=Disorient " + ThisYear.CAMP_YEAR + " Registration";
         else
             return null;
     }
