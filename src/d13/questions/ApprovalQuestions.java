@@ -47,11 +47,11 @@ public class ApprovalQuestions {
         qs.add(q);
         
         q = Question.newMultiChoice("I am a Disengage Rock Star",
-                "Please check EACH day that you plan to help DisEngage. Each full day (past 8pm) entitles you to a $50 rebate. **IMPORTANT: Keep this information updated if your travel plans change! We need an accurate headcount. Email <a href=\"mailto:disengage@disorient.info?subject=Disorient " + ThisYear.CAMP_YEAR + " Disengage\">disengage@disorient.info</a> with updates, questions, suggestions, etc.");
-        q.addChoice("disengage9_1", "Sunday, September 1st", 1);
-        q.addChoice("disengage9_2", "Monday, September 2nd", 1);
-        q.addChoice("disengage9_3", "Tuesday, September 3rd", 1);
-        q.addChoice("disengage9_4", "Wednesday, September 4th", 1);
+                "Please check EACH day that you plan to help DisEngage. Each full work day may entitle you to a rebate. **IMPORTANT: Keep this information updated if your travel plans change! We need an accurate headcount. Email <a href=\"mailto:disengage@disorient.info?subject=Disorient " + ThisYear.CAMP_YEAR + " Disengage\">disengage@disorient.info</a> with updates, questions, suggestions, etc.");
+        q.addChoice("disengageSun", "Sunday, August 31st", 1);
+        q.addChoice("disengageMon", "Monday, September 1nd", 1);
+        q.addChoice("disengageTue", "Tuesday, September 2rd", 1);
+        q.addChoice("disengageWed", "Wednesday, September 3th", 1);
         q.addChoice("disengageNone", "I'm sorry, I cannot stay to help.", 1);
         qs.add(q);
         

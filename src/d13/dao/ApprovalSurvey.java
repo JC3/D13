@@ -12,10 +12,10 @@ public class ApprovalSurvey {
     
     private String mealPreference;
     private String placementRequest;
-    private boolean disengage9_1;
-    private boolean disengage9_2;
-    private boolean disengage9_3;
-    private boolean disengage9_4;
+    private boolean disengageSun;
+    private boolean disengageMon;
+    private boolean disengageTue;
+    private boolean disengageWed;
     private boolean disengageNone;
     private boolean tixForSale;
     private int numForSale;
@@ -57,24 +57,24 @@ public class ApprovalSurvey {
         return placementRequest;
     }
 
-    @DataView(i=60, n="Disengage 9/1")
-    public boolean isDisengage9_1() {
-        return disengage9_1;
+    @DataView(i=60, n="Disengage Sun.")
+    public boolean isDisengageSun() {
+        return disengageSun;
     }
 
-    @DataView(i=70, n="Disengage 9/2")
-    public boolean isDisengage9_2() {
-        return disengage9_2;
+    @DataView(i=70, n="Disengage Mon.")
+    public boolean isDisengageMon() {
+        return disengageMon;
     }
 
-    @DataView(i=80, n="Disengage 9/3")
-    public boolean isDisengage9_3() {
-        return disengage9_3;
+    @DataView(i=80, n="Disengage Tue.")
+    public boolean isDisengageTue() {
+        return disengageTue;
     }
 
-    @DataView(i=90, n="Disengage 9/4")
-    public boolean isDisengage9_4() {
-        return disengage9_4;
+    @DataView(i=90, n="Disengage Wed.")
+    public boolean isDisengageWed() {
+        return disengageWed;
     }
 
     @DataView(i=100, n="No Disengage")
@@ -112,20 +112,20 @@ public class ApprovalSurvey {
         this.placementRequest = placementRequest;
     }
 
-    public void setDisengage9_1(boolean disengage9_1) {
-        this.disengage9_1 = disengage9_1;
+    public void setDisengageSun(boolean disengage9_1) {
+        this.disengageSun = disengage9_1;
     }
 
-    public void setDisengage9_2(boolean disengage9_2) {
-        this.disengage9_2 = disengage9_2;
+    public void setDisengageMon(boolean disengage9_2) {
+        this.disengageMon = disengage9_2;
     }
 
-    public void setDisengage9_3(boolean disengage9_3) {
-        this.disengage9_3 = disengage9_3;
+    public void setDisengageTue(boolean disengage9_3) {
+        this.disengageTue = disengage9_3;
     }
 
-    public void setDisengage9_4(boolean disengage9_4) {
-        this.disengage9_4 = disengage9_4;
+    public void setDisengageWed(boolean disengage9_4) {
+        this.disengageWed = disengage9_4;
     }
 
     public void setDisengageNone(boolean disengageNone) {

@@ -101,10 +101,10 @@
         <property name="completionTime" type="d13.dao.types.DateTimeType"/>
         <property name="mealPreference" type="text"/>
         <property name="placementRequest" type="text"/>
-        <property name="disengage9_1" not-null="true"/>
-        <property name="disengage9_2" not-null="true"/>
-        <property name="disengage9_3" not-null="true"/>
-        <property name="disengage9_4" not-null="true"/>
+        <property name="disengageSun" not-null="true"/>
+        <property name="disengageMon" not-null="true"/>
+        <property name="disengageTue" not-null="true"/>
+        <property name="disengageWed" not-null="true"/>
         <property name="disengageNone" not-null="true"/>
         <property name="tixForSale" not-null="true"/>
         <property name="numForSale" not-null="true"/>

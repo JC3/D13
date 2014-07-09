@@ -89,9 +89,9 @@ if ("create".equalsIgnoreCase(action)) {
 
 String paypal_email = RuntimeOptions.getOption("dues.paypal_email", "dues@disorient.info");
 String paypal_site = RuntimeOptions.getOption("dues.paypal_site", "https://www.paypal.com/cgi-bin/webscr");
-String paypal_notify = RuntimeOptions.getOption("dues.paypal_notify", "http://camp.disorient.info/pay/notify.jsp");
-String paypal_cancel = RuntimeOptions.getOption("dues.paypal_cancel", "http://camp.disorient.info/pay/cancel.jsp");
-String paypal_return = RuntimeOptions.getOption("dues.paypal_return", "http://camp.disorient.info/pay/success.jsp");
+String paypal_notify = RuntimeOptions.getOption("dues.paypal_notify", "http://disorient.ddns.net/pay/notify.jsp");
+String paypal_cancel = RuntimeOptions.getOption("dues.paypal_cancel", "http://disorient.ddns.net/pay/cancel.jsp");
+String paypal_return = RuntimeOptions.getOption("dues.paypal_return", "http://disorient.ddns.net/pay/success.jsp");
 String invoice_total = String.format("%.2f", (float)invoice.getInvoiceAmount() / 100.0f);
 String invoice_id = Long.toString(invoice.getInvoiceId());
 
