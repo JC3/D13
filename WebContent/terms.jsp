@@ -205,20 +205,8 @@ h1 {
     project you like. There will be an opportunity to fine-tune your participation
     once you are approved and individual project details and needs are assessed.
     
-    <li>All Disorient campers this year, will be divided into
-    smaller nodes based upon criteria including: arrival date,
-    volunteer shifts, people they are camping with and work cell
-    responsibilities.
-
-    <li>Each node will be responsible for the theme
-    and service of one meal (meaning decor or costuming and help with set up, prep
-    and clean-up). Meal plan participation does not
-    constitute or replace work cell participation. 
-    (Separate from the meal participation we have a Kitchen cell involved in
-    setting up, maintaining, and packing away the kitchen.)
-
     <li><strong>PLEASE NOTE</strong> that your
-    placement on Playa is not only based on your social node but based upon other
+    placement on Playa is based upon
     factors such as footprint of your tent and arrival/departure times. If you have plans
     to camp with specific campers please indicate so when describing your personal camp
     footprint and electrical needs in the Approved Camper Survey.
@@ -234,7 +222,7 @@ h1 {
     Please be seen MOOPing each day. Glitter is everyone's problem so
     let's be diligent and pro-active on ensuring Disorient is GREEN with LNT
     perfection!
-
+    
     <li>So that we Leave No Trace, every camper is expected to
     help with at least one full day of Disengage - the breaking down of camp structures,
     packing out everything, and MOOPing (removing all Matter Out Of Place).
@@ -255,6 +243,11 @@ h1 {
     distributed to RVs, trucks, and cars to take with them at the end of the week for
     proper sorting and disposal. Disorient expects you to maintain the principle of
     LNT even after departing BRC. Make us proud!
+
+    <li><strong>Virgin pro-tip:</strong> You take out all trash that you create; so plan
+    ahead and bring things that create little waste! Common gotchas include packaging of
+    snacks, toiletries, wrappers on last-minute items from your Walgreen's panic run
+    in Reno, etc. Remove as much packaging as possible before you arrive!
 
     <li>Also, a little reminder: Bring a color copy of your ID
     with you in case you need it on Playa. No need to bring anyone back to your camp in

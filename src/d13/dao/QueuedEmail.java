@@ -14,7 +14,8 @@ public class QueuedEmail {
     public static final int TYPE_ACCEPTED = 2;
     public static final int TYPE_APPROVED = 3;
     public static final int TYPE_REJECTED = 4;
-    public static final int TYPE_FINALIZE = 5; // todo
+    public static final int TYPE_FINALIZE = 5;
+    public static final int TYPE_PWRESET = 6;
      
     private long qnId;
     private int type;

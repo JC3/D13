@@ -4,6 +4,7 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpSession;
 
+import d13.dao.RuntimeOptions;
 import d13.dao.User;
 
 /**
@@ -16,6 +17,7 @@ public class SessionData {
     public static final String SA_LOGIN_ERROR = "jsp.login.error";
     public static final String SA_LOGIN_EMAIL = "jsp.login.email";
     public static final String SA_LOGIN_EXISTING = "jsp.login.existing";
+    public static final String SA_LOGIN_MESSAGE = "jsp.login.message";
     public static final String SA_USER_PROFILE_ERROR = "jsp.personal.error";
     public static final String SA_USER_PROFILE_DEFAULTS = "jsp.personal.defaults";
     public static final String SA_ADMIN_FORM_ADD_DEFAULTS = "jsp.admin_form.add_default";
@@ -29,7 +31,8 @@ public class SessionData {
     public static final String SA_DUES_INVOICE_ID = "jsp.dueconfirm.invoice_id";
     public static final String SA_EDIT_DUES_ERROR = "jsp.editdues.error";
     public static final String SA_EDIT_DUES_DEFAULTS = "jsp.editdues.defaults";
-
+    public static final String SA_PWRESET_ERROR = "jsp.pwreset.error";
+    
     //private static final String SA_EMAIL = "info.disorient.SessionData.email";
     private static final String SA_USERID = "info.disorient.SessionData.userid";
     
@@ -181,6 +184,9 @@ public class SessionData {
         
         if (!user.checkPassword(password))
             throw new SecurityException("Invalid email address or password.");
+        
+        if (RuntimeOptions.Global.isMaintenanceMode() && !user.getRole().canMaintenanceLogin())
+            throw new SecurityException("Sorry, the system is temporarily down for maintenance.");
         
         user.setLastLoginNow();
         session.setAttribute(SA_USERID, user.getUserId());

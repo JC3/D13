@@ -54,6 +54,11 @@ public abstract class Email {
         public String  from     = "camp@disorient.info";
         public String  replyTo  = "camp@disorient.info";
         public String  baseUrl  = "http://camp.disorient.info";
+        public String  pwExpire = User.RT_PWRESET_EXPIRE_MINUTES_DEFAULT;
+        // TODO: pwExpire is a bit of a hack; if we have to start referring to lots of other config
+        //       options in email, it would be cleaner to pass the hibernate session to Email 
+        //       constructors and query relevant options there. for now this is fine, there is only
+        //       one.
    
         public Configuration () {
         }
@@ -70,7 +75,12 @@ public abstract class Email {
             c.from = RuntimeOptions.getOption(RT_MAIL_FROM, c.from, session);
             c.replyTo = RuntimeOptions.getOption(RT_MAIL_REPLY_TO, c.replyTo, session);
             c.baseUrl = RuntimeOptions.getOption(RT_BASE_URL, c.baseUrl, session);
+            c.pwExpire = RuntimeOptions.getOption(User.RT_PWRESET_EXPIRE_MINUTES, User.RT_PWRESET_EXPIRE_MINUTES_DEFAULT, session);
             return c;
+        }
+        
+        public String getPwExpire () {
+            return pwExpire;
         }
         
     }
@@ -102,6 +112,12 @@ public abstract class Email {
     protected final String makeURL (String url) {
         
         return config.baseUrl + "/" + url;
+        
+    }
+    
+    protected final String getContactEmail () {
+        
+        return config.replyTo;
         
     }
     

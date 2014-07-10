@@ -69,6 +69,7 @@ if (nav == null || nav.isEmpty()) {
 </tr>
 </table>
 <hr>
+<% /*
 <!-- 
 <div id="navbar">
   <div class="navitem">One</div>
@@ -77,5 +78,6 @@ if (nav == null || nav.isEmpty()) {
   <div class="navitem">Four</div>
 </div>
 -->
+*/ %>
 </div>
 <div id="dbody">

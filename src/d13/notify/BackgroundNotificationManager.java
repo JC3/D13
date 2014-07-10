@@ -237,6 +237,9 @@ public class BackgroundNotificationManager implements ServletContextListener {
             case QueuedEmail.TYPE_REJECTED:
                 RejectionEmail.sendNow(user, config);
                 break;
+            case QueuedEmail.TYPE_PWRESET:
+                PasswordResetEmail.sendNow(user, config);
+                break;
             }
             
             // 7/23/2013: update user's grace period start time with current time if

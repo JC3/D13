@@ -54,7 +54,11 @@ public class RuntimeOptions {
         }
         
         public static boolean isRegistrationClosed (Session session) {
-            return "1".equals(getOption("closed", "0"));
+            return !"0".equals(getOption("closed", "0"));
+        }
+        
+        public static boolean isMaintenanceMode () {
+            return !"0".equals(RuntimeOptions.getOption("maintenance", "0"));
         }
         
     }

@@ -14,7 +14,7 @@ public class ApprovalEmail extends Email {
         sb.append("<p>It is with great pleasur");
         sb.append("e that we would like to confirm that you have been accepted");
         sb.append("  to camp with Disorient this year. We are all excited and r");
-        sb.append("aring to go!</p>  <p>In order to make D13 is a successful ");
+        sb.append("aring to go!</p>  <p>In order to make D14 is a successful ");
         sb.append("camp this year we need YOUR help.  We are in need of campers");
         sb.append(" to stay for Disengage!  Every full day helps, so please try");
         sb.append(" and stay until Monday or Tuesday evening and lend a helping");

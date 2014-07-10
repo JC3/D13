@@ -15,7 +15,7 @@ If you have any questions, <a href="mailto:camp@disorient.info?subject=Disorient
 </div>
 
 <div style="float:none;text-align:center;" class="version">
-<%=ThisYear.CAMP_YEAR %>-v1
+<%=ThisYear.CAMP_YEAR %>-<%=ThisYear.SYSTEM_VERSION %>
 </div>
 
 </div>

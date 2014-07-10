@@ -41,6 +41,9 @@ public class EditUser {
                 if (RuntimeOptions.Global.isRegistrationClosed())
                     throw new IllegalArgumentException("Sorry, registration is closed.");
                 
+                if (RuntimeOptions.Global.isMaintenanceMode())
+                    throw new IllegalArgumentException("Sorry, the system is temporarily down for maintenance.");
+                
                 // add the user to the database
                 User user = new User(bean.getEmail());
                 user.setPassword(bean.getPassword());

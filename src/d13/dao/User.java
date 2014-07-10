@@ -21,6 +21,9 @@ import d13.web.DataView;
 
 public class User {
     
+    public static final String RT_PWRESET_EXPIRE_MINUTES = "user.pwreset_expire_minutes";
+    public static final String RT_PWRESET_EXPIRE_MINUTES_DEFAULT = "10";
+    
     private long userId;
     private String email;
     private Role role;
@@ -28,6 +31,8 @@ public class User {
     private String passwordHash;
     private DateTime created;
     private DateTime lastLogin;
+    private String passwordResetKey;
+    private DateTime passwordResetTime;
     private Gender gender;
     private String realName;
     private String playaName;
@@ -311,6 +316,26 @@ public class User {
         return getRvDueItem() != null && (!getRvDueItem().isActive() || getRvDueItem().isPaid());
     }
     
+    public String getPasswordResetKey () {
+        return passwordResetKey;
+    }
+    
+    public DateTime getPasswordResetTime () {
+        return passwordResetTime;
+    }
+    
+    public boolean isPasswordResetTimeExpired () {
+        if (passwordResetKey == null || passwordResetTime == null)
+            return true;
+        try {
+            int minutes = Integer.parseInt(RuntimeOptions.getOption(RT_PWRESET_EXPIRE_MINUTES, RT_PWRESET_EXPIRE_MINUTES_DEFAULT));
+            return passwordResetTime.plusMinutes(minutes).isBeforeNow();
+        } catch (Exception x) {
+            System.err.println("User.isPasswordResetTimeExpired: " + x.getMessage());
+            return true;
+        }
+    }
+    
     public void setEmail(String email) {
         this.email = Util.requireEmail(email, "A valid email address");
     }
@@ -321,6 +346,17 @@ public class User {
         else if (password.length() < 6)
             throw new IllegalArgumentException("Password must be at least 6 characters long.");
         this.passwordHash = Util.hashString(this.passwordSalt + password);
+    }
+    
+    public void activatePasswordReset () {
+        String probablyUnique = Util.hashString(this.passwordSalt + Long.toString(this.userId) + "-" + Math.random()).substring(0, 8);
+        this.passwordResetKey = Util.randomString(8) + probablyUnique;
+        this.passwordResetTime = DateTime.now();
+    }
+    
+    public void clearPasswordReset () {
+        this.passwordResetKey = null;
+        this.passwordResetTime = null;
     }
     
     public void setLastLoginNow() {
@@ -588,6 +624,21 @@ public class User {
         
         return user;
 
+    }
+    
+    public static User findByPasswordResetKey (String key) {
+        
+        key = (key == null ? "" : key.trim());
+        if (key.isEmpty())
+            return null;
+        
+        User user = (User)HibernateUtil.getCurrentSession()
+                .createCriteria(User.class)
+                .add(Restrictions.eq("passwordResetKey", key))
+                .uniqueResult();
+        
+        return user;
+        
     }
     
     public static List<User> findAll () {

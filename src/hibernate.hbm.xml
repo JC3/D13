@@ -79,6 +79,7 @@
         <property name="finalizeUsers" not-null="true"/>
         <property name="viewLogs" not-null="true"/>
         <property name="editDues" not-null="true"/>
+        <property name="maintenanceLogin" not-null="true"/>
     </class>
 
     <class name="d13.dao.RuntimeOptions$RuntimeOption" table="options">
@@ -173,6 +174,8 @@
         <property name="passwordHash" length="40" not-null="true"/>
         <property name="created" type="d13.dao.types.DateTimeType" not-null="true"/>
         <property name="lastLogin" type="d13.dao.types.DateTimeType"/>
+        <property name="passwordResetKey" length="16"/>
+        <property name="passwordResetTime" type="d13.dao.types.DateTimeType"/>
         <property name="termsAgreed" not-null="true"/>
         <property name="gender" type="d13.dao.types.GenderType" not-null="true"/>
         <property name="realName" length="128" not-null="true"/>
