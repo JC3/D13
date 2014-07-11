@@ -11,7 +11,7 @@ import d13.dao.DueCalculator.Tier;
 public class ThisYear {
 
     public static final int CAMP_YEAR = 2014;
-    public static final String SYSTEM_VERSION = "v1.01";
+    public static final String SYSTEM_VERSION = "v1.03";
 
     /*
      * So: 
@@ -25,8 +25,8 @@ Any camper with unpaid camp dues after August 19th will NOT BE PLACED.
 
 RV Fees:
 Tier 1: $850 - If you pay your RV fees by July 17th 
-Tier 2: $900 - If you pay your RV fees by July  31st 
-OMG TIER: $950 - If you pay your RV fees after July 31st 
+Tier 2: $900 - If you pay your RV fees by July  31st  change to 24th
+OMG TIER: $950 - If you pay your RV fees after July 31st  change to 24th
      */
     
     public static void setupPersonalTiers (List<Tier> personalTiers) {
@@ -48,7 +48,7 @@ OMG TIER: $950 - If you pay your RV fees after July 31st
 
         rvTiers.clear();
         rvTiers.add(new Tier(new DateTime(2014, 7, 18, 0, 0, 0, tz), 85000, "R.V. Tier 1"));
-        rvTiers.add(new Tier(new DateTime(2014, 8, 1, 0, 0, 0, tz), 90000, "R.V. Tier 2"));
+        rvTiers.add(new Tier(new DateTime(2014, 7, 25, 0, 0, 0, tz), 90000, "R.V. Tier 2"));
         rvTiers.add(new Tier(null, 95000, "R.V. Tier 3"));
         
     }

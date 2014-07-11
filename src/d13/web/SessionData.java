@@ -4,6 +4,7 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpSession;
 
+import d13.InvalidLoginException;
 import d13.dao.RuntimeOptions;
 import d13.dao.User;
 
@@ -180,10 +181,10 @@ public class SessionData {
         }
         
         if (user == null)
-            throw new SecurityException("Invalid email address or password.");
+            throw new InvalidLoginException("Invalid email address or password.");
         
         if (!user.checkPassword(password))
-            throw new SecurityException("Invalid email address or password.");
+            throw new InvalidLoginException("Invalid email address or password.");
         
         if (RuntimeOptions.Global.isMaintenanceMode() && !user.getRole().canMaintenanceLogin())
             throw new SecurityException("Sorry, the system is temporarily down for maintenance.");

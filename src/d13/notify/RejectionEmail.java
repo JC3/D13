@@ -14,8 +14,8 @@ public class RejectionEmail extends Email {
         sb.append("We would like to thank you for your application to camp with DISORIENT on the Playa this year. Unfortunately due to size restrictions we are unable to accept every burner who wants to camp with us this year, and are unable to offer you a place with us.\n\n");
         sb.append("We hope that you have a good burn regardless of not camping with us this year and hope that you will drop in and say hello on the playa.\n\n");
         sb.append("Wishing you all the best.\n\n");
-        sb.append("D13 Camp Team.\n");
-        sb.append("camp@disorient.info\n");
+        sb.append("D14 Camp Team.\n");
+        sb.append(getContactEmail() + "\n");
         body = sb.toString();
         
     }

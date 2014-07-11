@@ -6,6 +6,7 @@ import javax.servlet.jsp.PageContext;
 import org.apache.commons.beanutils.BeanUtils;
 import org.joda.time.DateTime;
 
+import d13.InvalidLoginException;
 import d13.dao.QueuedEmail;
 import d13.dao.RuntimeOptions;
 import d13.dao.User;
@@ -44,6 +45,10 @@ public class Login {
             // if it's an existing user, log in
             try {
                 session.login(bean.getEmail(), bean.getPassword()); // <- checks maintenance mode
+            } catch (InvalidLoginException lx) { // special case to enhance error message
+                failed = true;
+                errorMessage = lx.getMessage() + " If you are a new user select 'new user' below and you can set a password on the next page.";
+                return;
             } catch (Throwable t) {
                 failed = true;
                 errorMessage = t.getMessage();

@@ -173,21 +173,15 @@ but please make sure that your email address is valid!
 
 <p>There is still a lot of work to be done on this site. Here are the urgent things I am working on now:</p>
 <ul>
-<li>Notification emails (including approval/rejection emails to users) are currently broken because of SMTP server
-issues that are currently unresolved. This is the highest priority issue. Any users you approve / reject now, before I
-get this working, will be notified once I implement this.
-<li>Due payments -- Integrate due payments with PayPal.
-<li>Cell view -- See all members of a given cell.
-<li>Group view -- See camping groups.
-<li>Mailing lists -- Get useful collections of email addresses (all users, registered users, approved campers, by cell, by group)
+<li>Offline payments -- Ability to manually enter non-paypal due payments
+<li>Vehicle information -- Vehicle information page and a "Vehicle" administrative role
+<li>Head shot uploads -- Ability for campers to upload head shots to the site
 </ul>
 
 <p>Here are other important things I need to work on:</p>
 <ul>
-<li>Social pod assignment and other administrative info tracking.
-<li>Filters on the registration data page.
+<li>Group view -- See camping groups.
 <li>"Inbox" to provide quick list of users that need action.
-<li>Activity log to track who reviewed/approved/rejected user.
 <li>Ability to add comments about users.
 <li>Interface for editing rules, questions, etc.
 <li>Improved site navigation; maybe a nav bar with breadcrumbs or something.
