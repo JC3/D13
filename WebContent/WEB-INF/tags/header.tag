@@ -24,9 +24,12 @@ if (!"1".equals(blank)) {
 	user = sess.isLoggedIn() ? sess.getUser() : null;
 }
 
+String announce = RuntimeOptions.Global.getAnnouncement();
+
 String email_html = null;
 String realname_html = null;
 String role_html = null;
+String announce_html = (announce == null ? null : Util.html(announce));
 
 if (user != null) {
     email_html = Util.html(user.getEmail());
@@ -48,6 +51,7 @@ if (nav == null || nav.isEmpty()) {
 %>
 <div id="container">
 <div id="dheader">
+ 
 <table class="header" width="100%" cellspacing="0" cellpadding="0">
 <tr>
   <td width="100%">
@@ -68,6 +72,11 @@ if (nav == null || nav.isEmpty()) {
   </td>
 </tr>
 </table>
+
+<% if (announce_html != null) { %>
+<div class="announce"><%=announce_html %></div>
+<% } %>
+
 <hr>
 <% /*
 <!-- 

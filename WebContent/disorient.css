@@ -197,6 +197,17 @@ div.notice {
     width: 56ex;
 }
 
+div.announce {
+    color: #ffffff;
+    background: #800000;
+    border: 2px solid #ff0000;
+    padding: 0.25ex;
+    margin: 0 auto 0 auto;
+    text-align: center;
+    max-width: 112ex;
+    font-weight: bold;
+}
+
 div.content {
     padding: 2ex;
     margin: 0 auto 1ex auto;

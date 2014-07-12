@@ -125,7 +125,7 @@ public class RegistrationQuestions {
                 null);
         q.addChoice("Tent", "Tent");
         q.addChoice("R.V.", "R.V.");
-        q.addChoice("TeePee", "TeePee");
+        //q.addChoice("TeePee", "TeePee");
         q.addChoice("Yurt", "Yurt");
         q.addOtherChoice("Other", "Other");
         qs.add(q);

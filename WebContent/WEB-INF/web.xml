@@ -30,4 +30,21 @@
     <filter-name>HibernateSessionFilter</filter-name>
     <url-pattern>*.jsp</url-pattern>
   </filter-mapping>  
+  
+  <!-- limit css cache age -->
+  <filter>
+       <filter-name>ExpiresFilter</filter-name>
+       <filter-class>org.apache.catalina.filters.ExpiresFilter</filter-class>
+       <init-param>
+          <param-name>ExpiresByType text/css</param-name>
+          <param-value>access plus 30 minutes</param-value>
+       </init-param>
+  </filter> 
+  <filter-mapping>
+       <filter-name>ExpiresFilter</filter-name>
+       <url-pattern>*.css</url-pattern>
+       <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
+  
+  
 </web-app>

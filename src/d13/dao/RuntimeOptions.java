@@ -61,6 +61,17 @@ public class RuntimeOptions {
             return !"0".equals(RuntimeOptions.getOption("maintenance", "0"));
         }
         
+        /** Returns null, or returns announcement. Never returns empty string. */
+        public static String getAnnouncement () {
+            String announcement = RuntimeOptions.getOption("announcement", "");
+            if (announcement != null) {
+                announcement = announcement.trim();
+                if ("".equals(announcement))
+                    announcement = null;
+            }
+            return announcement;
+        }
+        
     }
     
 }

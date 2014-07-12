@@ -165,8 +165,7 @@ h1 {
   </ul>
 
   <p>Campers have the opportunity to earn back a rebate for each day
-  of Disengage worked <strong>past 8pm</strong> between Sunday
-  and Wednesday.</p>
+  of Disengage worked between Sunday and Wednesday.</p>
 
   <p>Rebate breakdown is as follows:</p>
 
