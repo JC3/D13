@@ -48,7 +48,7 @@ public class RuntimeOptions {
     }
     
     public static class Global {
-        
+               
         public static boolean isRegistrationClosed () {
             return isRegistrationClosed(HibernateUtil.getCurrentSession());
         }
@@ -61,17 +61,36 @@ public class RuntimeOptions {
             return !"0".equals(RuntimeOptions.getOption("maintenance", "0"));
         }
         
-        /** Returns null, or returns announcement. Never returns empty string. */
-        public static String getAnnouncement () {
-            String announcement = RuntimeOptions.getOption("announcement", "");
-            if (announcement != null) {
-                announcement = announcement.trim();
-                if ("".equals(announcement))
-                    announcement = null;
+        /** Returns null or returns value. Never returns empty string. */
+        private static String nullOrElse (String option) {
+            String value = RuntimeOptions.getOption(option, "");
+            if (value != null) {
+                value = value.trim();
+                if ("".equals(value))
+                    value = null;
             }
-            return announcement;
+            return value;
         }
         
+        /** Returns null, or returns announcement. Never returns empty string. */
+        public static String getGeneralAnnouncement () {
+            return nullOrElse("announcement.general");
+        }
+        
+        public static String getGeneralAnnouncementStyleOverride () {
+            return nullOrElse("announcement.general.style");
+        }
+        
+        /** Returns null, or returns announcement. Never returns empty string. */
+        public static String getLoggedInAnnouncement () {
+            return nullOrElse("announcement.login");
+        }
+        
+        /** Returns null, or returns style. Never returns empty string. */
+        public static String getLoggedInAnnouncementStyleOverride () {
+            return nullOrElse("announcement.login.style");
+        }
+
     }
     
 }

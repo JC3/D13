@@ -24,12 +24,27 @@ if (!"1".equals(blank)) {
 	user = sess.isLoggedIn() ? sess.getUser() : null;
 }
 
-String announce = RuntimeOptions.Global.getAnnouncement();
+String announce = RuntimeOptions.Global.getGeneralAnnouncement();
+String announcel = (user == null ? null : RuntimeOptions.Global.getLoggedInAnnouncement());
+
+String announce_style = (announce == null ? null : RuntimeOptions.Global.getGeneralAnnouncementStyleOverride());
+String announcel_style = (announcel == null ? null : RuntimeOptions.Global.getLoggedInAnnouncementStyleOverride());
+
+if (announce_style != null)
+    announce_style = " style=\"" + Util.html(announce_style) + "\" ";
+else
+    announce_style = "";
+
+if (announcel_style != null)
+    announcel_style = " style=\"" + Util.html(announcel_style) + "\" ";
+else
+    announcel_style = "";
 
 String email_html = null;
 String realname_html = null;
 String role_html = null;
 String announce_html = (announce == null ? null : Util.html(announce));
+String announcel_html = (announcel == null ? null : Util.html(announcel));
 
 if (user != null) {
     email_html = Util.html(user.getEmail());
@@ -74,7 +89,11 @@ if (nav == null || nav.isEmpty()) {
 </table>
 
 <% if (announce_html != null) { %>
-<div class="announce"><%=announce_html %></div>
+<div class="announceg" <%=announce_style %>><%=announce_html %></div>
+<% } %>
+
+<% if (announcel_html != null) { %>
+<div class="announcel" <%=announcel_style %>><%=announcel_html %></div>
 <% } %>
 
 <hr>
