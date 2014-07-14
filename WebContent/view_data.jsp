@@ -169,7 +169,11 @@ hr.sub {
   <li><a href="view_data.jsp<%=makeQuery("5", sortby, null)%>">Only users that own RVs.</a>
   <li><a href="view_data.jsp<%=makeQuery("6", sortby, null)%>">Only users that need to pay their dues.</a>
   <li><a href="view_data.jsp<%=makeQuery("7", sortby, null)%>">Only users that need to complete their approval surveys.</a>
+  <li><a href="view_data.jsp<%=makeQuery("8", sortby, null)%>">All users that need to sign up for work cells.</a>
+  <li><a href="view_data.jsp<%=makeQuery("9", sortby, null)%>">Only not-yet-approved users that need to sign up for work cells.</a>
+  <li><a href="view_data.jsp<%=makeQuery("10", sortby, null)%>">Only approved that need to sign up for work cells.</a>
 </ul>
+
 <h1>Other Views:</h1>
 <ul>
   <li><a href="view_cells.jsp">View Cells</a>

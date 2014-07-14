@@ -54,6 +54,10 @@ form.td {
 <body>
 <dis:header/>
 
+<div class="nav">
+  <a href="home.jsp">Home</a>
+</div>
+
 <table class="form" style="width:90ex;">
 
 <% for (Cell c:cells) { %>
@@ -91,6 +95,12 @@ for (User u:c.getUsers()) {
 <% } %>
 
 </table>
+
+<br>
+<div class="nav">
+  <a href="home.jsp">Home</a>
+</div>
+
 
 <dis:footer/>
 </body>

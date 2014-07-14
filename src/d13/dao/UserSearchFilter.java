@@ -27,6 +27,9 @@ public class UserSearchFilter {
     public static final int QUICK_OWN_RVS = 5;
     public static final int QUICK_UNPAID = 6;
     public static final int QUICK_NEED_SURVEY = 7;
+    public static final int QUICK_NEED_CELLS = 8;
+    public static final int QUICK_NEED_CELLS_NOT_APPROVED = 9;
+    public static final int QUICK_NEED_CELLS_APPROVED = 10;
     
     public static List<User> quickFilter (int filter) throws IllegalArgumentException {
         
@@ -78,6 +81,19 @@ public class UserSearchFilter {
             break;
         case QUICK_NEED_SURVEY:
             querystr = "left outer join user.approval a where user.state = " + UserState.APPROVED.toDBId() + " and a.completionTime is null";
+            break;
+        case QUICK_NEED_CELLS:
+            querystr = "where user.state != " + UserState.NEW_USER.toDBId() + " and user.cells is empty";
+            break;
+        case QUICK_NEED_CELLS_NOT_APPROVED:
+            querystr = "where (user.state = " + UserState.NEEDS_REVIEW.toDBId() + " or " +
+                              "user.state = " + UserState.REGISTERED.toDBId() + ") " + 
+                              "and user.cells is empty";
+            break;
+        case QUICK_NEED_CELLS_APPROVED:
+            querystr = "where (user.state = " + UserState.APPROVED.toDBId() + " or " +
+                    "user.state = " + UserState.APPROVE_PENDING.toDBId() + ") " + 
+                    "and user.cells is empty";
             break;
         default:
             throw new IllegalArgumentException("Invalid quick filter index " + filter);

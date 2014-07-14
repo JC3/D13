@@ -107,6 +107,9 @@ here periodically for status updates!</div>
   <li><a href="view_data.jsp?qf=5">Only users that own RVs.</a>
   <li><a href="view_data.jsp?qf=6">Only users that need to pay their dues.</a>
   <li><a href="view_data.jsp?qf=7">Only users that need to complete their approval surveys.</a>
+  <li><a href="view_data.jsp?qf=8">All users that need to sign up for work cells.</a>
+  <li><a href="view_data.jsp?qf=9">Only not-yet-approved users that need to sign up for work cells.</a>
+  <li><a href="view_data.jsp?qf=10">Only approved users that need to sign up for work cells.</a>  
 </ul>
 <li><a href="view_cells.jsp">View Cells</a>
 <li><a href="view_groups.jsp">View Camper Groups</a>
