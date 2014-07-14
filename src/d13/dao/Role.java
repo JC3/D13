@@ -16,6 +16,7 @@ public class Role {
     public static String VIEW_LOGS = "viewlogs";
     public static String EDIT_DUES = "editdues";
     public static String MAINTENANCE_LOGIN = "maintlogin";
+    public static String VIEW_FULL_CELLS = "viewfullcells";
     
     private long roleId;
     private String name = "";
@@ -28,6 +29,7 @@ public class Role {
     private boolean viewLogs;
     private boolean editDues;
     private boolean maintenanceLogin;
+    private boolean viewFullCells;
     private Set<String> rights; 
     
     Role () {
@@ -81,6 +83,10 @@ public class Role {
         return maintenanceLogin;
     }
     
+    public boolean canViewFullCells () {
+        return viewFullCells;
+    }
+    
     public Set<String> getRights () {
         if (rights == null) {
             rights = new HashSet<String>();
@@ -92,6 +98,7 @@ public class Role {
             if (viewLogs) rights.add(VIEW_LOGS);
             if (editDues) rights.add(EDIT_DUES);
             if (maintenanceLogin) rights.add(MAINTENANCE_LOGIN);
+            if (viewFullCells) rights.add(VIEW_FULL_CELLS);
             rights = Collections.unmodifiableSet(rights);
         }
         return rights;

@@ -23,6 +23,7 @@ public class Cell {
     private int     people;
     private String  description;
     private boolean category;
+    private boolean hideWhenFull;
     private Set<User> users = new HashSet<User>(0);
     private List<Cell> children = new ArrayList<Cell>();
     
@@ -110,6 +111,10 @@ public class Cell {
         return category;
     }
    
+    public boolean isHideWhenFull () {
+        return hideWhenFull;
+    }
+    
     public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
@@ -131,7 +136,11 @@ public class Cell {
     public void setDescription(String description) {
         this.description = description;
     }
- 
+
+    public void setHideWhenFull (boolean h) {
+        this.hideWhenFull = h;
+    }
+    
     void addUser (User user) {
         if (user != null)
             users.add(user);

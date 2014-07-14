@@ -80,6 +80,7 @@
         <property name="viewLogs" not-null="true"/>
         <property name="editDues" not-null="true"/>
         <property name="maintenanceLogin" not-null="true"/>
+        <property name="viewFullCells" not-null="true"/>
     </class>
 
     <class name="d13.dao.RuntimeOptions$RuntimeOption" table="options">
@@ -214,6 +215,7 @@
         <id name="cellId"><generator class="native"/></id>
         <many-to-one name="parent" class="d13.dao.Cell" insert="false" update="false"/>
         <property name="category" not-null="true"/>
+        <property name="hideWhenFull" not-null="true"/>
         <property name="name" type="string" length="128" not-null="true"/>
         <property name="description" type="text"/>
         <property name="people" not-null="true"/>
