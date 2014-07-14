@@ -370,7 +370,10 @@ public class User {
     }
     
     public void setRealName(String realName) {
-        this.realName = Util.require(realName, "Real name");
+        String name = Util.require(realName, "Real name");
+        if (!name.contains(" "))
+            throw new IllegalArgumentException("Both first and last name must be specified.");
+        this.realName = name;
     }
     
     public void setPlayaName(String playaName) {
