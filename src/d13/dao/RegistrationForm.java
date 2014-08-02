@@ -55,8 +55,9 @@ public class RegistrationForm {
     
     RegistrationForm (User user) {
         this.user = user;
-        this.drivingFromTo = user.getLocation();
-        this.drivingFromToOther = user.getLocationOther();
+        // no more default; force user to select
+        //this.drivingFromTo = user.getLocation();
+        //this.drivingFromToOther = user.getLocationOther();
         this.groupLeader = user;
     }
     

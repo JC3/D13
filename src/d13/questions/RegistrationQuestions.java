@@ -93,7 +93,7 @@ public class RegistrationQuestions {
 
         q = Question.newSingleChoice("drivingFromToId",
                 "Where will you be driving from/to?",
-                "If you are flying from one area to another, choose the point at which you will be getting into an actual vehicle to make your final approach to BRC.");
+                "If you are flying into Reno and riding from there, please enter 'Reno', otherwise please enter whatever city you are riding (not flying) from to get to Reno or BRC.");
         for (Location l:Location.values())
             if (l != Location.OTHER)
                 q.addChoice(l.toDisplayString(), l.toDBId());
@@ -132,7 +132,7 @@ public class RegistrationQuestions {
         
         q = Question.newLongText("livingSpaceSize",
                 "What size is your living space on the playa?",
-                "We need to know your approximate foot print. The height of your tent, yurt, RV or teepee. Any personal shade structures you will be constructing. This will be crucial to making sure all placement needs are honored. The more information you can give us the less likely we are to bother you with more questions. While Disorient provides all tent campers with shade, we require that each camper purchase and bring with them one 10 by 10 orange tarp (<a href=\"http://www.tents-canopy.com/orange-tarp-10x10.html\">http://www.tents-canopy.com/orange-tarp-10x10.html</a>) to expand shade as necessary.");
+                "We need to know your approximate foot print. The height of your tent, yurt, RV or teepee. Any personal shade structures you will be constructing. This will be crucial to making sure all placement needs are honored. The more information you can give us the less likely we are to bother you with more questions. Disorient tries to provide all tent campers with shade, however if you would like to contribute to our shade or bring your own, we suggest a 10 by 10 orange tarp (<a href=\"http://www.tents-canopy.com/orange-tarp-10x10.html\">http://www.tents-canopy.com/orange-tarp-10x10.html</a>) to expand shade within our structure as necessary.");
         qs.add(q);
 
         //--

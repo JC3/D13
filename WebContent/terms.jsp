@@ -137,7 +137,7 @@ h1 {
   are:</p>
 
   <ul>
-    <li><strong>Tier 1:</strong> $425 if paid by 11:59 PM (Eastern Time) on July 14th
+    <li><strong>Tier 1:</strong> $425 if paid by 11:59 PM (Eastern Time) on July 18th
     <li><strong>Tier 2:</strong> $475 if paid by 11:59 PM (Eastern Time) on July 24th
     <li><strong>Tier 3:</strong> $525 if paid by 11:59 PM (Eastern Time) on August 4th
     <li><strong>Tier 4:</strong> $575 if paid by 11:59 PM (Eastern Time) on August 12th

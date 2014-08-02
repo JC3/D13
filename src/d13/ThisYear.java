@@ -11,7 +11,7 @@ import d13.dao.DueCalculator.Tier;
 public class ThisYear {
 
     public static final int CAMP_YEAR = 2014;
-    public static final String SYSTEM_VERSION = "v1.08";
+    public static final String SYSTEM_VERSION = "v1.09";
 
     /*
      * So: 
@@ -34,7 +34,7 @@ OMG TIER: $950 - If you pay your RV fees after July 31st  change to 24th
         DateTimeZone tz = DateTimeZone.forID("America/New_York");
 
         personalTiers.clear();        
-        personalTiers.add(new Tier(new DateTime(2014, 7, 15, 0, 0, 0, tz), 42500, "Tier 1"));
+        personalTiers.add(new Tier(new DateTime(2014, 7, 19, 0, 0, 0, tz), 42500, "Tier 1"));
         personalTiers.add(new Tier(new DateTime(2014, 7, 25, 0, 0, 0, tz), 47500, "Tier 2"));
         personalTiers.add(new Tier(new DateTime(2014, 8, 5, 0, 0, 0, tz), 52500, "Tier 3"));
         personalTiers.add(new Tier(new DateTime(2014, 8, 13, 0, 0, 0, tz), 57500, "Tier 4"));

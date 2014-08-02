@@ -28,22 +28,27 @@ public class CellList {
         String volunteers;        
         String trstyle = "";
         String titlestyle = "";
+       
+        boolean cellfull = false;
         
         int total = cell.getPeople();
         if (total == 0) {
             volunteers = "This cell still needs volunteers.";
+            cellfull = !cell.getUsers().isEmpty();
         } else {
             int sofar = cell.getUsers().size();
             int remaining = total - sofar;
-            if (remaining <= 0)
+            if (remaining <= 0) {
                 volunteers = null;
-            else
+                cellfull = true;
+            } else {
                 volunteers = String.format("This cell still needs %s volunteer%s.", remaining, remaining == 1 ? "" : "s");
+            }
         }
         
         boolean isInCell = user.isInCell(cell);
         
-        if (volunteers == null && cell.isHideWhenFull()) {
+        if (cellfull && cell.isHideWhenFull()) {
             if (user.getRole().canViewFullCells()) {
                 trstyle = "";
                 titlestyle = " style=\"color:red;\"";
