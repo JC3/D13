@@ -111,7 +111,7 @@ here periodically for status updates!</div>
   <li><a href="view_data.jsp?qf=9">Only not-yet-approved users that need to sign up for work cells.</a>
   <li><a href="view_data.jsp?qf=10">Only approved users that need to sign up for work cells.</a>  
 </ul>
-<li><a href="view_cells.jsp">View Cells</a>
+<li><a href="view_cells2.jsp">View Cells</a>
 <li><a href="view_groups.jsp">View Camper Groups</a>
 <li><a href="view_finance.jsp">View Dues Report</a>
 <li><a href="adminhelp.jsp">Help</a>

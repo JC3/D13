@@ -765,6 +765,18 @@ public class User {
         
     }
  
+    
+    /**
+     * Sorts a user list by full name.
+     */
+    public static class RealNameComparator implements Comparator<User> {
+        
+        @Override public int compare (User a, User b) {
+            return a.getRealName().compareTo(b.getRealName());
+        }
+        
+    }
+    
 
     /**
      * Sorts a user list by the user's location display string.
