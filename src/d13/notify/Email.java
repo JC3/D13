@@ -42,7 +42,7 @@ public abstract class Email {
     
     private final Configuration config;
     
-    public static class Configuration {
+    public static class Configuration implements Cloneable {
     
         public boolean auth     = false;
         public boolean tls      = false;
@@ -54,6 +54,7 @@ public abstract class Email {
         public String  from     = "camp@disorient.info";
         public String  replyTo  = "camp@disorient.info";
         public String  baseUrl  = "http://camp.disorient.info";
+        public boolean single   = false; // for mailer apps; if single then TO:recipient + CC:camp@, otherwise BCC recipients and no CC.
         public String  pwExpire = User.RT_PWRESET_EXPIRE_MINUTES_DEFAULT;
         // TODO: pwExpire is a bit of a hack; if we have to start referring to lots of other config
         //       options in email, it would be cleaner to pass the hibernate session to Email 
@@ -61,6 +62,23 @@ public abstract class Email {
         //       one.
    
         public Configuration () {
+        }
+        
+        @Override public Configuration clone () {
+            Configuration c = new Configuration();
+            c.auth = auth;
+            c.tls = tls;
+            c.ssl = ssl;
+            c.host = host;
+            c.port = port;
+            c.user = user;
+            c.password = password;
+            c.from = from;
+            c.replyTo = replyTo;
+            c.baseUrl = baseUrl;
+            c.single = single;
+            c.pwExpire = pwExpire;
+            return c;
         }
         
         public static Configuration fromDatabase (org.hibernate.Session session) {
@@ -129,7 +147,7 @@ public abstract class Email {
         return false;
     }
     
-    private final void send (List<InternetAddress> recipients) throws Exception {
+    public final void send (List<InternetAddress> recipients) throws Exception {
    
         if (recipients.isEmpty())
             throw new Exception("No recipients.");
@@ -148,7 +166,10 @@ public abstract class Email {
         message.setFrom(new InternetAddress(config.from));            
         for (InternetAddress recipient:recipients) {
             System.out.println("Sending to " + recipient);
-            message.addRecipient(Message.RecipientType.BCC, recipient);
+            message.addRecipient(config.single ? Message.RecipientType.TO : Message.RecipientType.BCC, recipient);
+        }
+        if (config.single) {
+            message.addRecipient(Message.RecipientType.CC, new InternetAddress(config.from));
         }
         message.setReplyTo(new Address[] {new InternetAddress(config.replyTo)});
         
@@ -185,5 +206,5 @@ public abstract class Email {
         send(addrs);
         
     }
-    
+        
 }

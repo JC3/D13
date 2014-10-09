@@ -1,6 +1,10 @@
 package d13.dao;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
+
+import d13.util.HibernateUtil;
 
 public class ActivityLogEntry {
     
@@ -47,4 +51,11 @@ public class ActivityLogEntry {
         return description;
     }
 
+    public static List<ActivityLogEntry> findAll () {
+        @SuppressWarnings("unchecked")
+        List<ActivityLogEntry> entries = (List<ActivityLogEntry>)HibernateUtil.getCurrentSession()
+                .createCriteria(ActivityLogEntry.class)
+                .list();
+        return entries;
+    }
 }
