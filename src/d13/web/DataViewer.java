@@ -295,6 +295,23 @@ public class DataViewer {
                 return 0;
             }
         }
+
+        private static int compareDataStrings (String astr, String bstr) {
+            
+            astr = astr.trim();
+            bstr = bstr.trim();
+            int cmp = astr.compareToIgnoreCase(bstr);
+            
+            if (cmp != 0) {
+                if (astr.isEmpty())
+                    return 1;
+                else if (bstr.isEmpty())
+                    return -1;
+            }
+            
+            return cmp;
+
+        }
         
         @SuppressWarnings({ "rawtypes", "unchecked" })
         private static int compareObjects (Object a, Object b) {
@@ -302,17 +319,29 @@ public class DataViewer {
             if (a == b)
                 return 0;
             else if (a == null || b == null)
-                return a == null ? -1 : 1;
+                return a == null ? 1 : -1; // 2015-06-27: order swapped to put empty stuff at end
            
             if (a.getClass().equals(b.getClass())) {
-                if (a instanceof Comparable) {
-                    Comparable ac = (Comparable)a;
-                    Comparable bc = (Comparable)b;
-                    return ac.compareTo(bc);
+                // additional special cases can go here
+                if (a instanceof String) {
+                    // 2015-06-27: empty strings at end instead of beginning; also case-insensitive
+                    return compareDataStrings((String)a, (String)b);
+                } else if (a instanceof Comparable) {
+                    try {
+                        Comparable ac = (Comparable)a;
+                        Comparable bc = (Comparable)b;
+                        return ac.compareTo(bc);
+                    } catch (Throwable t) {
+                        // fall through to string compare
+                    }
                 }
             }
             
-            return a.toString().compareTo(b.toString());
+            // normal string compare
+            //return a.toString().compareTo(b.toString());
+            
+            // 2015-06-27: empty strings at end instead of beginning; also case-insensitive
+            return compareDataStrings(a.toString(), b.toString());
             
         }
         
