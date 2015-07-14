@@ -54,11 +54,15 @@ public class RuntimeOptions {
         }
         
         public static boolean isRegistrationClosed (Session session) {
-            return !"0".equals(getOption("closed", "0"));
+            return !"0".equals(RuntimeOptions.getOption("closed", "0"));
         }
         
         public static boolean isMaintenanceMode () {
             return !"0".equals(RuntimeOptions.getOption("maintenance", "0"));
+        }
+        
+        public static boolean isInviteOnly () {
+            return !"0".equals(RuntimeOptions.getOption("invite_only", "0"));
         }
         
         /** Returns null or returns value. Never returns empty string. */

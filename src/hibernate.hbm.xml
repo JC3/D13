@@ -81,6 +81,9 @@
         <property name="editDues" not-null="true"/>
         <property name="maintenanceLogin" not-null="true"/>
         <property name="viewFullCells" not-null="true"/>
+        <property name="inviteUsers" not-null="true"/>
+        <property name="alwaysInvited" not-null="true"/>
+        <property name="viewInvites" not-null="true"/>
     </class>
 
     <class name="d13.dao.RuntimeOptions$RuntimeOption" table="options">
@@ -93,6 +96,7 @@
         <property name="type" not-null="true"/>
         <property name="queued" not-null="true" type="d13.dao.types.DateTimeType"/>
         <property name="userId"/>
+        <property name="inviteId"/>
         <property name="failedAttempt" type="d13.dao.types.DateTimeType"/>
         <property name="failedDetail" type="text"/>
     </class>
@@ -165,6 +169,22 @@
         <many-to-one name="toWho" class="d13.dao.User" not-null="true"/>
         <many-to-one name="byWho" class="d13.dao.User"/>
         <property name="description"/>
+    </class>
+
+    <class name="d13.dao.Invite" table="invites">
+        <id name="inviteId"><generator class="native"/></id>
+        <property name="inviteCode" length="8" not-null="true" unique="true"/>
+        <property name="inviteeEmail" length="254" not-null="true"/>
+        <property name="inviteeName" length="128"/>
+        <many-to-one name="createdBy" class="d13.dao.User" not-null="true"/>
+        <property name="createdOn" type="d13.dao.types.DateTimeType" not-null="true"/>
+        <many-to-one name="cancelledBy" class="d13.dao.User"/>
+        <property name="cancelledOn" type="d13.dao.types.DateTimeType"/>
+        <property name="expiresOn" type="d13.dao.types.DateTimeType"/>
+        <property name="resolvedOn" type="d13.dao.types.DateTimeType"/>
+        <many-to-one name="resolvedBy" class="d13.dao.User"/>
+        <property name="status" not-null="true"/>
+        <property name="comment" type="text"/>
     </class>
     
     <class name="d13.dao.User" table="users">

@@ -17,6 +17,9 @@ public class Role {
     public static String EDIT_DUES = "editdues";
     public static String MAINTENANCE_LOGIN = "maintlogin";
     public static String VIEW_FULL_CELLS = "viewfullcells";
+    public static String INVITE_USERS = "inviteu";
+    public static String ALWAYS_INVITED = "alwaysinvited";
+    public static String VIEW_INVITES = "viewinvites";
     
     private long roleId;
     private String name = "";
@@ -30,6 +33,9 @@ public class Role {
     private boolean editDues;
     private boolean maintenanceLogin;
     private boolean viewFullCells;
+    private boolean inviteUsers;
+    private boolean alwaysInvited;
+    private boolean viewInvites;
     private Set<String> rights; 
     
     Role () {
@@ -86,6 +92,18 @@ public class Role {
     public boolean canViewFullCells () {
         return viewFullCells;
     }
+   
+    public boolean canInviteUsers () {
+        return inviteUsers;
+    }
+    
+    public boolean isAlwaysInvited () {
+        return alwaysInvited;
+    }
+    
+    public boolean canViewInvites () {
+        return viewInvites;
+    }
     
     public Set<String> getRights () {
         if (rights == null) {
@@ -99,6 +117,9 @@ public class Role {
             if (editDues) rights.add(EDIT_DUES);
             if (maintenanceLogin) rights.add(MAINTENANCE_LOGIN);
             if (viewFullCells) rights.add(VIEW_FULL_CELLS);
+            if (inviteUsers) rights.add(INVITE_USERS);
+            if (alwaysInvited) rights.add(ALWAYS_INVITED);
+            if (viewInvites) rights.add(VIEW_INVITES);
             rights = Collections.unmodifiableSet(rights);
         }
         return rights;

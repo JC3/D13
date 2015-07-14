@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
 
+import d13.dao.Invite;
 import d13.dao.QueuedEmail;
 import d13.dao.RuntimeOptions;
 import d13.dao.User;
@@ -190,22 +191,27 @@ public class BackgroundNotificationManager implements ServletContextListener {
         
         private void sendMail (QueuedEmail queued, Email.Configuration config) throws Throwable {
 
-            User user;
+            Object object;
             List<User> recipients;
             
             Session session = HibernateUtil.openSession();
             Transaction tx = null;
             try {
                 tx = session.beginTransaction();
-                user = queued.fetchUser(session);
-                if (queued.getType() == QueuedEmail.TYPE_REVIEW)
-                    recipients = User.findReviewersForEmail(session);
-                else if (queued.getType() == QueuedEmail.TYPE_ACCEPTED)
-                    recipients = User.findAdmissionsForEmail(session);
-                else if (queued.getType() == QueuedEmail.TYPE_FINALIZE)
-                    recipients = User.findFinalizersForEmail(session);
-                else
+                if (queued.getType() == QueuedEmail.TYPE_INVITE) {
+                    object = queued.fetchInvite(session);
                     recipients = null;
+                } else {
+                    object = queued.fetchUser(session);
+                    if (queued.getType() == QueuedEmail.TYPE_REVIEW)
+                        recipients = User.findReviewersForEmail(session);
+                    else if (queued.getType() == QueuedEmail.TYPE_ACCEPTED)
+                        recipients = User.findAdmissionsForEmail(session);
+                    else if (queued.getType() == QueuedEmail.TYPE_FINALIZE)
+                        recipients = User.findFinalizersForEmail(session);
+                    else
+                        recipients = null;
+                }
                 tx.commit();
             } catch (Throwable t) {
                 if (tx != null) tx.rollback();
@@ -216,29 +222,32 @@ public class BackgroundNotificationManager implements ServletContextListener {
                 tx = null;
             }              
             
-            if (user == null)
-                throw new Exception("No such user.");
+            if (object == null)
+                throw new Exception("No such object.");
             
             //System.out.println("SEND: " + queued.getType() + " TO " + user.getEmail());
             
             switch (queued.getType()) {
             case QueuedEmail.TYPE_REVIEW:
-                ReviewNotificationEmail.sendNow(user, recipients, config);
+                ReviewNotificationEmail.sendNow((User)object, recipients, config);
                 break;
             case QueuedEmail.TYPE_ACCEPTED:
-                AcceptedNotificationEmail.sendNow(user, recipients, config);
+                AcceptedNotificationEmail.sendNow((User)object, recipients, config);
                 break;
             case QueuedEmail.TYPE_FINALIZE:
-                PendingNotificationEmail.sendNow(user, recipients, config);
+                PendingNotificationEmail.sendNow((User)object, recipients, config);
                 break;
             case QueuedEmail.TYPE_APPROVED:
-                ApprovalEmail.sendNow(user, config);
+                ApprovalEmail.sendNow((User)object, config);
                 break;
             case QueuedEmail.TYPE_REJECTED:
-                RejectionEmail.sendNow(user, config);
+                RejectionEmail.sendNow((User)object, config);
                 break;
             case QueuedEmail.TYPE_PWRESET:
-                PasswordResetEmail.sendNow(user, config);
+                PasswordResetEmail.sendNow((User)object, config);
+                break;
+            case QueuedEmail.TYPE_INVITE:
+                InviteEmail.sendNow((Invite)object, config);
                 break;
             }
             
@@ -250,7 +259,7 @@ public class BackgroundNotificationManager implements ServletContextListener {
                 tx = null;
                 try {
                     tx = session.beginTransaction();
-                    user = queued.fetchUser(session);
+                    User user = queued.fetchUser(session);
                     user.setGracePeriodStart(DateTime.now());
                     tx.commit();
                 } catch (Throwable t) {

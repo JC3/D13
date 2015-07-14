@@ -114,6 +114,13 @@ here periodically for status updates!</div>
 <li><a href="view_cells2.jsp">View Cells</a>
 <li><a href="view_groups.jsp">View Camper Groups</a>
 <li><a href="view_finance.jsp">View Dues Report</a>
+<%   if (RuntimeOptions.Global.isInviteOnly()) { %>
+<%     if (user.getRole().canInviteUsers()) { %>
+<li><a href="view_invites.jsp">View/Manage Invites</a>
+<%     } else if (user.getRole().canViewInvites()) { %>
+<li><a href="view_invites.jsp">View Invites</a>
+<%     } %>
+<%   } %>
 <li><a href="adminhelp.jsp">Help</a>
 </ul>
 <% } %>

@@ -33,6 +33,10 @@ public class SessionData {
     public static final String SA_EDIT_DUES_ERROR = "jsp.editdues.error";
     public static final String SA_EDIT_DUES_DEFAULTS = "jsp.editdues.defaults";
     public static final String SA_PWRESET_ERROR = "jsp.pwreset.error";
+    public static final String SA_MANAGE_INVITES_ERROR = "jsp.invites.error";
+    public static final String SA_MANAGE_INVITES_WARNING = "jsp.invites.warning";
+    public static final String SA_MANAGE_INVITES_EMAILS = "jsp.invites.emails";
+    public static final String SA_MANAGE_INVITES_EXPIRES = "jsp.invites.expires";
     
     //private static final String SA_EMAIL = "info.disorient.SessionData.email";
     private static final String SA_USERID = "info.disorient.SessionData.userid";

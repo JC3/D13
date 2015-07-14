@@ -11,7 +11,7 @@
 </div>
 
 <div style="float:right;border:0;margin:0;padding:0;text-align:right;width:40ex;" class="contact">
-If you have any questions, <a href="mailto:camp@disorient.info?subject=Disorient <%=ThisYear.CAMP_YEAR %> Registration">contact us</a>.
+If you have any questions, <a href="mailto:camp@disorient.info?subject=Disorient <%=ThisYear.CAMP_YEAR %> Registration">send an email</a>.
 </div>
 
 <div style="float:none;text-align:center;" class="version">

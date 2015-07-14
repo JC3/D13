@@ -1,3 +1,4 @@
+<%@page import="d13.ThisYear"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ page import="d13.web.*" %>
@@ -83,7 +84,7 @@ function doForgot () {
 </form>
 
 <div class="content">
-<strong>If you registered in 2013 you may use the same email and password this year. If you last registered in 2012 or earlier, you will have to create
+<strong>If you registered in 2013 or later, you may use the same email and password this year. If you last registered in 2012 or earlier, you will have to create
 a new account above!</strong>
 </div>
 

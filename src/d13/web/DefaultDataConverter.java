@@ -16,6 +16,10 @@ public class DefaultDataConverter implements DataConverter {
     private static final DateTimeZone tz = DateTimeZone.forID("America/New_York");
     
     @Override public String asString (Object object) {
+        return objectAsString(object);
+    }
+    
+    public static String objectAsString (Object object) {
         if (object == null)
             return "";
         else if (object instanceof Boolean)
