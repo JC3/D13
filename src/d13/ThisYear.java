@@ -11,7 +11,7 @@ import d13.dao.DueCalculator.Tier;
 public class ThisYear {
 
     public static final int CAMP_YEAR = 2015;
-    public static final String SYSTEM_VERSION = "v1.12";
+    public static final String SYSTEM_VERSION = "v1.12b";
 
     /*
      * So: 

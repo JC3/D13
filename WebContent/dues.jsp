@@ -25,6 +25,11 @@ if (user.getState() != UserState.APPROVED) {
     return;
 }
 
+if (user.isInviteCodeNeeded()) {
+    response.sendRedirect("invite.jsp");
+    return;
+}
+
 StringBuilder personalSelectOptions = new StringBuilder();
 personalSelectOptions.append("<option value=\"\">-- Select Another Camper --</option>");
 for (User u:BillingManager.getUsersWithOpenPersonalDues())

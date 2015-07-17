@@ -1,5 +1,7 @@
 package d13.dao;
 
+import java.util.List;
+
 import org.hibernate.Session;
 
 import d13.util.HibernateUtil;
@@ -11,7 +13,16 @@ public class RuntimeOptions {
         String value;
         RuntimeOption () { }
         RuntimeOption (String name) { this.name = name; }
-        RuntimeOption (String name, String value) { this.name = name; this.value = value; }
+        public RuntimeOption (String name, String value) { this.name = name; this.value = value; }
+        public boolean isSecure () {
+            return name.startsWith("notify.smtp") || name.startsWith("dues.paypal");
+        }
+        public String getName () {
+            return name;
+        }
+        public String getValue () {
+            return value;
+        }
     }
  
     public static void setOption (String name, String value, Session session) {
@@ -45,6 +56,11 @@ public class RuntimeOptions {
     
     public static String getOption (String name) {
         return getOption(name, null, HibernateUtil.getCurrentSession());
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static List<RuntimeOption> getOptions () {
+        return HibernateUtil.getCurrentSession().createCriteria(RuntimeOption.class).list();
     }
     
     public static class Global {

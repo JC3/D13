@@ -42,6 +42,9 @@ public class EditRegistration {
             if (!editee.isEditableBy2(editor))
                 throw new SecurityException("Permission denied.");
             
+            if (editor.isInviteCodeNeeded())
+                throw new IllegalArgumentException("Invite code needed.");
+            
             RegistrationForm form = editee.getRegistration();
             boolean sendmail = false;
             

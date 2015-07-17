@@ -77,4 +77,8 @@ public class ApprovalQuestions {
         return qs;
     }
     
+    public static final boolean isBlank () {
+        return getQuestions().isEmpty();
+    }
+    
 }

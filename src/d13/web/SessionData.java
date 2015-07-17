@@ -37,6 +37,7 @@ public class SessionData {
     public static final String SA_MANAGE_INVITES_WARNING = "jsp.invites.warning";
     public static final String SA_MANAGE_INVITES_EMAILS = "jsp.invites.emails";
     public static final String SA_MANAGE_INVITES_EXPIRES = "jsp.invites.expires";
+    public static final String SA_INVITE_ERROR = "jsp.invite.error";
     
     //private static final String SA_EMAIL = "info.disorient.SessionData.email";
     private static final String SA_USERID = "info.disorient.SessionData.userid";

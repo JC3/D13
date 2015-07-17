@@ -14,6 +14,11 @@ if (!sess.isLoggedIn()) {
     return;
 }
 
+if (sess.getUser().isInviteCodeNeeded()) {
+    response.sendRedirect("invite.jsp");
+    return;
+}
+
 DataViewer view = new DataViewer(pageContext, sess, DataViewer.FLAG_SINGLE_USER | DataViewer.FLAG_NO_CELLS);
 if (view.isFailed())
     return; // user should not be here

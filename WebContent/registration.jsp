@@ -40,6 +40,11 @@ if (!editee.isEditableBy2(editor) && !editee.isViewableBy2(editor))
 if (defaults == null)
     defaults = new RegistrationBean(editee);
 
+if (editor.isInviteCodeNeeded()) {
+    response.sendRedirect("invite.jsp");
+    return;
+}
+    
 String error = (String)sess.getAndClearAttribute(SessionData.SA_REG_ERROR);
 String error_html = (error == null ? null : Util.html(error));
 

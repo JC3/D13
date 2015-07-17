@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 
 import d13.util.HibernateUtil;
@@ -237,6 +238,22 @@ public class Invite {
             throw new IllegalArgumentException("There is no invite with the specified ID.");
         return invite;
     }    
+    
+    public static Invite findByInviteCode (String inviteCode) {
+        
+        inviteCode = (inviteCode == null ? "" : inviteCode.trim());
+        if (inviteCode.isEmpty())
+            throw new IllegalArgumentException("Invite code must be specified.");
+        
+        Invite invite = (Invite)HibernateUtil.getCurrentSession()
+                .createCriteria(Invite.class)
+                .add(Restrictions.eq("inviteCode", inviteCode))
+                .uniqueResult();
+        
+        return invite;
+
+    }
+
 
     public static List<Invite> findAll () {
         @SuppressWarnings("unchecked")

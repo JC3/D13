@@ -47,6 +47,7 @@ public class User {
     private DateTime gracePeriodStart;
     private String adminComment;
     private boolean termsAgreed;
+    private Invite currentInvite;
     private Set<Cell> cells = new HashSet<Cell>(0);
     private List<ActivityLogEntry> activityLog = new ArrayList<ActivityLogEntry>();
     private DueItem personalDue;
@@ -334,6 +335,20 @@ public class User {
             System.err.println("User.isPasswordResetTimeExpired: " + x.getMessage());
             return true;
         }
+    }
+    
+    public boolean isInviteCodeNeeded () {
+        if (!RuntimeOptions.Global.isInviteOnly())
+            return false;
+        if (getRole().isAlwaysInvited())
+            return false;
+        if (currentInvite != null && currentInvite.getStatus() == Invite.STATUS_ACCEPTED)
+            return false;
+        return true;
+    }
+    
+    public void setCurrentInvite (Invite invite) {
+        currentInvite = invite;
     }
     
     public void setEmail(String email) {

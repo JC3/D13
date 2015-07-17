@@ -24,9 +24,24 @@ String realname_html = Util.html(user.getRealName());
 //    role_html = "Admissions";
 String role_html = Util.html(user.getRoleDisplay());
 
+if (user.isInviteCodeNeeded()) {
+    response.sendRedirect("invite.jsp");
+    return;
+}
+
 if (!user.isTermsAgreed()) {
     response.sendRedirect("terms.jsp");
     return;
+}
+
+Cookie[] cs = request.getCookies();
+if (cs != null) {
+    for (Cookie c : cs) {
+        if ("inviteCode".equals(c.getName())) {
+            c.setMaxAge(0);
+            response.addCookie(c);
+        }
+    }
 }
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -121,6 +136,7 @@ here periodically for status updates!</div>
 <li><a href="view_invites.jsp">View Invites</a>
 <%     } %>
 <%   } %>
+<li><a href="view_options.jsp">View Site Configuration</a>
 <li><a href="adminhelp.jsp">Help</a>
 </ul>
 <% } %>

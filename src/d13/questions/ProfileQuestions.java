@@ -3,9 +3,8 @@ package d13.questions;
 import java.util.ArrayList;
 import java.util.List;
 
-import d13.dao.Location;
-
 import d13.dao.Gender;
+import d13.dao.Location;
 
 public class ProfileQuestions {
 

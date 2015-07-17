@@ -8,6 +8,13 @@
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="dis" %>
 <%
+String code = request.getParameter("code");
+code = (code == null ? "" : code.trim());
+if (!code.isEmpty()) {
+    Cookie c = new Cookie("inviteCode", code);
+    c.setMaxAge(3600*24*90);
+    response.addCookie(c);
+}
 
 SessionData sess = new SessionData(session);
 if (sess.isLoggedIn()) {

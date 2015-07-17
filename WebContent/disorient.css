@@ -95,6 +95,10 @@ div.qdesc {
     clear: both;
 }
 
+td.instruct {
+	font-size: 10pt;
+}
+
 input.dtext {
     border: 1px solid #bb7700;
     background: #402000;

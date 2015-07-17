@@ -198,6 +198,7 @@
         <property name="passwordResetKey" length="16"/>
         <property name="passwordResetTime" type="d13.dao.types.DateTimeType"/>
         <property name="termsAgreed" not-null="true"/>
+        <many-to-one name="currentInvite" class="d13.dao.Invite" cascade="save-update"/>
         <property name="gender" type="d13.dao.types.GenderType" not-null="true"/>
         <property name="realName" length="128" not-null="true"/>
         <property name="playaName" length="128"/>
