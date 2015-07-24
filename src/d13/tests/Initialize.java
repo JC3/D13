@@ -1,12 +1,14 @@
 package d13.tests;
 
+import java.io.FileReader;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
+
 import d13.dao.Cell;
-import d13.dao.Gender;
-import d13.dao.Location;
-import d13.dao.RuntimeOptions;
-import d13.dao.User;
-import d13.dao.UserState;
-import d13.notify.BackgroundNotificationManager;
 import d13.util.HibernateUtil;
 
 public class Initialize {
@@ -15,7 +17,7 @@ public class Initialize {
     public static void main(String[] args) throws Exception {
 
         HibernateUtil.beginTransaction();
-
+/*
         RuntimeOptions.setOption("maintenance", "0");
         RuntimeOptions.setOption(BackgroundNotificationManager.RT_ENABLE_NOTIFY, "1");
         RuntimeOptions.setOption("notify.smtp_auth", "1");
@@ -49,9 +51,45 @@ public class Initialize {
             user.setState(UserState.NEW_USER);
             HibernateUtil.getCurrentSession().persist(user);
         }
-        
+  */      
         if (Cell.findRoot() == null) {
             
+            Cell root = Cell.newRoot();
+            Map<String,Cell> categories = new HashMap<String,Cell>();
+            
+            Reader reader = new FileReader("cells.csv");
+            for (CSVRecord record :CSVFormat.EXCEL.parse(reader)) {
+                
+                if (record.size() < 4)
+                    continue;
+                
+                String category = record.get(0).trim();
+                String name = record.get(1).trim();
+                int people = 0;
+                try {
+                    people = Integer.parseInt(record.get(2));
+                } catch (Exception x) {
+                }
+                boolean hide = record.get(3).trim().toLowerCase().startsWith("y");
+                String desc = (record.size() < 4 ? null : record.get(4).trim());
+                
+                System.out.println(category  +" -> " + name + " -> " + people + " -> " + hide);
+                System.out.println("  " + desc);
+                
+                Cell cat = categories.get(category);
+                if (cat == null) {
+                    cat = root.addCategory(category);
+                    categories.put(category, cat);
+                }
+                
+                Cell cell = cat.addCell(name);
+                cell.setPeople(people);
+                cell.setDescription(desc);
+                cell.setHideWhenFull(hide);
+                
+            }
+            
+            /*
             Cell root, cell, cell2, cell3;
            
             root = Cell.newRoot();
@@ -237,6 +275,7 @@ public class Initialize {
             cell3.setDescription("");
     
             //==============================================================
+            */
             
             HibernateUtil.getCurrentSession().save(root);
             
