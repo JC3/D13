@@ -11,22 +11,18 @@ import d13.dao.DueCalculator.Tier;
 public class ThisYear {
 
     public static final int CAMP_YEAR = 2015;
-    public static final String SYSTEM_VERSION = "v1.12b";
+    public static final String SYSTEM_VERSION = "v1.13f";
 
     /*
-     * So: 
-Tier 1: $425 – If you pay your camp dues by July 14th at 11:59PM PT
-Tier 2: $475 – If you pay your camp dues by July 24st at 11:59PM PT
-Tier 3: $525 – If you pay your camp dues by August 4th at 11:59PM PT
-Tier 4: $575 - If you pay your camp dues after  August 12th at 11:59PM PT
-OMG TIER $625 - If you pay your camp dues after August 12th 
-Any camper with unpaid camp dues after August 19th will NOT BE PLACED. 
+     * 2015
+     * 
+     * Tier 1: $425 if paid by 11:59 PM (Eastern Time) on July 26th
+Tier 2: $525 if paid by 11:59 PM (Eastern Time) on July 31st
+Tier 3: $625 if paid by 11:59 PM (Eastern Time) on August 16th
 
-
-RV Fees:
-Tier 1: $850 - If you pay your RV fees by July 17th 
-Tier 2: $900 - If you pay your RV fees by July  31st  change to 24th
-OMG TIER: $950 - If you pay your RV fees after July 31st  change to 24th
+RV Fee Tier 1: $950 if paid by 11:59 PM (Eastern Time) on July 26th
+RV Fee Tier 2: $1050 if paid by 11:59 PM (Eastern Time) on July 31st
+RV Fee Tier 3: $1150 if paid by 11:59 PM (Eastern Time) on August 16th
      */
     
     public static void setupPersonalTiers (List<Tier> personalTiers) {
@@ -34,11 +30,9 @@ OMG TIER: $950 - If you pay your RV fees after July 31st  change to 24th
         DateTimeZone tz = DateTimeZone.forID("America/New_York");
 
         personalTiers.clear();        
-        personalTiers.add(new Tier(new DateTime(2014, 7, 19, 0, 0, 0, tz), 42500, "Tier 1"));
-        personalTiers.add(new Tier(new DateTime(2014, 7, 25, 0, 0, 0, tz), 47500, "Tier 2"));
-        personalTiers.add(new Tier(new DateTime(2014, 8, 5, 0, 0, 0, tz), 52500, "Tier 3"));
-        personalTiers.add(new Tier(new DateTime(2014, 8, 13, 0, 0, 0, tz), 57500, "Tier 4"));
-        personalTiers.add(new Tier(null, 62500, "Tier 5"));
+        personalTiers.add(new Tier(new DateTime(2015, 7, 27, 0, 0, 0, tz), 42500, "Tier 1"));
+        personalTiers.add(new Tier(new DateTime(2015, 8, 1, 0, 0, 0, tz), 52500, "Tier 2"));
+        personalTiers.add(new Tier(null, 62500, "Tier 3"));
         
     }
     
@@ -47,9 +41,9 @@ OMG TIER: $950 - If you pay your RV fees after July 31st  change to 24th
         DateTimeZone tz = DateTimeZone.forID("America/New_York");
 
         rvTiers.clear();
-        rvTiers.add(new Tier(new DateTime(2014, 7, 18, 0, 0, 0, tz), 85000, "R.V. Tier 1"));
-        rvTiers.add(new Tier(new DateTime(2014, 7, 25, 0, 0, 0, tz), 90000, "R.V. Tier 2"));
-        rvTiers.add(new Tier(null, 95000, "R.V. Tier 3"));
+        rvTiers.add(new Tier(new DateTime(2015, 7, 27, 0, 0, 0, tz), 95000, "R.V. Tier 1"));
+        rvTiers.add(new Tier(new DateTime(2015, 8, 1, 0, 0, 0, tz), 105000, "R.V. Tier 2"));
+        rvTiers.add(new Tier(null, 115000, "R.V. Tier 3"));
         
     }
     

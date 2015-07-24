@@ -102,7 +102,7 @@ public class Invite {
     }
     
     public String getInviteeName () {
-        return inviteeName;
+        return inviteeName == null ? getInviteeEmail() : inviteeName;
     }
 
     public User getCreatedBy() {
@@ -158,16 +158,16 @@ public class Invite {
         return getStatus() == STATUS_ACTIVE && !isExpired(); 
     }
     
-    private void checkStateForResolve (User acceptor) {
-        if (acceptor == null) {
+    private void checkStateForResolve (User acceptor, boolean nullok) {
+        if (acceptor == null && !nullok) {
             throw new IllegalArgumentException("User must be specified.");
         } else if (getStatus() == STATUS_ACCEPTED) {
-            if (acceptor.getUserId() == resolvedBy.getUserId())
+            if (acceptor != null && resolvedBy != null && acceptor.getUserId() == resolvedBy.getUserId())
                 throw new IllegalArgumentException("You have already accepted this invite.");
             else
                 throw new IllegalArgumentException("This invite code has already been used.");
         } else if (getStatus() == STATUS_REJECTED) {
-            if (acceptor.getUserId() == resolvedBy.getUserId())
+            if (acceptor != null && resolvedBy != null && acceptor.getUserId() == resolvedBy.getUserId())
                 throw new IllegalArgumentException("You have already rejected this invite.");
             else
                 throw new IllegalArgumentException("This invite code has already been used.");
@@ -204,14 +204,14 @@ public class Invite {
     }
     
     public void accept (User acceptor) {
-        checkStateForResolve(acceptor);
+        checkStateForResolve(acceptor, false);
         resolvedOn = DateTime.now();
         resolvedBy = acceptor;
         status = STATUS_ACCEPTED;
     }
     
     public void reject (User rejector) {
-        checkStateForResolve(rejector);
+        checkStateForResolve(rejector, true);
         resolvedOn = DateTime.now();
         resolvedBy = rejector;
         status = STATUS_REJECTED;

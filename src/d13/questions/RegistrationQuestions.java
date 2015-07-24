@@ -55,33 +55,26 @@ public class RegistrationQuestions {
         // end if
         
         q = Question.newDropList("arrivalDate", "Date of arrival on the playa.", "Want to arrive early and help Alpha Camp build Disorient?");
-        q.addChoice("8/18", "8/18/2014");
-        q.addChoice("8/19", "8/19/2014");
-        q.addChoice("8/20", "8/20/2014");
-        q.addChoice("8/21", "8/21/2014");
-        q.addChoice("8/22", "8/22/2014");
-        q.addChoice("8/23", "8/23/2014");
-        q.addChoice("8/24", "8/24/2014");
-        q.addChoice("8/25", "8/25/2014");
-        q.addChoice("8/26", "8/26/2014");
-        q.addChoice("8/27", "8/27/2014");
-        qs.add(q);
-        
-        q = Question.newDropList("arrivalTime", "Time of arrival on the playa.", null);
-        q.addChoice("Morning", "Morning");
-        q.addChoice("Afternoon", "Afternoon");
-        q.addChoice("Evening", "Evening");
-        q.addChoice("Late Night", "Night");
+        q.addChoice("Monday 8/24", "8/24/2015");
+        q.addChoice("Tuesday 8/25", "8/25/2015");
+        q.addChoice("Wednesday 8/26", "8/26/2015");
+        q.addChoice("Thursday 8/27", "8/27/2015");
+        q.addChoice("Friday 8/28", "8/28/2015");
+        q.addChoice("Saturday 8/29", "8/29/2015");
+        q.addChoice("Sunday 8/30", "8/30/2015");
+        q.addChoice("Monday 9/1", "9/1/2015");
+        q.addChoice("Tuesday 9/2", "9/2/2015");
         qs.add(q);
         
         q = Question.newDropList("departureDate", "Date of departure from the playa.", "Remember, you can get up to a $250 rebate if you stay for Disengage!");
-        q.addChoice("8/30", "8/30/2014");
-        q.addChoice("8/31", "8/31/2014");
-        q.addChoice("9/1", "9/1/2014");
-        q.addChoice("9/2", "9/2/2014");
-        q.addChoice("9/3", "9/3/2014");
-        q.addChoice("9/4", "9/4/2014");
-        q.addChoice("9/5", "9/5/2014");
+        q.addChoice("Thursday 9/3", "9/3/2015");
+        q.addChoice("Friday 9/4", "9/4/2015");
+        q.addChoice("Saturday 9/5", "9/5/2015");
+        q.addChoice("Sunday 9/6", "9/6/2015");
+        q.addChoice("Monday 9/7", "9/7/2015");
+        q.addChoice("Tuesday 9/8", "9/8/2015");
+        q.addChoice("Wednesday 9/9", "9/9/2015");
+        q.addChoice("Thursday 9/10", "9/10/2015");
         qs.add(q);
         
         q = Question.newDropList("departureTime", "Time of departure from the playa.", null);
@@ -92,7 +85,7 @@ public class RegistrationQuestions {
         qs.add(q);
 
         q = Question.newSingleChoice("drivingFromToId",
-                "Where will you be driving from/to?",
+                "Where will you be arriving from?",
                 "If you are flying into Reno and riding from there, please enter 'Reno', otherwise please enter whatever city you are riding (not flying) from to get to Reno or BRC.");
         for (Location l:Location.values())
             if (l != Location.OTHER)
@@ -160,7 +153,12 @@ public class RegistrationQuestions {
         q.addChoice("Yes", 1);
         q.addChoice("No", 0);
         qs.add(q);
-        
+
+        q = Question.newSingleChoice("haveVehiclePass", "Do you have a vehicle pass for your vehicle?", null);
+        q.addChoice("Yes", 1);
+        q.addChoice("No", 0);
+        qs.add(q);
+
         qs.add(Question.newLongText("vehicleComments", "Additional vehicle comments?", null));
         
         // end if
@@ -170,6 +168,11 @@ public class RegistrationQuestions {
         q.addChoice("needRideFrom", "Departure", 1);
         qs.add(q);
 
+        q = Question.newSingleChoice("tixSource", "Do you have a regular BM ticket or a Disorient Group Sale ticket?", null);
+        q.addChoice("Regular", 0);
+        q.addChoice("Group Sale", 1);
+        q.addChoice("I don't have a ticket.", 2);
+        qs.add(q);
         
         q = Question.newSingleChoice("tixForSale", "Do you have any BM tickets for sale?", null);
         q.addChoice("Yes", 1);
@@ -198,7 +201,7 @@ public class RegistrationQuestions {
                 "Are you doing any personal projects on the playa this year?",
                 "If so, please briefly describe your project, let us know if there are any large items that require placement, and specify who is responsible for the project's disengage and on what day. Also, let us know if your project is something you would like to set up on Disorient's frontage for the general Burning Man public."));
 
-        qs.add(Question.newLongText("comments", "Do you have anything else to add?", null));
+        qs.add(Question.newLongText("comments", "Do you have anything else to add?", "Do you have any special skills to share with Disorient, or any other comments?"));
         
     }
     

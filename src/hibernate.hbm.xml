@@ -112,10 +112,6 @@
         <property name="disengageTue" not-null="true"/>
         <property name="disengageWed" not-null="true"/>
         <property name="disengageNone" not-null="true"/>
-        <property name="tixForSale" not-null="true"/>
-        <property name="numForSale" not-null="true"/>
-        <property name="tixWanted" not-null="true"/>
-        <property name="numWanted" not-null="true"/>
     </class>
     
     <class name="d13.dao.RegistrationForm" table="registration_forms">
@@ -136,7 +132,6 @@
 		<property name="sponsor" type="text"/>
 		<property name="sponsorFor" type="text"/>
 		<property name="arrivalDate"/>
-		<property name="arrivalTime"/>
 		<property name="departureDate"/>
 		<property name="departureTime"/>
 		<property name="drivingFromTo" type="d13.dao.types.LocationType"/>
@@ -160,7 +155,8 @@
 		<many-to-one name="groupLeader" class="d13.dao.User"/>
 		<property name="personalProject" type="text"/>
 		<property name="comments" type="text"/>
-        
+        <property name="haveVehiclePass" not-null="true"/>
+        <property name="tixSource" not-null="true"/>
     </class>
     
     <class name="d13.dao.ActivityLogEntry" table="activity_log">

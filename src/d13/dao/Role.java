@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Role {
+public class Role implements Comparable<Role> {
 
     public static Role DEFAULT_ROLE = new Role();
     
@@ -123,6 +123,29 @@ public class Role {
             rights = Collections.unmodifiableSet(rights);
         }
         return rights;
+    }
+   
+    @Override public String toString () {
+        return getName();
+    }
+    
+    @Override public int compareTo (Role b) {
+        return compare(this, b);
+    }
+    
+    public static int compare (Role a, Role b) {
+        if (a == b)
+            return 0;
+        else if (a == null)
+            return 1;
+        else if (b == null)
+            return -1;
+        else if (a.getLevel() == b.getLevel())
+            return a.getName().compareToIgnoreCase(b.getName());
+        else if (a.getLevel() < b.getLevel())
+            return 1;
+        else
+            return -1;
     }
     
 }

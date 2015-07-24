@@ -70,7 +70,7 @@ if (nav == null || nav.isEmpty()) {
 <table class="header" width="100%" cellspacing="0" cellpadding="0">
 <tr>
   <td width="100%">
-      <img src="<%=root%>/media/logo.gif" alt="Disorient Registration">
+      <a href="<%=root%>/home.jsp"><img src="<%=root%>/media/logo.gif" alt="Disorient Registration" border="0"></a>
   </td>
   <td>
       <div class="you">

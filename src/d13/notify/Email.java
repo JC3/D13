@@ -147,6 +147,10 @@ public abstract class Email {
         return false;
     }
     
+    protected boolean ccFrom () {
+        return false;
+    }
+    
     public final void send (List<InternetAddress> recipients) throws Exception {
    
         if (recipients.isEmpty())
@@ -168,7 +172,7 @@ public abstract class Email {
             System.out.println("Sending to " + recipient);
             message.addRecipient(config.single ? Message.RecipientType.TO : Message.RecipientType.BCC, recipient);
         }
-        if (config.single) {
+        if (config.single || ccFrom()) {
             message.addRecipient(Message.RecipientType.CC, new InternetAddress(config.from));
         }
         message.setReplyTo(new Address[] {new InternetAddress(config.replyTo)});

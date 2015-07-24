@@ -36,7 +36,7 @@ private final String body;
         return body;
         
     }
-
+    
     
     public static final void sendNow (User registrant, List<User> recipients, Configuration c) throws Exception {
         

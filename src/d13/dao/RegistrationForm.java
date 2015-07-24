@@ -25,7 +25,6 @@ public class RegistrationForm {
     private String sponsor = "";
     private String sponsorFor = "";
     private String arrivalDate = "";
-    private String arrivalTime = "";
     private String departureDate = "";
     private String departureTime = "";
     private Location drivingFromTo;
@@ -49,6 +48,8 @@ public class RegistrationForm {
     private User groupLeader;
     private String personalProject;
     private String comments;
+    private boolean haveVehiclePass;
+    private int tixSource; // TODO: TixSourceSelection
     
     RegistrationForm () {
     }
@@ -147,10 +148,10 @@ public class RegistrationForm {
         return arrivalDate;
     }
 
-    @DataView(i=150, n="Arrival Time")
+    /*@DataView(i=150, n="Arrival Time")
     public String getArrivalTime() {
         return arrivalTime;
-    }
+    }*/
 
     @DataView(i=160, n="Departure Date")
     public String getDepartureDate() {
@@ -252,6 +253,11 @@ public class RegistrationForm {
         return needRideFrom;
     }
 
+    @DataView(i=265, n="Have Vehicle Pass?")
+    public boolean isHaveVehiclePass() {
+        return haveVehiclePass;
+    }
+
     @DataView(i=2270, n="Group Leader")
     public User getGroupLeader() {
         return groupLeader;
@@ -287,6 +293,11 @@ public class RegistrationForm {
     @DataView(i=101, n="Tickets Needed")
     public int getNumWanted() {
         return tixWanted ? numWanted : 0;
+    }
+
+    @DataView(i=102, n="Ticket Source")
+    public int getTixSource() {
+        return tixSource;
     }
 
     public void setHelpedOffPlaya(String helpedOffPlaya) {
@@ -345,9 +356,9 @@ public class RegistrationForm {
         this.arrivalDate = Util.require(arrivalDate, "Arrival date");
     }
 
-    public void setArrivalTime(String arrivalTime) {
+    /*public void setArrivalTime(String arrivalTime) {
         this.arrivalTime = Util.require(arrivalTime, "Arrival time");
-    }
+    }*/
 
     public void setDepartureDate(String departureDate) {
         this.departureDate = Util.require(departureDate, "Departure date");
@@ -370,6 +381,14 @@ public class RegistrationForm {
         if (loc == null)
             throw new IllegalArgumentException("Invalid location ID for driving location.");
         this.drivingFromTo = loc;
+    }
+
+    public void setHaveVehiclePass (boolean have) {
+        this.haveVehiclePass = have;
+    }
+    
+    public void setTixSource(int tixSource) {
+        this.tixSource = tixSource;
     }
 
     public void setDrivingFromToOther (String drivingFromToOther) {

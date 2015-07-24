@@ -47,28 +47,12 @@ public class ApprovalQuestions {
         qs.add(q);
         
         q = Question.newMultiChoice("I am a Disengage Rock Star",
-                "Please check EACH day that you plan to help DisEngage. Each full work day may entitle you to a rebate. **IMPORTANT: Keep this information updated if your travel plans change! We need an accurate headcount. Email <a href=\"mailto:disengage@disorient.info?subject=Disorient " + ThisYear.CAMP_YEAR + " Disengage\">disengage@disorient.info</a> with updates, questions, suggestions, etc.");
-        q.addChoice("disengageSun", "Sunday, August 31st", 1);
-        q.addChoice("disengageMon", "Monday, September 1nd", 1);
-        q.addChoice("disengageTue", "Tuesday, September 2rd", 1);
-        q.addChoice("disengageWed", "Wednesday, September 3th", 1);
+                "Disengage rebate is up to $240. Please check EACH day that you plan to help DisEngage. Each full work day may entitle you to a rebate. **IMPORTANT: Keep this information updated if your travel plans change! We need an accurate headcount. Email <a href=\"mailto:disengage@disorient.info?subject=Disorient " + ThisYear.CAMP_YEAR + " Disengage\">disengage@disorient.info</a> with updates, questions, suggestions, etc.");
+        q.addChoice("disengageSun", "Sunday, September 6th", 1);
+        q.addChoice("disengageMon", "Monday, September 7th", 1);
+        q.addChoice("disengageTue", "Tuesday, September 8th", 1);
+        q.addChoice("disengageWed", "Wednesday, September 9th", 1);
         q.addChoice("disengageNone", "I'm sorry, I cannot stay to help.", 1);
-        qs.add(q);
-        
-        q = Question.newSingleChoice("tixForSale", "Do you have any BM tickets for sale?", null);
-        q.addChoice("Yes", 1);
-        q.addChoice("No", 0);
-        qs.add(q);
-        
-        q = Question.newShortText("numForSale", "How many are you selling?", null);
-        qs.add(q);
-        
-        q = Question.newSingleChoice("tixWanted", "Do you need BM tickets?", null);
-        q.addChoice("Yes", 1);
-        q.addChoice("No", 0);
-        qs.add(q);
-        
-        q = Question.newShortText("numWanted", "How many do you need?", null);
         qs.add(q);
         
     }

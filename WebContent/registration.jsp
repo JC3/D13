@@ -20,7 +20,7 @@ RegistrationBean defaults = (RegistrationBean)sess.getAndClearAttribute(SessionD
 
 String fail_target = Util.getCompleteUrl(request); // on error come back to this page
 String success_target = request.getParameter("next");
-if (success_target == null || success_target.trim().isEmpty()) success_target = "home.jsp";
+if (success_target == null || success_target.trim().isEmpty()) success_target = "cells.jsp";
 
 if (!sess.isLoggedIn()) {
     sess.setAttribute(SessionData.SA_LOGIN_ERROR, "Please log in first.");
@@ -84,6 +84,7 @@ function updateVisibility () {
     setVisible("rideSpaceFrom", b);
     setVisible("parkAtCamp", b);
     setVisible("vehicleComments", b);
+    setVisible("haveVehiclePass", b);
     b = isChecked("tixWanted_1");
     setVisible("numWanted", b);
     b = isChecked("tixForSale_1");

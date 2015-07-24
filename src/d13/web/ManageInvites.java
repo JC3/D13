@@ -210,7 +210,7 @@ public class ManageInvites {
         case Invite.STATUS_ACCEPTED:
             return Util.html(String.format("Accepted by %s", DefaultDataConverter.objectAsString(i.getResolvedBy())));
         case Invite.STATUS_REJECTED:
-            return Util.html(String.format("Rejected by %s", DefaultDataConverter.objectAsString(i.getResolvedBy())));
+            return Util.html(String.format("Rejected"));
         case Invite.STATUS_CANCELLED:
             return Util.html(String.format("Cancelled by %s", DefaultDataConverter.objectAsString(i.getCancelledBy())));
         case Invite.STATUS_ACTIVE:

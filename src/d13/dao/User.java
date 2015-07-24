@@ -116,6 +116,7 @@ public class User {
         return hashed.equalsIgnoreCase(this.passwordHash);
     }
     
+    @DataView(i=20, n="Role")
     public Role getRole () {
         if (role == null)
             return Role.DEFAULT_ROLE;
@@ -123,7 +124,6 @@ public class User {
             return role;
     }
     
-    @DataView(i=20, n="Role")
     public String getRoleDisplay () {
         if (getRole().isSpecial())
             return getRole().getName();

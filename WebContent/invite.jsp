@@ -56,7 +56,7 @@ if (code_html == null || code_html.isEmpty()) {
 <table class="form">
 <tr>
     <td>Invite Code:
-    <td><input class="dtext" type="text" name="code" value="<%=code_html%>">
+    <td><input class="dtext" type="text" name="code" value="<%=code_html==null?"":code_html%>">
 <tr>
     <td colspan="2" class="instruct">Campers invited to apply will have received an invite code via email. Please enter your code to continue.
 <tr class="section">

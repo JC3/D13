@@ -42,6 +42,7 @@ if ("accept".equals(request.getParameter("action"))) {
 } else if ("reject".equals(request.getParameter("action"))) {
     // todo: invite rejection; without requiring user
     // this will probably be in a different place and not here.
+    return;
 } else {
     return;
 }

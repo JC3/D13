@@ -18,6 +18,7 @@ import d13.ThisYear;
 import d13.dao.ApprovalSurvey;
 import d13.dao.Cell;
 import d13.dao.RegistrationForm;
+import d13.dao.Role;
 import d13.dao.User;
 import d13.dao.UserSearchFilter;
 import d13.util.Util;
@@ -265,6 +266,10 @@ public class DataViewer {
             row.sortvalues.add(vd.getObject(aform));
         }
         
+        //for (int n = 0; n < row.values.size(); ++ n)
+        //    if (row.sortvalues.get(n) instanceof Role)
+        //        System.out.println(n + " " + row.sortvalues.get(n).getClass().getSimpleName() + " => " + row.values.get(n));
+        
         return row;
         
     }
@@ -320,8 +325,9 @@ public class DataViewer {
                 return 0;
             else if (a == null || b == null)
                 return a == null ? 1 : -1; // 2015-06-27: order swapped to put empty stuff at end
-           
-            if (a.getClass().equals(b.getClass())) {
+            
+            // special case for role to mix Role.DEFAULT_ROLE with hibernate/javassist Role subclasses. 7/18/2015
+            if (a.getClass().equals(b.getClass()) || (a instanceof Role && b instanceof Role)) {
                 // additional special cases can go here
                 if (a instanceof String) {
                     // 2015-06-27: empty strings at end instead of beginning; also case-insensitive
@@ -333,8 +339,11 @@ public class DataViewer {
                         return ac.compareTo(bc);
                     } catch (Throwable t) {
                         // fall through to string compare
+                        //System.out.println("dv warn: when comparing: " + t.getMessage());
                     }
                 }
+            } else {
+                //System.out.println("dv warn: classes not equal " + a.getClass().getSimpleName() + " " + b.getClass().getSimpleName());
             }
             
             // normal string compare

@@ -20,7 +20,6 @@ public class RegistrationBean {
     private String sponsor;
     private String sponsorFor;
     private String arrivalDate;
-    private String arrivalTime;
     private String departureDate;
     private String departureTime;
     private Long drivingFromToId;
@@ -44,6 +43,8 @@ public class RegistrationBean {
     private Long groupLeaderId;
     private String personalProject;
     private String comments;
+    private boolean haveVehiclePass;
+    private Long tixSource;
     
     public RegistrationBean () {
     }
@@ -111,10 +112,6 @@ public class RegistrationBean {
 
     public String getArrivalDate() {
         return arrivalDate;
-    }
-
-    public String getArrivalTime() {
-        return arrivalTime;
     }
 
     public String getDepartureDate() {
@@ -249,10 +246,6 @@ public class RegistrationBean {
         this.arrivalDate = arrivalDate;
     }
 
-    public void setArrivalTime(String arrivalTime) {
-        this.arrivalTime = arrivalTime;
-    }
-
     public void setDepartureDate(String departureDate) {
         this.departureDate = departureDate;
     }
@@ -361,4 +354,20 @@ public class RegistrationBean {
         this.numWanted = numWanted;
     }
     
+    public boolean isHaveVehiclePass() {
+        return haveVehiclePass;
+    }
+
+    public Long getTixSource() {
+        return tixSource;
+    }
+
+    public void setHaveVehiclePass(boolean haveVehiclePass) {
+        this.haveVehiclePass = haveVehiclePass;
+    }
+
+    public void setTixSource(Long tixSource) {
+        this.tixSource = tixSource;
+    }
+
 }
