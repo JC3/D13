@@ -167,7 +167,7 @@ java.util.Collections.sort(pending, new User.RealNameComparator());
 <b style="color: #ffddaa;">APPROVAL FINALIZED</b><br><br>
 
 <table width="100%">
-<tr><td class="leftdetail"">
+<tr><td class="leftdetail">
 <b>Email Addresses:</b><br>
   <textarea style="dtextarea">
   <% {
@@ -189,7 +189,7 @@ java.util.Collections.sort(pending, new User.RealNameComparator());
 <tr><td><a href="details.jsp?u=<%=u.getUserId()%>&next=<%=this_url%>%23<%=cell.getCellId()%>"><%=Util.html(u.getRealName()) %></a>
     <td><a href="mailto:<%=Util.html(u.getEmail())%>"><%=Util.html(u.getEmail()) %></a>
     <% if (u.isRegistrationComplete()) { %>
-      <td><%=Util.html(u.getRegistration().getArrivalDate() + " " + u.getRegistration().getArrivalTime()) %>
+      <td><%=Util.html(u.getRegistration().getArrivalDate()) %>
       <td><%=Util.html(u.getRegistration().getDepartureDate() + " " + u.getRegistration().getDepartureTime()) %>
     <% } else { %>
       <td><td>
@@ -226,7 +226,7 @@ java.util.Collections.sort(pending, new User.RealNameComparator());
 <tr><td><a href="details.jsp?u=<%=u.getUserId()%>&next=<%=this_url%>%23<%=cell.getCellId()%>"><%=Util.html(u.getRealName()) %></a>
     <td><a href="mailto:<%=Util.html(u.getEmail())%>"><%=Util.html(u.getEmail()) %></a>
     <% if (u.isRegistrationComplete()) { %>
-      <td><%=Util.html(u.getRegistration().getArrivalDate() + " " + u.getRegistration().getArrivalTime()) %>
+      <td><%=Util.html(u.getRegistration().getArrivalDate()) %>
       <td><%=Util.html(u.getRegistration().getDepartureDate() + " " + u.getRegistration().getDepartureTime()) %>
     <% } else { %>
       <td><td>

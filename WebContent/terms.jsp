@@ -79,6 +79,7 @@ h1 {
 <li>Registration applications must go through a formal approval process.
 <li>If any clarification is needed regarding your application, you will be contacted. Please keep an eye out for emails and respond promptly to keep things running smoothly.
 <li>Campers may arrive at Disorient no later than Tue to check-in at camp headquarters and be placed.
+<li>All campers are expected to help with general camp build and break down tasks near the beginning and end of the week.
 <li>Campers should plan to leave Disorient no earlier than sunset on Sunday, in order to contribute a full day of Disengage.
 </ul> 
 
