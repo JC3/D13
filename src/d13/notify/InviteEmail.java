@@ -10,6 +10,7 @@ import d13.util.Util;
 
 public class InviteEmail extends Email {
 
+    private final String subject;
     private final String body;
     
     public InviteEmail (Invite invite, Configuration c) {
@@ -18,6 +19,16 @@ public class InviteEmail extends Email {
         
         StringBuilder sb = new StringBuilder();
         
+        sb.append("<html><body>");
+/*        
+        sb.append("<div itemscope itemtype=\"http://schema.org/EmailMessage\">");
+        sb.append("<div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\">");
+        sb.append("  <link itemprop=\"target\" href=\"[rsvpurl]\"/>");
+        sb.append("  <meta itemprop=\"name\" content=\"RSVP\"/>");
+        sb.append("</div>");
+        sb.append("<meta itemprop=\"description\" content=\"Respond to your invite.\"/>");
+        sb.append("</div>");
+  */    
         sb.append("<p>Dear [realname],</p>");
         sb.append("<p>Preparations continue for our annual pilgrimage. This message is sent with love and a dedication to radical self-reliance. May you have your best Burn yet.</p>");
         sb.append("<p>In 2015 Disorient, we will be conducting a social experiment of our own. Disorient will ReOrient for 2015 and move to a smaller 150 person camp with an invite-only system. This is an exercise in going \"Tighter and Brighter\" as our camp population will be radically reduced to fine-tune, document, and share our best practices. Our collective experience enables us to envision a better camp on many levels. There are no tourists in D15ORIENT.</p>");
@@ -41,6 +52,8 @@ public class InviteEmail extends Email {
         sb.append("<p>While this invitation may seem like a departure from radical inclusion it is actually the exact opposite. We will have 100% participation from each camper to make 2015 a banner year.  Everyone's sleeves are rolled up and ready to help create our tightest and brightest year yet.</p>");
         sb.append("<p>If you have any questions, feel free to contact [campemail] or reply to this email.</p>");
         sb.append("<p>Thanks for helping to make D15ORIENT tighter and brighter than ever before, and see you on the playa!</p>");
+        
+        sb.append("</body></html>");
 
         String realname = Util.html(invite.getInviteeName());
         String invitecode = Util.html(invite.getInviteCode());
@@ -53,12 +66,14 @@ public class InviteEmail extends Email {
                 .replace("[campemail]", campemail)
                 .replace("[rsvpurl]", rsvpurl)
                 .replace("[loginurl]", loginurl)
-                .replace("[realname]", realname);
+                .replace("[realname]", realname); // name last so things don't get weird if user's name actually is "[campemail]"...
+   
+        subject = "Invitation to camp with D15ORIENT - " + invite.getInviteeName();
         
     }
 
     @Override protected String getSubject () {
-        return "Invitation to camp with D15ORIENT";
+        return subject;
     }
 
     @Override protected String getBody () {

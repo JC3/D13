@@ -96,7 +96,7 @@ public class ManageInvites {
             else {
                 int expireDays;
                 try {
-                    expireDays = Integer.parseInt(bean.getExpires());
+                    expireDays = Integer.parseInt(bean.getExpires().trim());
                     if (expireDays <= 0)
                         throw new Exception();
                 } catch (Exception x) {

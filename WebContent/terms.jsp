@@ -99,19 +99,19 @@ h1 {
 <p>Our camp dues in 2015 are:</p>
 
 <ul>
-<li><strong>Tier 1:</strong> $425 if paid by 11:59 PM (Eastern Time) on July 26th
+<li><strong>Tier 1:</strong> $425 if paid by 11:59 PM (Eastern Time) on July 27th
 <li><strong>Tier 2:</strong> $525 if paid by 11:59 PM (Eastern Time) on July 31st
 <li><strong>Tier 3:</strong> $625 if paid by 11:59 PM (Eastern Time) on August 16th
 <li><strong>ANY CAMPER WITH UNPAID DUES AFTER AUGUST 16TH WILL NOT BE PLACED.</strong>
 <li><strong>RV campers:</strong> RV fee is in addition to your camp fee. You will be provided connection to the generator grid, as the use of onboard generators is prohibited due to the exhaust produced at tent-level. RV fee also covers the ongoing week-long servicing such as potable water replenishments and gray/black water removal to ensure things stay clean and fresh throughout the duration of Burning Man. <em>PLEASE NOTE: There are a <strong>limited amount</strong> of slots for RVs and RV slots will be given on a first come first serve basis!</em>
   <ul>
-  <li><strong>RV Fee Tier 1:</strong> $950 if paid by 11:59 PM (Eastern Time) on July 26th
+  <li><strong>RV Fee Tier 1:</strong> $950 if paid by 11:59 PM (Eastern Time) on July 27th
   <li><strong>RV Fee Tier 2:</strong> $1050 if paid by 11:59 PM (Eastern Time) on July 31st
   <li><strong>RV Fee Tier 3:</strong> $1150 if paid by 11:59 PM (Eastern Time) on August 16th
   <li><strong>IMPORTANT: Due to United service policy changes, RVs that are not registered and paid for by August 16th MAY NOT BE ELIGIBLE FOR WATER SERVICE.</strong>
   <li><strong>ANY RV WITH UNPAID FEES AFTER AUGUST 16TH WILL NOT BE PLACED AND WILL NOT RECEIVE SERVICE.</strong>
   </ul>
-<li>You will have a grace period of <strong>3 days</strong> after you are approved to pay the tier that was active <strong>at the time you originally completed the registration form</strong>! After that period is over, your tier will be determined by the date of your payment.
+<li>You will have a grace period of <strong><%= ThisYear.GRACE_PERIOD_DAYS %> days</strong> after you are approved to pay the tier that was active <strong>at the time you originally completed the registration form</strong>! After that period is over, your tier will be determined by the date of your payment.
 </ul>
 
 <p>Campers have the opportunity to earn back a rebate for each day of Disengage worked between Monday and Wednesday. Rebate breakdown is as follows:</p>

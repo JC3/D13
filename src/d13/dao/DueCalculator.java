@@ -38,8 +38,7 @@ public class DueCalculator {
     
     private static final List<Tier> personalTiers = new ArrayList<Tier>();
     private static final List<Tier> rvTiers = new ArrayList<Tier>();
-    private static final int GRACE_PERIOD_DAYS = 7;
-
+    
     static {
         
         /*
@@ -66,13 +65,13 @@ public class DueCalculator {
         
         if (type == TYPE_RV) {
             Duration period = new Duration(approved, now);
-            if (period.getStandardDays() < GRACE_PERIOD_DAYS)
+            if (period.getStandardDays() < ThisYear.GRACE_PERIOD_DAYS)
                 return new Amount(findRVTier(registered));
             else
                 return new Amount(findRVTier(now));
         } else if (type == TYPE_PERSONAL) {
             Duration period = new Duration(approved, now);
-            if (period.getStandardDays() < GRACE_PERIOD_DAYS)
+            if (period.getStandardDays() < ThisYear.GRACE_PERIOD_DAYS)
                 return new Amount(findPersonalTier(registered));
             else
                 return new Amount(findPersonalTier(now));
@@ -86,7 +85,7 @@ public class DueCalculator {
         List<Tier> tiers = new ArrayList<Tier>();
         
         Duration period = new Duration(approved, now);
-        if (period.getStandardDays() < GRACE_PERIOD_DAYS)
+        if (period.getStandardDays() < ThisYear.GRACE_PERIOD_DAYS)
             tiers.add(findPersonalTier(registered));
         else
             tiers.add(findPersonalTier(now));
@@ -104,7 +103,7 @@ public class DueCalculator {
         List<Tier> tiers = new ArrayList<Tier>();
         
         Duration period = new Duration(approved, now);
-        if (period.getStandardDays() < GRACE_PERIOD_DAYS)
+        if (period.getStandardDays() < ThisYear.GRACE_PERIOD_DAYS)
             tiers.add(findRVTier(registered));
         else
             tiers.add(findRVTier(now));
