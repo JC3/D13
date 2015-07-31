@@ -66,7 +66,7 @@ public class RegistrationQuestions {
         q.addChoice("Tuesday 9/2", "9/2/2015");
         qs.add(q);
         
-        q = Question.newDropList("departureDate", "Date of departure from the playa.", "Remember, you can get up to a $250 rebate if you stay for Disengage!");
+        q = Question.newDropList("departureDate", "Date of departure from the playa.", "Remember, you can get up to a $240 rebate if you stay for Disengage!");
         q.addChoice("Thursday 9/3", "9/3/2015");
         q.addChoice("Friday 9/4", "9/4/2015");
         q.addChoice("Saturday 9/5", "9/5/2015");

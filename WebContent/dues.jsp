@@ -112,7 +112,8 @@ for higher tiers or enter custom amounts below. You may pay other campers' dues 
 paying for another camper, select their name(s) below.</p>
 
 <p>On the next page, you will be able to review and confirm your payment details and pay 
-with PayPal.</p>
+with PayPal. Note: Disorient's legal entity name is American Safety Company of America (ASCOA), which is what
+may appear on charge statements.</p>
 
 <form action="dueconfirm.jsp" method="post">
 <input type="hidden" name="personal_count" value="5">

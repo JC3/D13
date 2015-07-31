@@ -20,6 +20,8 @@ public class Role implements Comparable<Role> {
     public static String INVITE_USERS = "inviteu";
     public static String ALWAYS_INVITED = "alwaysinvited";
     public static String VIEW_INVITES = "viewinvites";
+    public static String LEAVE_COMMENTS = "comment";
+    public static String VIEW_COMMENTS = "viewcomments";
     
     private long roleId;
     private String name = "";
@@ -36,6 +38,8 @@ public class Role implements Comparable<Role> {
     private boolean inviteUsers;
     private boolean alwaysInvited;
     private boolean viewInvites;
+    private boolean leaveComments;
+    private boolean viewComments;
     private Set<String> rights; 
     
     Role () {
@@ -105,6 +109,14 @@ public class Role implements Comparable<Role> {
         return viewInvites;
     }
     
+    public boolean canLeaveComments () {
+        return leaveComments;
+    }
+    
+    public boolean canViewComments () {
+        return viewComments;
+    }
+    
     public Set<String> getRights () {
         if (rights == null) {
             rights = new HashSet<String>();
@@ -120,6 +132,8 @@ public class Role implements Comparable<Role> {
             if (inviteUsers) rights.add(INVITE_USERS);
             if (alwaysInvited) rights.add(ALWAYS_INVITED);
             if (viewInvites) rights.add(VIEW_INVITES);
+            if (leaveComments) rights.add(LEAVE_COMMENTS);
+            if (viewComments) rights.add(VIEW_COMMENTS);
             rights = Collections.unmodifiableSet(rights);
         }
         return rights;

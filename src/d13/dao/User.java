@@ -23,6 +23,8 @@ public class User {
     
     public static final String RT_PWRESET_EXPIRE_MINUTES = "user.pwreset_expire_minutes";
     public static final String RT_PWRESET_EXPIRE_MINUTES_DEFAULT = "10";
+ 
+    public static final int LOW_CELL_THRESHOLD = 1;
     
     private long userId;
     private String email;
@@ -45,7 +47,6 @@ public class User {
     private UserState state = UserState.NEW_USER;
     private DateTime approvedOn;
     private DateTime gracePeriodStart;
-    private String adminComment;
     private boolean termsAgreed;
     private Invite currentInvite;
     private Set<Cell> cells = new HashSet<Cell>(0);
@@ -55,6 +56,7 @@ public class User {
     private String customDueComments;
     private List<Invoice> invoices = new ArrayList<Invoice>();
     private boolean receiveNotifications = true;
+    private List<Comment> comments = new ArrayList<Comment>();
     
     User () {
     }
@@ -93,6 +95,10 @@ public class User {
     
     public boolean isInCells () {
         return !cells.isEmpty();
+    }
+    
+    public boolean isInEnoughCells () {
+        return cells.size() > LOW_CELL_THRESHOLD;
     }
     
     public boolean isReceiveNotifications () {
@@ -224,11 +230,6 @@ public class User {
     @DataView(i=135, n="Grace Period Start")
     public DateTime getGracePeriodStart () {
         return gracePeriodStart;
-    }
-    
-    @DataView(i=140, n="Administrator Comment")
-    public String getAdminComment() {
-        return adminComment;
     }
     
     @DataView(i=110, n="Read Terms?")
@@ -430,10 +431,6 @@ public class User {
         gracePeriodStart = when;
     }
     
-    public void setAdminComment(String adminComment) {
-        this.adminComment = adminComment;
-    }
-    
     public void setTermsAgreed (boolean termsAgreed) {
         this.termsAgreed = termsAgreed;
     }
@@ -467,9 +464,27 @@ public class User {
         String description = String.format("Changed from %s to %s.", old.toString(), state.toString());
         addActivityLogEntry(new ActivityLogEntry(this, description, editor));
     }
-    
-    
 
+    public List<Comment> getComments () {
+        return Collections.unmodifiableList(comments);
+    }
+    
+    public void addComment (User author, String text) {
+        Comment comment = new Comment(this, author, text);
+        comments.add(comment);
+    }
+    
+    public boolean hasViewableComments (User by) {
+        if (by == null)
+            return false;
+        else if (comments == null || comments.isEmpty())
+            return false;
+        else if (!by.getRole().canViewComments())
+            return false;
+        else
+            return true;
+    }
+    
     /*
     public boolean isEditableBy (User editor) {
         if (editor == null)
@@ -584,6 +599,15 @@ public class User {
         else if (viewer == this || viewer.getUserId() == getUserId())
             return true;
         else if (viewer.getRole().canViewUsers())
+            return true;
+        else
+            return false;
+    }
+    
+    public boolean isCommentableBy (User commenter) {
+        if (commenter == null)
+            return false;
+        else if (commenter.getRole().canLeaveComments())
             return true;
         else
             return false;
