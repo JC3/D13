@@ -83,7 +83,7 @@ public class UserSearchFilter {
             querystr = "left outer join user.approval a where user.state = " + UserState.APPROVED.toDBId() + " and a.completionTime is null";
             break;
         case QUICK_NEED_CELLS:
-            querystr = "where user.state != " + UserState.NEW_USER.toDBId() + " and user.cells is empty";
+            querystr = "where user.state != " + UserState.NEW_USER.toDBId() + " and user.cells is empty or user.cells.size <= " + User.LOW_CELL_THRESHOLD;
             break;
         case QUICK_NEED_CELLS_NOT_APPROVED:
             querystr = "where (user.state = " + UserState.NEEDS_REVIEW.toDBId() + " or " +

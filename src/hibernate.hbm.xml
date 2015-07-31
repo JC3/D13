@@ -13,7 +13,24 @@
 	alter table registration_forms add column `sharingWith` longtext;
 	alter table registration_forms add column `livingIn` varchar(255) DEFAULT NULL;
 	alter table registration_forms add column `livingInOther` varchar(255) DEFAULT NULL;
-	alter table registration_forms add column `livingSpaceSize` longtext;    
+	alter table registration_forms add column `livingSpaceSize` longtext;
+	
+	7/29/2015
+	drop admincomment from user
+	add leaveComments to roles
+	add viewComments to roles
+	
+	CREATE TABLE IF NOT EXISTS `comments` (
+  `commentId` bigint(20) NOT NULL,
+  `author` bigint(20) NOT NULL,
+  `subject` bigint(20) NOT NULL,
+  `time` bigint(20) NOT NULL,
+  `comment` text NOT NULL,
+  `index` int(11) DEFAULT NULL,
+  PRIMARY KEY (`commentId`),
+  KEY `subject` (`subject`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	    
      -->
     
 <hibernate-mapping default-access="field">
@@ -84,6 +101,8 @@
         <property name="inviteUsers" not-null="true"/>
         <property name="alwaysInvited" not-null="true"/>
         <property name="viewInvites" not-null="true"/>
+        <property name="leaveComments" not-null="true"/>
+        <property name="viewComments" not-null="true"/>
     </class>
 
     <class name="d13.dao.RuntimeOptions$RuntimeOption" table="options">
@@ -166,6 +185,14 @@
         <many-to-one name="byWho" class="d13.dao.User"/>
         <property name="description"/>
     </class>
+    
+    <class name="d13.dao.Comment" table="comments">
+        <id name="commentId"><generator class="native"/></id>
+        <many-to-one name="author" class="d13.dao.User" not-null="true"/>
+        <many-to-one name="subject" class="d13.dao.User" not-null="true"/>
+        <property name="time" not-null="true" type="d13.dao.types.DateTimeType"/>
+        <property name="comment" not-null="true"/>
+    </class>
 
     <class name="d13.dao.Invite" table="invites">
         <id name="inviteId"><generator class="native"/></id>
@@ -207,7 +234,6 @@
         <property name="state" type="d13.dao.types.UserStateType" not-null="true"/>
         <property name="approvedOn" type="d13.dao.types.DateTimeType"/>
         <property name="gracePeriodStart" type="d13.dao.types.DateTimeType"/>
-        <property name="adminComment" type="text"/>
         <set name="cells" table="users_cells">
             <key column="userId"/>
             <many-to-many column="cellId" class="d13.dao.Cell"/>
@@ -226,6 +252,11 @@
             <one-to-many class="d13.dao.Invoice"/>
         </list>
         <property name="receiveNotifications" not-null="true"/>
+        <list name="comments" cascade="all">
+            <key column="subject"/>
+            <index column="`index`"/>
+            <one-to-many class="d13.dao.Comment"/>
+        </list>
     </class>
     
     <class name="d13.dao.Cell" table="cells">

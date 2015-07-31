@@ -20,6 +20,7 @@ if (view.isFailed())
 UserStatistics.Statistics stats = UserStatistics.calculateStatistics();
     
 String this_url = Util.html(java.net.URLEncoder.encode(Util.getCompleteUrl(request), "us-ascii"));
+String root = pageContext.getServletContext().getContextPath();
 
 List<String> cols = view.getColumns();
 List<String> cls = view.getColumnClasses();
@@ -40,6 +41,8 @@ if (!csv_link.contains("download")) { // hack
     else
         csv_link += "&download";
 }
+
+boolean show_comments = sess.getUser().getRole().canViewComments();
 
 String qf = request.getParameter("qf");
 String sortby = request.getParameter("sortby");
@@ -169,7 +172,7 @@ hr.sub {
   <li><a href="view_data.jsp<%=makeQuery("5", sortby, null)%>">Only users that own RVs.</a>
   <li><a href="view_data.jsp<%=makeQuery("6", sortby, null)%>">Only users that need to pay their dues.</a>
   <li><a href="view_data.jsp<%=makeQuery("7", sortby, null)%>">Only users that need to complete their approval surveys.</a>
-  <li><a href="view_data.jsp<%=makeQuery("8", sortby, null)%>">All users that need to sign up for work cells.</a>
+  <li><a href="view_data.jsp<%=makeQuery("8", sortby, null)%>">All users that need to sign up for more work cells.</a>
   <li><a href="view_data.jsp<%=makeQuery("9", sortby, null)%>">Only not-yet-approved users that need to sign up for work cells.</a>
   <li><a href="view_data.jsp<%=makeQuery("10", sortby, null)%>">Only approved that need to sign up for work cells.</a>
 </ul>
@@ -220,7 +223,7 @@ Find: <input type="text" name="search" class="dtext" style="width:20ex;" value="
 <table cellspacing="0" class="summary">
 <tr>
 
-    <th class="standard" colspan="5">Actions
+    <th class="standard" colspan="<%=show_comments?6:5%>">Actions
 <% for (int n = 0; n < cols.size(); ++ n) { %>
     <th class="<%=cls.get(n)%>"><a href="<%=sortLink(qf, n, search)%>"><%=Util.html(cols.get(n)) %></a>
 <% } %>
@@ -235,6 +238,7 @@ Find: <input type="text" name="search" class="dtext" style="width:20ex;" value="
             (row.user.getState() == UserState.NEEDS_REVIEW && row.user.isReviewableBy2(sess.getUser())) ||
             (row.user.getState() == UserState.REGISTERED && row.user.isApprovableBy2(sess.getUser()));
     boolean dues = row.user.getState() == UserState.APPROVED && sess.getUser().getRole().canEditDues();
+    boolean comments = row.user.hasViewableComments(sess.getUser());
     
     String query = ("u=" + row.user.getUserId() + "&next=" + this_url);
     
@@ -251,6 +255,9 @@ Find: <input type="text" name="search" class="dtext" style="width:20ex;" value="
     <td class="standard"><div><%if (cells) {%><a href="cells.jsp?<%=query%>">Cells</a><%}%></div>
     <td class="standard"><div><%if (dues) {%><a href="editdues.jsp?<%=query%>">Dues</a><%}%></div>
     <td class="standard"><div><a href="details.jsp?<%=query%>"><%=review?"Review":"Details"%></a></div>
+<% if (show_comments) { %>
+    <td class="standard"><div><%if (comments) {%><a href="details.jsp?<%=query%>#comments"><img src="<%=root %>/media/comment.png"></a><%}%></div>
+<% } %>
     
     <% for (int n = 0; n < row.values.size(); ++ n) { String str=row.values.get(n); %>
     <td class="<%=cls.get(n)%>"><div>

@@ -25,6 +25,7 @@ if (view.isFailed())
     
 String fail_target = Util.getCompleteUrl(request); // on error come back to this page
 String success_target = request.getParameter("next");
+String this_page = Util.getCompleteUrl(request);
 if (success_target == null || success_target.trim().isEmpty()) success_target = "home.jsp";
 
 // there will be only one row in result. cols and row.values will be the same size.
@@ -44,6 +45,7 @@ boolean canEdit = editee.isEditableBy2(editor);
 boolean canReview = editee.isReviewableBy2(editor);
 boolean canAdmit = editee.isApprovableBy2(editor);
 boolean canFinalize = editee.isFinalizableBy(editor);
+boolean canComment = editee.isCommentableBy(editor);
 boolean needsReview = canReview && (editee.getState() == UserState.NEEDS_REVIEW);
 boolean needsAdmit = canAdmit && (editee.getState() == UserState.REGISTERED);
 boolean needsFinalize = canFinalize && (editee.getState() == UserState.APPROVE_PENDING || editee.getState() == UserState.REJECT_PENDING);
@@ -52,8 +54,11 @@ List<ActivityLogEntry> logs = null;
 if (editor.getRole().canViewLogs())
     logs = editee.getActivityLog();
 
+List<Comment> comments = null;
+if (editor.getRole().canViewComments())
+    comments = editee.getComments();    
 %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -66,13 +71,13 @@ td.left { text-align: right; vertical-align: top; }
 td.wide { text-align: center; vertical-align: top; }
 table.form td.cell { border: 0; text-indent: 4ex; vertical-align: top; border-top: 1px solid #202020; }
 table.form td.log { border: 0; text-indent: 2ex; vertical-align: top; font-size: smaller; }
-table.form td.log2 { border: 0; text-indent: 4ex; vertical-align: top; font-size: smaller; }
+table.form td.log2 { border: 0; padding-left: 4ex; vertical-align: top; font-size: smaller; }
 table.form td.title { text-align: center; font-weight: bold; color: #ff8080; }
 table.form td.status { text-align: center; color: #ff8000; }
 .approved { color: #00ff00; font-weight: bold; }
 .rejected { color: #ff0000; font-weight: bold; }
 </style>
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 function checkc () {
     var action = document.getElementById("action");
     if (action.options[action.selectedIndex].value == "") {
@@ -158,7 +163,34 @@ here.</div>
      } %>
 <% } %>
 
+<% if (comments != null) { %>
+<tr><td class="key" colspan="2"><a name="comments"></a>Comments:
+  <% if (comments.isEmpty()) { %>
+     <tr><td class="log" colspan="2">None.
+  <% } else { 
+       DefaultDataConverter ddc = new DefaultDataConverter();
+       for (Comment c:comments) { 
+           String datestr = Util.html(ddc.asString(c.getTime()));
+           String authstr = Util.html(c.getAuthor().getEmail());
+           String textstr = Util.html(c.getComment()).replace("\n", "<br/>"); %>
+          <tr><td class="log" colspan="2"><%=datestr%>, <a href="mailto:<%=authstr%>"><%=authstr%></a>:
+          <tr><td class="log2" colspan="2"><%=textstr%>
+       <% } 
+     } %>
+<% } %>
 </table>
+
+<% if (canComment) { %>
+<form action="do_comment.jsp" method="post">
+<input type="hidden" name="next" value="<%= this_page %>#comments">
+<input type="hidden" name="subject" value="<%= editee.getUserId() %>">
+<table class="form" style="margin-top: 1ex;">
+<tr><td class="title">Post Comment
+<tr><td class="wide" style="padding-top: 1ex;"><textarea style="width:100%" class="dtextarea" name="comment" placeholder="You cannot edit or delete comments, so think before posting."></textarea>
+<tr><td class="wide" style="padding-top: 1ex;"><input type="submit" class="dbutton" value="Post">
+</table>
+</form>
+<% } %>
 
 <% if (needsReview) { %>
 <% /*==========================================================================================================*/ %>
@@ -183,8 +215,8 @@ here.</div>
 <tr><td colspan="2" class="title">Approve / Reject User
 <tr><td class="left"><input class="dcheckbox" type="checkbox" name="c1" id="c1" value="1"><td>I have thoroughly reviewed the above application and if I approve it, I believe that <%=Util.html(editee.getRealName()) %> is a DOer who will positively contribute to our camp.
 <tr><td class="left"><input class="dcheckbox" type="checkbox" name="c2" id="c2" value="1"><td>I understand that I have been trusted with the responsibility to enforce our maximum camper limit so that we can provide <%=Util.html(editee.getRealName()) %> with food, water, power, and a place to live for a week.
-<% if (!editee.isInCells()) { %>
-<tr><td colspan="2" style="text-align:center;"><span style="color: red;">Warning: This user has not signed up for any volunteer cells!</span>
+<% if (!editee.isInEnoughCells()) { %>
+<tr><td colspan="2" style="text-align:center;"><span style="color: red;">Warning: This user has not signed up for enough volunteer cells!</span>
 <% } %>
 <tr><td colspan="2" style="text-align:center;">Action: <select class="dselect" name="action" id="action">
     <option value="">--- Select Action ---</option>
