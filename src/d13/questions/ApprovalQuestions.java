@@ -47,7 +47,7 @@ public class ApprovalQuestions {
         qs.add(q);
         
         q = Question.newMultiChoice("I am a Disengage Rock Star",
-                "Disengage rebate is up to $240. Please check EACH day that you plan to help DisEngage. Each full work day may entitle you to a rebate. **IMPORTANT: Keep this information updated if your travel plans change! We need an accurate headcount. Email <a href=\"mailto:disengage@disorient.info?subject=Disorient " + ThisYear.CAMP_YEAR + " Disengage\">disengage@disorient.info</a> with updates, questions, suggestions, etc.");
+                "Disengage rebate is up to $240. Please check EACH day that you plan to help DisEngage. Each full work day may entitle you to a rebate. **IMPORTANT: Keep this information updated if your travel plans change! We need an accurate headcount.");
         q.addChoice("disengageSun", "Sunday, September 6th", 1);
         q.addChoice("disengageMon", "Monday, September 7th", 1);
         q.addChoice("disengageTue", "Tuesday, September 8th", 1);

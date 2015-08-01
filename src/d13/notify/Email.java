@@ -38,6 +38,7 @@ public abstract class Email {
     public static String RT_SMTP_PASSWORD ="notify.smtp_password";
     public static String RT_MAIL_FROM = "notify.mail_from";
     public static String RT_MAIL_REPLY_TO = "notify.reply_to";
+    public static String RT_MAIL_DEBUG = "notify.debug";
     public static String RT_BASE_URL = "notify.base_url";
     
     private final Configuration config;
@@ -56,10 +57,11 @@ public abstract class Email {
         public String  baseUrl  = "http://camp.disorient.info";
         public boolean single   = false; // for mailer apps; if single then TO:recipient + CC:camp@, otherwise BCC recipients and no CC.
         public String  pwExpire = User.RT_PWRESET_EXPIRE_MINUTES_DEFAULT;
+        public boolean debug    = false;
         // TODO: pwExpire is a bit of a hack; if we have to start referring to lots of other config
         //       options in email, it would be cleaner to pass the hibernate session to Email 
         //       constructors and query relevant options there. for now this is fine, there is only
-        //       one.
+        //       one. 
    
         public Configuration () {
         }
@@ -78,6 +80,7 @@ public abstract class Email {
             c.baseUrl = baseUrl;
             c.single = single;
             c.pwExpire = pwExpire;
+            c.debug = debug;
             return c;
         }
         
@@ -94,6 +97,7 @@ public abstract class Email {
             c.replyTo = RuntimeOptions.getOption(RT_MAIL_REPLY_TO, c.replyTo, session);
             c.baseUrl = RuntimeOptions.getOption(RT_BASE_URL, c.baseUrl, session);
             c.pwExpire = RuntimeOptions.getOption(User.RT_PWRESET_EXPIRE_MINUTES, User.RT_PWRESET_EXPIRE_MINUTES_DEFAULT, session);
+            c.debug = "1".equals(RuntimeOptions.getOption(RT_MAIL_DEBUG, c.debug ? "1" : "0", session));
             return c;
         }
         
@@ -164,6 +168,7 @@ public abstract class Email {
         props.setProperty(prefix + ".host", config.host);
         props.setProperty(prefix + ".port", Integer.toString(config.port));
         Session session = Session.getDefaultInstance(props);
+        session.setDebug(config.debug);
         
         // create message and header
         MimeMessage message = new MimeMessage(session);
