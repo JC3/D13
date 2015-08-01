@@ -68,75 +68,49 @@ public class BackgroundNotificationManager implements ServletContextListener {
 
         private boolean processEmails () {
 
-            Session session = null;
-            Transaction tx = null;
-            Email.Configuration config = null;
-
-            // load configuration
-            
-            boolean enabled;
             try {
-                session = HibernateUtil.openSession();
-                if (enableOverride != null)
-                    enabled = enableOverride;
-                else
-                    enabled = "1".equals(RuntimeOptions.getOption(RT_ENABLE_NOTIFY, "1", session));
-                if (enabled && enablestate != 1) {
-                    enablestate = 1;
-                    System.out.println("MAIL: Notifications enabled.");
-                } else if (!enabled && enablestate != 0) {
-                    enablestate = 0;
-                    System.out.println("MAIL: Notifications disabled.");
-                }
-                if (enabled)
-                    config = Configuration.fromDatabase(session);
-                session.close();
-                session = null;
-            } catch (Throwable t) {
-                System.err.println("MAIL: When loading configuration options: " + t.getMessage());
-                enabled = false;
-            }
                 
-            if (!enabled)
-                return !terminate;
-            
-            // process queue
-            
-            List<QueuedEmail> queued;
-            
-            try {
-                session = HibernateUtil.openSession();
+                Session session = null;
+                Transaction tx = null;
+                Email.Configuration config = null;
+    
+                // load configuration
+                
+                boolean enabled;
                 try {
-                    tx = session.beginTransaction();
-                    queued = QueuedEmail.getQueuedNotifications(session);
-                    tx.commit();
-                } catch (Throwable t) {
-                    if (tx != null) tx.rollback();
-                    throw t;
-                } finally {
+                    session = HibernateUtil.openSession();
+                    if (enableOverride != null)
+                        enabled = enableOverride;
+                    else
+                        enabled = "1".equals(RuntimeOptions.getOption(RT_ENABLE_NOTIFY, "1", session));
+                    if (enabled && enablestate != 1) {
+                        enablestate = 1;
+                        System.out.println("MAIL: Notifications enabled.");
+                    } else if (!enabled && enablestate != 0) {
+                        enablestate = 0;
+                        System.out.println("MAIL: Notifications disabled.");
+                    }
+                    if (enabled)
+                        config = Configuration.fromDatabase(session);
                     session.close();
                     session = null;
-                    tx = null;
+                } catch (Throwable t) {
+                    System.err.println("MAIL: When loading configuration options: " + t.getMessage());
+                    enabled = false;
                 }
-            } catch (Throwable t) {
-                System.err.println("MAIL: When retrieving notification queue: " + t.getMessage());
-                //t.printStackTrace();
-                return !terminate;
-            }
-
-            System.out.println("MAIL: Processing " + queued.size() + " notification(s)...");
-            
-            for (QueuedEmail q:queued) {
-            
-                try {
                     
-                    if (terminate)
-                        break;
-    
+                if (!enabled)
+                    return !terminate;
+                
+                // process queue
+                
+                List<QueuedEmail> queued;
+                
+                try {
                     session = HibernateUtil.openSession();
                     try {
                         tx = session.beginTransaction();
-                        session.delete(q);
+                        queued = QueuedEmail.getQueuedNotifications(session);
                         tx.commit();
                     } catch (Throwable t) {
                         if (tx != null) tx.rollback();
@@ -146,23 +120,25 @@ public class BackgroundNotificationManager implements ServletContextListener {
                         session = null;
                         tx = null;
                     }
-                   
-                    String error = null;
+                } catch (Throwable t) {
+                    System.err.println("MAIL: When retrieving notification queue: " + t.getMessage());
+                    //t.printStackTrace();
+                    return !terminate;
+                }
+    
+                System.out.println("MAIL: Processing " + queued.size() + " notification(s)...");
+                
+                for (QueuedEmail q:queued) {
+                
                     try {
-                        sendMail(q, config);
-                    } catch (Throwable t) {
-                        System.err.println("MAIL: When sending email [#" + q.getQnId() + "]: " + t.getMessage());
-                        //t.printStackTrace();
-                        error = t.getMessage();
-                        if (error == null) error = "";
-                    }
-                                 
-                    if (error != null) {
-                        q.markFailed(error);
+                        
+                        if (terminate)
+                            break;
+        
                         session = HibernateUtil.openSession();
                         try {
                             tx = session.beginTransaction();
-                            session.save(q);
+                            session.delete(q);
                             tx.commit();
                         } catch (Throwable t) {
                             if (tx != null) tx.rollback();
@@ -171,19 +147,54 @@ public class BackgroundNotificationManager implements ServletContextListener {
                             session.close();
                             session = null;
                             tx = null;
-                        }                    
+                        }
+                       
+                        String error = null;
+                        try {
+                            sendMail(q, config);
+                        } catch (Throwable t) {
+                            System.err.println("MAIL: When sending email [#" + q.getQnId() + "]: " + t.getMessage());
+                            //t.printStackTrace();
+                            error = t.getMessage();
+                            if (error == null) error = "";
+                        }
+                                     
+                        if (error != null) {
+                            q.markFailed(error);
+                            session = HibernateUtil.openSession();
+                            try {
+                                tx = session.beginTransaction();
+                                session.save(q);
+                                tx.commit();
+                            } catch (Throwable t) {
+                                if (tx != null) tx.rollback();
+                                throw t;
+                            } finally {
+                                session.close();
+                                session = null;
+                                tx = null;
+                            }                    
+                        }
+                        
+                    } catch (Throwable t) {
+                        System.err.println("MAIL: When processing notification [#" + q.getQnId() + "]: " + t.getMessage());
+                        //t.printStackTrace();
                     }
                     
-                } catch (Throwable t) {
-                    System.err.println("MAIL: When processing notification [#" + q.getQnId() + "]: " + t.getMessage());
-                    //t.printStackTrace();
                 }
                 
+                if (!queued.isEmpty())
+                    System.out.println("MAIL: Finished processing queue.");
+                
+            } catch (Throwable t) {
+               
+                // added 2015-jul-31 to try to diagnose mail thread hang
+                System.err.println("MAIL: UNHANDLED EXCEPTION: " + t.getMessage());
+                System.err.println("MAIL: STACK TRACE FOLLOWS.");
+                t.printStackTrace();
+                
             }
-            
-            if (!queued.isEmpty())
-                System.out.println("MAIL: Finished processing queue.");
-            
+                
             return !terminate;
             
         }
