@@ -69,6 +69,9 @@ String makeQuery (String qf, String sortby, String search) {
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Disorient</title>
+<link rel="stylesheet" type="text/css" href="<%=root %>/ext/tooltipster.css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.0.min.js"></script>
+<script type="text/javascript" src="<%=root %>/ext/jquery.tooltipster.min.js"></script>
 <link rel="stylesheet" type="text/css" href="disorient.css">
 <style type="text/css">
 /*td { border-bottom: 1px solid black; border-right: 1px solid #e0e0e0; white-space: nowrap; vertical-align: top; }*/
@@ -122,6 +125,32 @@ hr.sub {
     font-size: smaller;
 }
 </style>
+<script>
+$(document).ready(function() {
+	$('.tooltip').tooltipster({
+	    content: 'Loading...',
+	    contentAsHTML: true,
+	    functionBefore: function(origin, continueTooltip) {
+
+	        // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
+	        continueTooltip();
+	        
+	        // next, we want to check if our data has already been cached
+	        if (origin.data('ajax') !== 'cached') {
+	            $.ajax({
+	                type: 'POST',
+	                data: { 'u': origin.attr('data-uid') },
+	                url: '<%=root%>/ajax/query_comments.jsp',
+	                success: function(data) {
+	                    // update our tooltip content with our returned data and cache it
+	                    origin.tooltipster('content', data).data('ajax', 'cached');
+	                }
+	            });
+	        }
+	    }
+	});
+});
+</script>
 </head>
 <body>
 
@@ -256,7 +285,7 @@ Find: <input type="text" name="search" class="dtext" style="width:20ex;" value="
     <td class="standard"><div><%if (dues) {%><a href="editdues.jsp?<%=query%>">Dues</a><%}%></div>
     <td class="standard"><div><a href="details.jsp?<%=query%>"><%=review?"Review":"Details"%></a></div>
 <% if (show_comments) { %>
-    <td class="standard"><div><%if (comments) {%><a href="details.jsp?<%=query%>#comments"><img src="<%=root %>/media/comment.png"></a><%}%></div>
+    <td class="standard"><div><%if (comments) {%><a href="details.jsp?<%=query%>#comments"><img src="<%=root %>/media/comment.png" class="tooltip" data-uid="<%=row.user.getUserId()%>"></a><%}%></div>
 <% } %>
     
     <% for (int n = 0; n < row.values.size(); ++ n) { String str=row.values.get(n); %>

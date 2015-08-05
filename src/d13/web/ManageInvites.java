@@ -25,6 +25,7 @@ public class ManageInvites {
     private String errorMessage;
     private String submittedEmails;
     private String submittedExpires;
+    private String submittedComment;
     private List<String> warnings;
     
     private static class InviteViewComparator implements Comparator<Invite> {
@@ -72,6 +73,7 @@ public class ManageInvites {
         
         submittedEmails = bean.getEmails();
         submittedExpires = bean.getExpires();
+        submittedComment = bean.getComment();
         
         if ("invite".equals(bean.getAction())) {
             // permissions
@@ -110,7 +112,7 @@ public class ManageInvites {
             warnings = new ArrayList<String>();
             for (InternetAddress e : emails) {
                 try {
-                    createInvite(e, current, expires);
+                    createInvite(e, current, expires, bean.getComment());
                 } catch (Exception x) {
                     warnings.add(e.getAddress() + ": " + x.getMessage());
                 }
@@ -205,6 +207,10 @@ public class ManageInvites {
         return submittedExpires;
     }
     
+    public String getSubmittedComment () {
+        return submittedComment;
+    }
+    
     public static String getStatusHtml (Invite i) {
         switch (i.getStatus()) {
         case Invite.STATUS_ACCEPTED:
@@ -220,8 +226,9 @@ public class ManageInvites {
         }
     }
     
-    private static void createInvite (InternetAddress e, User current, DateTime expiresOn) {
+    private static void createInvite (InternetAddress e, User current, DateTime expiresOn, String comment) {
         Invite invite = new Invite(e.getAddress(), e.getPersonal(), current, expiresOn);
+        invite.setComment(comment);
         Invite.addInvite(invite);
         QueuedEmail.queueNotification(QueuedEmail.TYPE_INVITE, invite);
     }

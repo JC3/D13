@@ -5,6 +5,7 @@ public class ManageInvitesBean {
     private String action;
     private String emails;
     private String expires;
+    private String comment;
     private int invite;
     
     public String getAction() {
@@ -17,6 +18,10 @@ public class ManageInvitesBean {
     
     public String getExpires () {
         return expires;
+    }
+    
+    public String getComment () {
+        return comment;
     }
     
     public int getInvite () {
@@ -33,6 +38,10 @@ public class ManageInvitesBean {
     
     public void setExpires (String expires) {
         this.expires = expires;
+    }
+    
+    public void setComment (String comment) {
+        this.comment = comment;
     }
     
     public void setInvite (int invite) {

@@ -167,6 +167,9 @@ public abstract class Email {
         props.setProperty(prefix + ".auth", config.auth ? "true" : "false");
         props.setProperty(prefix + ".host", config.host);
         props.setProperty(prefix + ".port", Integer.toString(config.port));
+        props.setProperty(prefix + ".connectiontimeout", "30000");
+        props.setProperty(prefix + ".timeout", "30000");
+        props.setProperty(prefix + ".writetimeout", "30000");
         Session session = Session.getDefaultInstance(props);
         session.setDebug(config.debug);
         

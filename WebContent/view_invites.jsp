@@ -19,6 +19,8 @@ if (manager.isFailed()) {
     return;
 }
 
+String root = pageContext.getServletContext().getContextPath();
+
 String error = (String)sess.getAndClearAttribute(SessionData.SA_MANAGE_INVITES_ERROR);
 String error_html = (error == null ? null : Util.html(error));
 String emails = (String)sess.getAndClearAttribute(SessionData.SA_MANAGE_INVITES_EMAILS);
@@ -27,6 +29,8 @@ String expires = (String)sess.getAndClearAttribute(SessionData.SA_MANAGE_INVITES
 String expires_html = Util.html(expires);
 String warning = (String)sess.getAndClearAttribute(SessionData.SA_MANAGE_INVITES_WARNING);
 String warning_html = warning; //(warning == null ? null : Util.html(warning)); // it's already html
+String comment = (String)sess.getAndClearAttribute(SessionData.SA_MANAGE_INVITES_COMMENT);
+String comment_html = Util.html(comment);
 boolean show_actions = sess.getUser().getRole().canInviteUsers();
 %>
 <!DOCTYPE html>
@@ -34,6 +38,9 @@ boolean show_actions = sess.getUser().getRole().canInviteUsers();
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Disorient</title>
+<link rel="stylesheet" type="text/css" href="<%=root %>/ext/tooltipster.css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.0.min.js"></script>
+<script type="text/javascript" src="<%=root %>/ext/jquery.tooltipster.min.js"></script>
 <link rel="stylesheet" type="text/css" href="disorient.css">
 <style type="text/css">
 #emailtext {
@@ -82,10 +89,15 @@ pre {
 <% if (show_actions) { %>
 <script type="text/javascript">
 function confirmCancel (name) {
-	return confirm('Really cancel the invite for ' + name + '? The user has already received an invite email so beware of possible confusion.');
+    return confirm('Really cancel the invite for ' + name + '? The user has already received an invite email so beware of possible confusion.');
 }
 </script>
 <% } %>
+<script>
+$(document).ready(function() {
+    $('.tooltip').tooltipster();
+});
+</script>
 </head>
 <body>
 <dis:header/>
@@ -114,6 +126,9 @@ function confirmCancel (name) {
     <td>Expires In (Days):
     <td><input type="text" class="dtext" name="expires" placeholder="Leave blank for none." value="<%= expires_html %>">
 <tr>
+    <td>Comment:
+    <td><input type="text" class="dtext" name="comment" placeholder="Optional comment." value="<%= comment_html %>">
+<tr>
     <td colspan="2" style="text-align:center;padding-top:2ex;"><input class="dbutton" type="submit" value="Send Invites">
 </table>
 </form>
@@ -121,6 +136,7 @@ function confirmCancel (name) {
 
 <table cellspacing="0" class="summary" style="margin-bottom:4ex;margin-left:auto;margin-right:auto;">
     <tr>
+        <th class="standard"></th>
         <th class="standard">Invitee Email</th>
         <th class="standard">Invitee Name</th>
         <th class="standard">Code</th>
@@ -133,8 +149,11 @@ function confirmCancel (name) {
         <th class="standard">Actions</th>
         <% } %>
     </tr>
-    <% for (Invite i : manager.getInvites()) { %>
+    <% for (Invite i : manager.getInvites()) { 
+       String icomment = Util.html(i.getComment()).trim();
+    %>
     <tr>
+        <td class="standard"><% if (!icomment.isEmpty()) { %><img src="<%=root %>/media/comment.png" class="tooltip" title="<%=Util.html(i.getComment())%>"><% } %></td>
         <td class="standard"><a href="mailto:<%=Util.html(i.getInviteeEmail())%>"><%=Util.html(i.getInviteeEmail()) %></a></td>
         <td class="standard"><%=Util.html(i.getInviteeName()) %></td>
         <td class="standard"><pre><%=Util.html(i.getInviteCode()) %></pre></td>

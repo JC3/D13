@@ -3,8 +3,6 @@ package d13.questions;
 import java.util.ArrayList;
 import java.util.List;
 
-import d13.ThisYear;
-
 public class ApprovalQuestions {
 
     private static final List<Question> qs;
