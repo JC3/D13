@@ -470,7 +470,13 @@ public class User {
     }
     
     public void addComment (User author, String text) {
+        addComment(author, text, null);
+    }
+
+    public void addComment (User author, String text, DateTime timestamp) {
         Comment comment = new Comment(this, author, text);
+        if (timestamp != null)
+            comment.setTime(timestamp);
         comments.add(comment);
     }
     

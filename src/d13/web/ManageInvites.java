@@ -211,10 +211,18 @@ public class ManageInvites {
         return submittedComment;
     }
     
-    public static String getStatusHtml (Invite i) {
+    public static String getUserStatusHtml (Invite i) {
+        if (i.getStatus() == Invite.STATUS_ACCEPTED) {
+            return Util.html(i.getResolvedBy().getState().toString());
+        } else {
+            return "";
+        }
+    }
+    
+    public static String getStatusHtml (Invite i, String this_url) {
         switch (i.getStatus()) {
         case Invite.STATUS_ACCEPTED:
-            return Util.html(String.format("Accepted by %s", DefaultDataConverter.objectAsString(i.getResolvedBy())));
+            return String.format("Accepted by <a href=\"details.jsp?u=%d&next=%s\">%s</a>", i.getResolvedBy().getUserId(), this_url, Util.html(DefaultDataConverter.objectAsString(i.getResolvedBy())));
         case Invite.STATUS_REJECTED:
             return Util.html(String.format("Rejected"));
         case Invite.STATUS_CANCELLED:
@@ -223,6 +231,21 @@ public class ManageInvites {
             return i.isExpired() ? "Expired" : "Active";
         default:
             return Integer.toString(i.getStatus());
+        }
+    }
+    
+    public static String getStatusStyleClass (Invite i) {
+        switch (i.getStatus()) {
+        case Invite.STATUS_ACCEPTED:
+            return "invacc";
+        case Invite.STATUS_REJECTED:
+            return "invrej";
+        case Invite.STATUS_CANCELLED:
+            return "invcan";
+        case Invite.STATUS_ACTIVE:
+            return i.isExpired() ? "invexp" : "invact";
+        default:
+            return "";
         }
     }
     
