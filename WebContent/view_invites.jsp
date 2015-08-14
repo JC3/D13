@@ -19,6 +19,7 @@ if (manager.isFailed()) {
     return;
 }
 
+String this_url = Util.html(java.net.URLEncoder.encode(Util.getCompleteUrl(request), "us-ascii"));
 String root = pageContext.getServletContext().getContextPath();
 
 String error = (String)sess.getAndClearAttribute(SessionData.SA_MANAGE_INVITES_ERROR);
@@ -91,11 +92,30 @@ pre {
 function confirmCancel (name) {
     return confirm('Really cancel the invite for ' + name + '? The user has already received an invite email so beware of possible confusion.');
 }
+function updateView () {
+    $('.invact').toggle($('#vact').is(':checked'));  
+    $('.invacc').toggle($('#vacc').is(':checked'));  
+    $('.invrej').toggle($('#vrej').is(':checked'));  
+    $('.invexp').toggle($('#vexp').is(':checked'));  
+    $('.invcan').toggle($('#vcan').is(':checked'));
+    var addrs = '';
+    $('.inv:visible > .invemail').each(function() {
+    	addrs = addrs + $(this).text() + ', ';
+    });
+    $('#addrlist').text(addrs);
+}
 </script>
 <% } %>
 <script>
 $(document).ready(function() {
     $('.tooltip').tooltipster();
+    $('#nact').text($('.invact').length);
+    $('#nacc').text($('.invacc').length);
+    $('#nrej').text($('.invrej').length);
+    $('#nexp').text($('.invexp').length);
+    $('#ncan').text($('.invcan').length);
+    $('#ninv').text($('.inv').length);
+    updateView();
 });
 </script>
 </head>
@@ -116,6 +136,8 @@ $(document).ready(function() {
 <% } %>
 
 <% if (show_actions) { %>
+<table style="margin-left:auto;margin-right:auto;"><tr><td>
+
 <form action="do_invites.jsp" method="post">
 <input type="hidden" name="action" value="invite">
 <table class="form" style="margin-bottom:4ex;">
@@ -132,6 +154,23 @@ $(document).ready(function() {
     <td colspan="2" style="text-align:center;padding-top:2ex;"><input class="dbutton" type="submit" value="Send Invites">
 </table>
 </form>
+
+</td><td>
+<% } %>
+
+<table cellspacing="0" class="summary" style="margin-bottom:4ex;margin-left:auto;margin-right:auto;">
+    <tr><th class="standard">View?</th><th class="standard">Status</th><th class="standard">Count</th></tr>
+    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vact" onclick="updateView()" checked></td><td class="standard">Active</td>   <td class="standard" id="nact"></td></tr>
+    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vacc" onclick="updateView()" checked></td><td class="standard">Accepted</td> <td class="standard" id="nacc"></td></tr>
+    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vrej" onclick="updateView()" checked></td><td class="standard">Rejected</td> <td class="standard" id="nrej"></td></tr>
+    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vexp" onclick="updateView()" checked></td><td class="standard">Expired</td>  <td class="standard" id="nexp"></td></tr>
+    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vcan" onclick="updateView()" checked></td><td class="standard">Cancelled</td><td class="standard" id="ncan"></td></tr>
+    <tr><td class="standard"></td><td class="standard">Total</td><td class="standard" id="ninv"></td></tr>
+    <tr><td class="standard">Emails:</td><td class="standard" colspan="2"><textarea class="dtextarea" id="addrlist"></textarea></td></tr>
+</table>
+
+<% if (show_actions) { %>
+</td></tr></table>
 <% } %>
 
 <table cellspacing="0" class="summary" style="margin-bottom:4ex;margin-left:auto;margin-right:auto;">
@@ -145,6 +184,7 @@ $(document).ready(function() {
         <th class="standard">Expires</th>
         <th class="standard">Status</th>
         <th class="standard">Status Changed</th>
+        <th class="standard">User State</th>
         <% if (show_actions) { %>
         <th class="standard">Actions</th>
         <% } %>
@@ -152,16 +192,17 @@ $(document).ready(function() {
     <% for (Invite i : manager.getInvites()) { 
        String icomment = Util.html(i.getComment()).trim();
     %>
-    <tr>
+    <tr class="inv <%=ManageInvites.getStatusStyleClass(i)%>">
         <td class="standard"><% if (!icomment.isEmpty()) { %><img src="<%=root %>/media/comment.png" class="tooltip" title="<%=Util.html(i.getComment())%>"><% } %></td>
-        <td class="standard"><a href="mailto:<%=Util.html(i.getInviteeEmail())%>"><%=Util.html(i.getInviteeEmail()) %></a></td>
+        <td class="standard invemail"><a href="mailto:<%=Util.html(i.getInviteeEmail())%>"><%=Util.html(i.getInviteeEmail()) %></a></td>
         <td class="standard"><%=Util.html(i.getInviteeName()) %></td>
         <td class="standard"><pre><%=Util.html(i.getInviteCode()) %></pre></td>
         <td class="standard" style="text-align:right"><%=Util.html(DefaultDataConverter.objectAsString(i.getCreatedOn())) %></td>
         <td class="standard"><%=Util.html(DefaultDataConverter.objectAsString(i.getCreatedBy())) %></td>
         <td class="standard" style="text-align:right"><%=Util.html(DefaultDataConverter.objectAsString(i.getExpiresOn())) %></td>
-        <td class="standard"><%=ManageInvites.getStatusHtml(i) %></td>
+        <td class="standard"><%=ManageInvites.getStatusHtml(i, this_url) %></td>
         <td class="standard" style="text-align:right"><%=Util.html(DefaultDataConverter.objectAsString(i.getStatusChanged())) %></td>
+        <td class="standard" style="text-align:right"><%=ManageInvites.getUserStatusHtml(i) %></td>
         <% if (show_actions) { %>
         <%   if (i.isCancellable(sess.getUser())) { %>
           <td class="standard"><a href="do_invites.jsp?action=cancel&invite=<%= i.getInviteId() %>" onclick="return confirmCancel('<%= Util.html(i.getInviteeEmail()) %>')">Cancel</a></td>

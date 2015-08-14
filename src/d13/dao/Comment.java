@@ -46,4 +46,8 @@ public class Comment {
         return comment;
     }
     
+    public void setTime (DateTime time) {
+        this.time = time;
+    }
+    
 }

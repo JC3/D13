@@ -208,7 +208,7 @@ public class Invite {
         resolvedOn = DateTime.now();
         resolvedBy = acceptor;
         if (comment != null && !comment.trim().isEmpty())
-            resolvedBy.addComment(createdBy, "[Invite Comment] " + comment);
+            resolvedBy.addComment(createdBy, "[Invite Comment] " + comment, createdOn);
         status = STATUS_ACCEPTED;
     }
     
