@@ -162,9 +162,9 @@ $(document).ready(function() {
     <tr><th class="standard">View?</th><th class="standard">Status</th><th class="standard">Count</th></tr>
     <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vact" onclick="updateView()" checked></td><td class="standard">Active</td>   <td class="standard" id="nact"></td></tr>
     <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vacc" onclick="updateView()" checked></td><td class="standard">Accepted</td> <td class="standard" id="nacc"></td></tr>
-    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vrej" onclick="updateView()" checked></td><td class="standard">Rejected</td> <td class="standard" id="nrej"></td></tr>
-    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vexp" onclick="updateView()" checked></td><td class="standard">Expired</td>  <td class="standard" id="nexp"></td></tr>
-    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vcan" onclick="updateView()" checked></td><td class="standard">Cancelled</td><td class="standard" id="ncan"></td></tr>
+    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vrej" onclick="updateView()"></td><td class="standard">Rejected</td> <td class="standard" id="nrej"></td></tr>
+    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vexp" onclick="updateView()"></td><td class="standard">Expired</td>  <td class="standard" id="nexp"></td></tr>
+    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vcan" onclick="updateView()"></td><td class="standard">Cancelled</td><td class="standard" id="ncan"></td></tr>
     <tr><td class="standard"></td><td class="standard">Total</td><td class="standard" id="ninv"></td></tr>
     <tr><td class="standard">Emails:</td><td class="standard" colspan="2"><textarea class="dtextarea" id="addrlist"></textarea></td></tr>
 </table>
