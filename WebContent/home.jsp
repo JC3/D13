@@ -113,6 +113,7 @@ here periodically for status updates!</div>
 <% if (user.getRole().isSpecial()) { %>
 <strong>For Administrators:</strong><br><ul>
 <!-- <li><a href="admin_users.jsp">Manage Users</a> -->
+<li><form action="view_data.jsp" method="get">Search for user: <input type="text" name="search" class="dtext" style="width:20ex;"> <input type="submit" value="Search" class="dbutton" style="width:10ex;"></form>
 <li><a href="view_data.jsp">View Registration Data</a>
 <ul>
   <li><a href="view_data.jsp?qf=1">Only users that need registration applications reviewed.</a>
