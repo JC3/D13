@@ -58,7 +58,7 @@ public class Initialize {
             Map<String,Cell> categories = new HashMap<String,Cell>();
             
             Reader reader = new FileReader("cells.csv");
-            for (CSVRecord record :CSVFormat.EXCEL.parse(reader)) {
+            for (CSVRecord record : CSVFormat.EXCEL.parse(reader)) {
                 
                 if (record.size() < 4)
                     continue;

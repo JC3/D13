@@ -55,26 +55,26 @@ public class RegistrationQuestions {
         // end if
         
         q = Question.newDropList("arrivalDate", "Date of arrival on the playa.", "Want to arrive early and help Alpha Camp build Disorient?");
-        q.addChoice("Monday 8/24", "8/24/2015");
-        q.addChoice("Tuesday 8/25", "8/25/2015");
-        q.addChoice("Wednesday 8/26", "8/26/2015");
-        q.addChoice("Thursday 8/27", "8/27/2015");
-        q.addChoice("Friday 8/28", "8/28/2015");
-        q.addChoice("Saturday 8/29", "8/29/2015");
-        q.addChoice("Sunday 8/30", "8/30/2015");
-        q.addChoice("Monday 9/1", "9/1/2015");
-        q.addChoice("Tuesday 9/2", "9/2/2015");
+        q.addChoice("Monday 8/22", "8/22/2015");
+        q.addChoice("Tuesday 8/23", "8/23/2015");
+        q.addChoice("Wednesday 8/24", "8/24/2015");
+        q.addChoice("Thursday 8/25", "8/25/2015");
+        q.addChoice("Friday 8/26", "8/26/2015");
+        q.addChoice("Saturday 8/27", "8/27/2015");
+        q.addChoice("Sunday 8/28", "8/28/2015");
+        q.addChoice("Monday 8/29", "8/29/2015");
+        q.addChoice("Tuesday 8/30", "8/30/2015");
         qs.add(q);
         
         q = Question.newDropList("departureDate", "Date of departure from the playa.", "Remember, you can get up to a $240 rebate if you stay for Disengage!");
-        q.addChoice("Thursday 9/3", "9/3/2015");
-        q.addChoice("Friday 9/4", "9/4/2015");
-        q.addChoice("Saturday 9/5", "9/5/2015");
-        q.addChoice("Sunday 9/6", "9/6/2015");
-        q.addChoice("Monday 9/7", "9/7/2015");
-        q.addChoice("Tuesday 9/8", "9/8/2015");
-        q.addChoice("Wednesday 9/9", "9/9/2015");
-        q.addChoice("Thursday 9/10", "9/10/2015");
+        q.addChoice("Thursday 9/1", "9/1/2015");
+        q.addChoice("Friday 9/2", "9/2/2015");
+        q.addChoice("Saturday 9/3", "9/3/2015");
+        q.addChoice("Sunday 9/4", "9/4/2015");
+        q.addChoice("Monday 9/5", "9/5/2015");
+        q.addChoice("Tuesday 9/6", "9/6/2015");
+        q.addChoice("Wednesday 9/7", "9/7/2015");
+        q.addChoice("Thursday 9/8", "9/8/2015");
         qs.add(q);
         
         q = Question.newDropList("departureTime", "Time of departure from the playa.", null);
@@ -85,7 +85,7 @@ public class RegistrationQuestions {
         qs.add(q);
 
         q = Question.newSingleChoice("drivingFromToId",
-                "Where will you be arriving from?",
+                "Where will you be driving from?",
                 "If you are flying into Reno and riding from there, please enter 'Reno', otherwise please enter whatever city you are riding (not flying) from to get to Reno or BRC.");
         for (Location l:Location.values())
             if (l != Location.OTHER)
@@ -125,7 +125,7 @@ public class RegistrationQuestions {
         
         q = Question.newLongText("livingSpaceSize",
                 "What size is your living space on the playa?",
-                "We need to know your approximate foot print. The height of your tent, yurt, RV or teepee. Any personal shade structures you will be constructing. This will be crucial to making sure all placement needs are honored. The more information you can give us the less likely we are to bother you with more questions. Disorient tries to provide all tent campers with shade, however if you would like to contribute to our shade or bring your own, we suggest a 10 by 10 orange tarp (<a href=\"http://www.tents-canopy.com/orange-tarp-10x10.html\">http://www.tents-canopy.com/orange-tarp-10x10.html</a>) to expand shade within our structure as necessary.");
+                "We need to know your approximate foot print. The height of your tent, yurt, or RV. Any personal shade structures you will be constructing. This will be crucial to making sure all placement needs are honored. The more information you can give us the less likely we are to bother you with more questions. Disorient tries to provide all tent campers with shade, however if you would like to contribute to our shade or bring your own, we suggest a 10 by 10 orange tarp (<a href=\"http://www.tents-canopy.com/orange-tarp-10x10.html\">http://www.tents-canopy.com/orange-tarp-10x10.html</a>) to expand shade within our structure as necessary.");
         qs.add(q);
 
         //--
@@ -190,12 +190,12 @@ public class RegistrationQuestions {
         q = Question.newShortText("numWanted", "How many do you need?", null);
         qs.add(q);
         
-        
-        
+        /* removed in 2016
         q = Question.newUserDropList("groupLeaderId",
                 "Who will be your group leader?",
                 "This individual is responsible for coordinating with Disorient about registration, arrival, disengage, etc. If your group leader has not yet registered, please just select yourself for now - you'll be able to change it later."); 
         qs.add(q);
+        */
 
         qs.add(Question.newLongText("personalProject",
                 "Are you doing any personal projects on the playa this year?",

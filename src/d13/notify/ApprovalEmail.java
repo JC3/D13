@@ -22,20 +22,20 @@ public class ApprovalEmail extends Email {
 
         sb.append("<p>Dear [realname],</p>");
         sb.append("<p>It is with great pleasure that we would like to confirm that you have been accepted to camp with Disorient this year. We are all excited and raring to go!</p>");
-        sb.append("<p>Thank you for being a part of D15ORIENT. In order to create a successful camp this year we need YOUR help. Full participation is needed to bring D15ORIENT to and from the playa, especially in the areas of Alpha and Disengage. Please consider staying until Monday or Tuesday at the end of the week as every full day helps. Working together to build our camp is the key to keeping Disorient tighter and brighter than ever before.</p>");
+        sb.append("<p>Thank you for being a part of D16ORIENT. In order to create a successful camp this year we need YOUR help. Full participation is needed to bring D16ORIENT to and from the playa, especially in the areas of Alpha and Disengage. Please consider staying until Monday or Tuesday at the end of the week as every full day helps. Working together to build our camp is the key to keeping Disorient tighter and brighter than ever before.</p>");
         sb.append("<p>To secure your place in camp, please pay your camp dues promptly so that we can all get to the playa as smoothly as possible. You have [graceperiod] days from the time of this email to pay the tier that was in effect when you filled out your registration form, but after that, camp dues go up the longer you wait. Details of dues and how to pay can be found at:</p>");
         sb.append("<p><a href=\"[duesurl]\">[duesurl]</a></p>");
         sb.append("<p>You may update your registration form (please keep your info up to date!) and volunteer cells at any time at:</p>");
         sb.append("<p><a href=\"[regurl]\">[regurl]</a></p>");
         sb.append("<p><b>Some other important information you should know:</b></p>");
         sb.append("<ul>");
-        sb.append("<li>You will be receiving updates about D15ORIENT from [campemail]. Please make sure you read them!");
+        sb.append("<li>You will be receiving updates about D16ORIENT from [campemail]. Please make sure you read them!");
         sb.append("<li>You may be contacted by your cell leads regarding your on-playa responsibilities.");
         sb.append("<li>Our tireless and fearless volunteer coordinators will be in touch with each of you to discuss your volunteer assignments and schedules.");
         sb.append("</ul>");
         sb.append("<p>If you have any questions please feel free to reply to this email, or contact [campemail] at any time.</p>");
         sb.append("<p>Can't wait to camp with you all on the playa!</p>");
-        sb.append("<p><a href=\"mailto:[campemail]\">D15ORIENT</a></p>");
+        sb.append("<p><a href=\"mailto:[campemail]\">D16ORIENT</a></p>");
 
         /* 2014:
         sb.append("<p>Dear " + realname + ",</p>");
@@ -82,7 +82,7 @@ public class ApprovalEmail extends Email {
     }
 
     @Override protected String getSubject () {
-        return "Your Disorient 2015 Registration Application";
+        return "Your Disorient " + ThisYear.CAMP_YEAR + " Registration Application";
     }
 
     /*

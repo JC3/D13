@@ -6,10 +6,10 @@ public enum Location {
     PHILLY(2, "Philly Area"),
     LA(3, "Los Angeles Area"),
     SF(4, "San Francisco Area"),
-    NEW_ENGLAND(5, "New England"),
     SACRAMENTO(6, "Sacramento"),
     SEATTLE(7, "Seattle"),
     DUBAI(8, "Dubai"),
+    AUSTIN(9, "Austin"),
     OTHER(0, "Other");
     
     private final int dbId;
@@ -35,10 +35,10 @@ public enum Location {
         case 2: return PHILLY;
         case 3: return LA;
         case 4: return SF;
-        case 5: return NEW_ENGLAND;
         case 6: return SACRAMENTO;
         case 7: return SEATTLE;
         case 8: return DUBAI;
+        case 9: return AUSTIN;
         default: return null;
         }
     }

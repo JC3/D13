@@ -10,19 +10,19 @@ import d13.dao.DueCalculator.Tier;
 
 public class ThisYear {
 
-    public static final int CAMP_YEAR = 2015;
-    public static final String SYSTEM_VERSION = "v1.17";
+    public static final int CAMP_YEAR = 2016;
+    public static final String SYSTEM_VERSION = "v1.18c";
     
     /*
-     * 2015
+     * 2016
      * 
-     * Tier 1: $425 if paid by 11:59 PM (Eastern Time) on July 26th
-Tier 2: $525 if paid by 11:59 PM (Eastern Time) on July 31st
-Tier 3: $625 if paid by 11:59 PM (Eastern Time) on August 16th
+Tier 1: $395 if paid by 11:59 PM (Eastern Time) on July 15th
+Tier 2: $545 if paid by 11:59 PM (Eastern Time) on July 25st
+Tier 3: $665 if paid by 11:59 PM (Eastern Time) on August 16th
 
-RV Fee Tier 1: $950 if paid by 11:59 PM (Eastern Time) on July 26th
-RV Fee Tier 2: $1050 if paid by 11:59 PM (Eastern Time) on July 31st
-RV Fee Tier 3: $1150 if paid by 11:59 PM (Eastern Time) on August 16th
+RV Fee Tier 1: $1050 if paid by 11:59 PM (Eastern Time) on July 15th
+RV Fee Tier 2: $1250 if paid by 11:59 PM (Eastern Time) on July 25th
+RV Fee Tier 3: $1550 if paid by 11:59 PM (Eastern Time) on August 16th
      */
 
     public static final int GRACE_PERIOD_DAYS = 3;
@@ -32,9 +32,9 @@ RV Fee Tier 3: $1150 if paid by 11:59 PM (Eastern Time) on August 16th
         DateTimeZone tz = DateTimeZone.forID("America/New_York");
 
         personalTiers.clear();        
-        personalTiers.add(new Tier(new DateTime(2015, 7, 28, 0, 0, 0, tz), 42500, "Tier 1"));
-        personalTiers.add(new Tier(new DateTime(2015, 8, 1, 0, 0, 0, tz), 52500, "Tier 2"));
-        personalTiers.add(new Tier(null, 62500, "Tier 3"));
+        personalTiers.add(new Tier(new DateTime(2016, 7, 16, 0, 0, 0, tz), 39500, "Tier 1"));
+        personalTiers.add(new Tier(new DateTime(2016, 7, 26, 0, 0, 0, tz), 54500, "Tier 2"));
+        personalTiers.add(new Tier(null, 66500, "Tier 3"));
         
     }
     
@@ -43,9 +43,9 @@ RV Fee Tier 3: $1150 if paid by 11:59 PM (Eastern Time) on August 16th
         DateTimeZone tz = DateTimeZone.forID("America/New_York");
 
         rvTiers.clear();
-        rvTiers.add(new Tier(new DateTime(2015, 7, 28, 0, 0, 0, tz), 95000, "R.V. Tier 1"));
-        rvTiers.add(new Tier(new DateTime(2015, 8, 1, 0, 0, 0, tz), 105000, "R.V. Tier 2"));
-        rvTiers.add(new Tier(null, 115000, "R.V. Tier 3"));
+        rvTiers.add(new Tier(new DateTime(2016, 7, 16, 0, 0, 0, tz), 105000, "R.V. Tier 1"));
+        rvTiers.add(new Tier(new DateTime(2016, 7, 26, 0, 0, 0, tz), 125000, "R.V. Tier 2"));
+        rvTiers.add(new Tier(null, 155000, "R.V. Tier 3"));
         
     }
 

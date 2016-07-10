@@ -10,7 +10,7 @@ public class ApprovalSurvey {
     private User user;
     private DateTime completionTime;
     
-    private String mealPreference;
+    // private String mealPreference;  // removed 2016
     private String placementRequest;
     private boolean disengageSun;
     private boolean disengageMon;
@@ -45,10 +45,12 @@ public class ApprovalSurvey {
         return completionTime;
     }
 
+    /* // removed 2016
     @DataView(i=40, n="Meal Preference", longtext=true)
     public String getMealPreference() {
         return mealPreference;
     }
+    */
     
     @DataView(i=50, n="Placement Requests", longtext=true)
     public String getPlacementRequest() {
@@ -84,9 +86,11 @@ public class ApprovalSurvey {
         return completionTime != null;
     }
     
+    /*  // removed 2016
     public void setMealPreference(String mealPreference) {
         this.mealPreference = mealPreference;
     }
+    */
 
     public void setPlacementRequest(String placementRequest) {
         this.placementRequest = placementRequest;

@@ -124,7 +124,6 @@
         <id name="aformId"><generator class="foreign"><param name="property">user</param></generator></id>
         <one-to-one name="user" class="d13.dao.User" constrained="true"/>
         <property name="completionTime" type="d13.dao.types.DateTimeType"/>
-        <property name="mealPreference" type="text"/>
         <property name="placementRequest" type="text"/>
         <property name="disengageSun" not-null="true"/>
         <property name="disengageMon" not-null="true"/>
@@ -171,7 +170,6 @@
 		<property name="numForSale" not-null="true"/>
 		<property name="tixWanted" not-null="true"/>
 		<property name="numWanted" not-null="true"/>
-		<many-to-one name="groupLeader" class="d13.dao.User"/>
 		<property name="personalProject" type="text"/>
 		<property name="comments" type="text"/>
         <property name="haveVehiclePass" not-null="true"/>
