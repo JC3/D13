@@ -40,7 +40,7 @@ public class RegistrationBean {
     private String numForSale;
     private boolean tixWanted;
     private String numWanted;
-    private Long groupLeaderId;
+    //private Long groupLeaderId;  // removed 2016
     private String personalProject;
     private String comments;
     private boolean haveVehiclePass;
@@ -178,9 +178,11 @@ public class RegistrationBean {
         return needRideFrom;
     }
 
+    /*  // removed 2016
     public Long getGroupLeaderId() {
         return groupLeaderId;
     }
+    */
 
     public String getPersonalProject() {
         return personalProject;
@@ -310,9 +312,11 @@ public class RegistrationBean {
         this.needRideFrom = needRideFrom;
     }
 
+    /*  // removed 2016
     public void setGroupLeaderId(Long groupLeader) {
         this.groupLeaderId = groupLeader;
     }
+    */
 
     public void setPersonalProject(String personalProject) {
         this.personalProject = personalProject;

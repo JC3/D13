@@ -3,7 +3,8 @@ package d13.dao;
 public enum Gender {
 
     MALE("m", "Male"),
-    FEMALE("f", "Female");
+    FEMALE("f", "Female"),
+    OTHER("o", "Other");
     
     private final String dbString;
     private final String displayString;
@@ -26,6 +27,8 @@ public enum Gender {
             return MALE;
         else if ("f".equalsIgnoreCase(dbString))
             return FEMALE;
+        else if ("o".equalsIgnoreCase(dbString))
+            return OTHER;
         else
             return null;
     }

@@ -34,10 +34,12 @@ public class ApprovalQuestions {
         qs.add(q);
         */
         
+        /*  // removed 2016
         q = Question.newLongText("mealPreference",
                 "What I Eat",
                 "Yes Disorient provides 2 meals a day to campers help us prepare and tell us any dietary restrictions you may have. This should include things like vegan, nut allergies etc and NOT things like \"I don't like tomatoes\".");
         qs.add(q);
+        */
         
         q = Question.newLongText("placementRequest",
                 "Placement Requests",
@@ -46,10 +48,10 @@ public class ApprovalQuestions {
         
         q = Question.newMultiChoice("I am a Disengage Rock Star",
                 "Disengage rebate is up to $240. Please check EACH day that you plan to help DisEngage. Each full work day may entitle you to a rebate. **IMPORTANT: Keep this information updated if your travel plans change! We need an accurate headcount.");
-        q.addChoice("disengageSun", "Sunday, September 6th", 1);
-        q.addChoice("disengageMon", "Monday, September 7th", 1);
-        q.addChoice("disengageTue", "Tuesday, September 8th", 1);
-        q.addChoice("disengageWed", "Wednesday, September 9th", 1);
+        q.addChoice("disengageSun", "Sunday, September 4th", 1);
+        q.addChoice("disengageMon", "Monday, September 5th", 1);
+        q.addChoice("disengageTue", "Tuesday, September 6th", 1);
+        q.addChoice("disengageWed", "Wednesday, September 7th", 1);
         q.addChoice("disengageNone", "I'm sorry, I cannot stay to help.", 1);
         qs.add(q);
         

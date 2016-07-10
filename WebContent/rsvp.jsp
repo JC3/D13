@@ -40,7 +40,7 @@ if (invite != null) {
 
 <p>Your invite code: <%= Util.html(invite.getInviteCode()) %></p>
 <p>This invite is intended for <b><%=Util.html(invite.getInviteeName()) %></b>. If this is not you, <a href="index.jsp?code="> please click here</a>!</p>
-<p>Thank you for considering being a part of D15ORIENT. To respond to this invite, please do one of the following:</p>
+<p>Thank you for considering being a part of D16ORIENT. To respond to this invite, please do one of the following:</p>
 <ul>
 <p>To <b>accept</b>, simply proceed to <a href="<%=loginurl %>">the login page</a> or visit this site at any point in the future, log in / create an account, and enter your invite code if prompted.
 <p>To <b>reject</b>, please <a href="rejectinvite.jsp?code=<%=Util.html(invite.getInviteCode()) %>" onclick="return confirm('Are you sure you wish to reject this invite? This decision is final.')">click here</a>. Doing so indicates that you will not be joining D15ORIENT this year and opens the slot up for other campers, so if you are sure you are not going to be camping with Disorient, please choose this option! This will invalidate your invite code.</p>

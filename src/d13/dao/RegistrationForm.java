@@ -45,7 +45,7 @@ public class RegistrationForm {
     private int numForSale;
     private boolean tixWanted;
     private int numWanted;
-    private User groupLeader;
+    //private User groupLeader; // removed 2016
     private String personalProject;
     private String comments;
     private boolean haveVehiclePass;
@@ -59,7 +59,7 @@ public class RegistrationForm {
         // no more default; force user to select
         //this.drivingFromTo = user.getLocation();
         //this.drivingFromToOther = user.getLocationOther();
-        this.groupLeader = user;
+        //this.groupLeader = user;  // removed 2016
     }
     
     public long getRformId () {
@@ -258,6 +258,7 @@ public class RegistrationForm {
         return haveVehiclePass;
     }
 
+    /* removed 2016
     @DataView(i=2270, n="Group Leader")
     public User getGroupLeader() {
         return groupLeader;
@@ -266,6 +267,7 @@ public class RegistrationForm {
     public Long getGroupLeaderId () {
         return groupLeader == null ? null : groupLeader.getUserId();
     }
+    */
 
     @DataView(i=2280, n="Personal Projects", longtext=true)
     public String getPersonalProject() {
@@ -462,6 +464,8 @@ public class RegistrationForm {
         this.needRideFrom = needRideFrom;
     }
 
+    /*
+    // removed 2016
     public void setGroupLeader(User groupLeader) {
         if (groupLeader == null)
             throw new IllegalArgumentException("Group leader must be specified.");
@@ -473,6 +477,7 @@ public class RegistrationForm {
             throw new IllegalArgumentException("Group leader must be specified.");
         groupLeader = User.findById(id);
     }
+    */
 
     public void setPersonalProject(String personalProject) {
         if (personalProject != null)

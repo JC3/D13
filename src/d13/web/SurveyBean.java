@@ -6,7 +6,7 @@ import d13.dao.User;
 
 public class SurveyBean {
 
-    private String mealPreference;
+    //private String mealPreference;  // removed 2016
     private String placementRequest;
     private boolean disengageSun;
     private boolean disengageMon;
@@ -26,9 +26,12 @@ public class SurveyBean {
         //System.out.println(toString()); // TODO: remove this
     }
     
+    /* // removed 2016
     public String getMealPreference() {
         return mealPreference;
     }
+    */
+    
     public String getPlacementRequest() {
         return placementRequest;
     }
@@ -47,9 +50,11 @@ public class SurveyBean {
     public boolean isDisengageNone() {
         return disengageNone;
     }
+    /*  // removed 2016
     public void setMealPreference(String mealPreference) {
         this.mealPreference = mealPreference;
     }
+    */
     public void setPlacementRequest(String placementRequest) {
         this.placementRequest = placementRequest;
     }

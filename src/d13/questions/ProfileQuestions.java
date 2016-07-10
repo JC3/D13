@@ -21,6 +21,7 @@ public class ProfileQuestions {
         q = Question.newSingleChoice("gender", "Gender", null);
         q.addChoice(Gender.MALE.toDisplayString(), Gender.MALE.toDBString());
         q.addChoice(Gender.FEMALE.toDisplayString(), Gender.FEMALE.toDBString());
+        q.addChoice(Gender.OTHER.toDisplayString(), Gender.OTHER.toDBString());
         qs.add(q);
         qs.add(Question.newShortText("phone", "Cell Phone", null));
         q = Question.newSingleChoice("location", "Location", null);
