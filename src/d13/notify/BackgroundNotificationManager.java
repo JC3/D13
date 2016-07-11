@@ -22,7 +22,7 @@ public class BackgroundNotificationManager implements ServletContextListener {
 
     public static String RT_ENABLE_NOTIFY = "notify.enabled"; // "1" to enable, else disable
     
-    private static final int POLL_INTERVAL = 60000;
+    public static final int POLL_INTERVAL = 60000; // public so we can view it on site config; TODO: make configurable in db, maybe?
 
     private ExecutorService executor;
     private Notifier notifier;

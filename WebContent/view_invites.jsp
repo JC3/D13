@@ -125,8 +125,6 @@ $(document).ready(function() {
   <a href="home.jsp">Home</a>
 </div>
 
-<div style="text-align:center;margin-left:auto;margin-right:auto;">This page is new and rough. Send bug reports and suggestions to Jason.</div>
-
 <% if (error_html != null) { %>
 <div class="error">Error: <%=error_html%></div>
 <% } %>

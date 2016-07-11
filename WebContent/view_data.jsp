@@ -127,28 +127,28 @@ hr.sub {
 </style>
 <script>
 $(document).ready(function() {
-	$('.tooltip').tooltipster({
-	    content: 'Loading...',
-	    contentAsHTML: true,
-	    functionBefore: function(origin, continueTooltip) {
+    $('.tooltip').tooltipster({
+        content: 'Loading...',
+        contentAsHTML: true,
+        functionBefore: function(origin, continueTooltip) {
 
-	        // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
-	        continueTooltip();
-	        
-	        // next, we want to check if our data has already been cached
-	        if (origin.data('ajax') !== 'cached') {
-	            $.ajax({
-	                type: 'POST',
-	                data: { 'u': origin.attr('data-uid') },
-	                url: '<%=root%>/ajax/query_comments.jsp',
-	                success: function(data) {
-	                    // update our tooltip content with our returned data and cache it
-	                    origin.tooltipster('content', data).data('ajax', 'cached');
-	                }
-	            });
-	        }
-	    }
-	});
+            // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
+            continueTooltip();
+            
+            // next, we want to check if our data has already been cached
+            if (origin.data('ajax') !== 'cached') {
+                $.ajax({
+                    type: 'POST',
+                    data: { 'u': origin.attr('data-uid') },
+                    url: '<%=root%>/ajax/query_comments.jsp',
+                    success: function(data) {
+                        // update our tooltip content with our returned data and cache it
+                        origin.tooltipster('content', data).data('ajax', 'cached');
+                    }
+                });
+            }
+        }
+    });
 });
 </script>
 </head>
@@ -209,7 +209,7 @@ $(document).ready(function() {
 <h1>Other Views:</h1>
 <ul>
   <li><a href="view_cells2.jsp">View Cells</a>
-  <li><a href="view_groups.jsp">View Camper Groups</a>
+  <!-- <li><a href="view_groups.jsp">View Camper Groups</a>  (removed for 2016 when group leader went away)  -->
   <li><a href="view_finance.jsp">View Dues Reports</a>
 </ul>
 </div>
