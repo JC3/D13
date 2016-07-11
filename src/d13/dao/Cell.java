@@ -24,6 +24,7 @@ public class Cell {
     private String  description;
     private boolean category;
     private boolean hideWhenFull;
+    private boolean mandatory;
     private Set<User> users = new HashSet<User>(0);
     private List<Cell> children = new ArrayList<Cell>();
     
@@ -122,6 +123,10 @@ public class Cell {
         return hideWhenFull;
     }
     
+    public boolean isMandatory () {
+        return mandatory;
+    }
+    
     public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
@@ -146,6 +151,10 @@ public class Cell {
 
     public void setHideWhenFull (boolean h) {
         this.hideWhenFull = h;
+    }
+    
+    public void setMandatory (boolean m) {
+        this.mandatory = m;
     }
     
     void addUser (User user) {
@@ -190,6 +199,18 @@ public class Cell {
         
         return cells;
 
+    }
+    
+    public static List<Cell> findMandatory () {
+        
+        @SuppressWarnings("unchecked")
+        List<Cell> cells = (List<Cell>)HibernateUtil.getCurrentSession()
+                .createCriteria(Cell.class)
+                .add(Restrictions.ne("mandatory", false))
+                .list();
+        
+        return cells;
+        
     }
     
 }

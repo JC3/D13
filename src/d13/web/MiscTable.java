@@ -17,7 +17,7 @@ import d13.util.Util;
 public class MiscTable {
 
     public static class Style implements Cloneable {
-        private static final Style DEFAULT = new Style();
+        public static final Style DEFAULT = new Style();
         private String cssClass;
         private boolean bulletList;
         public Style css (String cssClass) {
@@ -128,7 +128,6 @@ public class MiscTable {
         for (Row r : rows)
             p.printRecord(r.getText());
         p.flush();
-        p.close();
     }
     
     public String toCSV () {
@@ -165,9 +164,12 @@ public class MiscTable {
             if (style.bulletList) {
                 String[] data = row.getText(n).trim().split("\\n");
                 for (String s : data) {
-                    out.append("&bull; ");
-                    out.append(Util.html(s));
-                    out.append("<br>\n");
+                    s = s.trim();
+                    if (!s.isEmpty()) {
+                        out.append("&bull; ");
+                        out.append(Util.html(s));
+                        out.append("<br>\n");
+                    }
                 }
             } else {
                 out.append(Util.html(row.getText(n)));

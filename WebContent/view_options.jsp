@@ -20,8 +20,8 @@ if (!sess.isLoggedIn()) {
 
 // todo: move code out of this jsp
 
-if (!sess.getUser().getRole().isSpecial()) {
-    return; // permission denied. todo: special privilege for viewing options?
+if (!sess.getUser().getRole().canViewAdminData()) {
+    return; // permission denied.
 }
 
 List<RuntimeOptions.RuntimeOption> options = new ArrayList<RuntimeOptions.RuntimeOption>(RuntimeOptions.getOptions());
@@ -51,6 +51,7 @@ ThisYear.setupRVTiers(rdues);
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Disorient</title>
 <link rel="stylesheet" type="text/css" href="disorient.css">
+<link rel="icon" href="favicon.ico">
 <style type="text/css">
 .summary {
     background: #101010;

@@ -54,6 +54,7 @@ String error_html = (error == null ? null : Util.html(error));
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="disorient.css">
+<link rel="icon" href="favicon.ico">
 <title>Disorient</title>
 <script language="JavaScript" type="text/javascript">
 function setVisible (id, visible) {

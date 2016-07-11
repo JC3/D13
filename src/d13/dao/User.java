@@ -98,7 +98,20 @@ public class User {
     }
     
     public boolean isInEnoughCells () {
-        return cells.size() > LOW_CELL_THRESHOLD;
+        //return cells.size() > LOW_CELL_THRESHOLD;
+        // 2016 - added ability for cells to be mandatory; mandatory cells do not count towards warning threshold
+        int cellCount = 0;
+        for (Cell c : cells)
+            if (!c.isMandatory())
+                ++ cellCount;
+        return cellCount > LOW_CELL_THRESHOLD;
+    }
+    
+    public boolean isInMandatoryCells () {
+        for (Cell c : Cell.findMandatory())
+            if (!isInCell(c))
+                return false;
+        return true;
     }
     
     public boolean isReceiveNotifications () {
@@ -698,6 +711,19 @@ public class User {
         
         return users;
 
+    }
+    
+    public static List<User> findSpecial () {
+        
+        @SuppressWarnings("unchecked")
+        List<User> users = (List<User>)HibernateUtil.getCurrentSession()
+                .createCriteria(User.class)
+                .add(Restrictions.isNotNull("role"))
+                .addOrder(Order.asc("realName"))
+                .list();
+        
+        return users;
+        
     }
     
     public static List<User> findReviewersForEmail (Session session) {

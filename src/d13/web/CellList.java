@@ -58,8 +58,15 @@ public class CellList {
             }
         }
         
-        out.println(String.format("<tr%s><td width=\"100%%\">", trstyle));
-        out.println(String.format("<div class=\"cellname\"%s>%s</div>", titlestyle, Util.html(cell.getFullName())));
+        String tdstyle = "";
+        String titleexclass = "";
+        if (cell.isMandatory()) {
+            tdstyle = " class=\"mandatory-cell-left\"";
+            titleexclass += " mandatory-cell-title";
+        }
+        
+        out.println(String.format("<tr%s><td%s width=\"100%%\">", trstyle, tdstyle));
+        out.println(String.format("<div class=\"cellname%s\"%s>%s%s</div>", titleexclass, titlestyle, cell.isMandatory() ? "REQUIRED: " : "", Util.html(cell.getFullName())));
                 
         if (volunteers != null)
             out.println(String.format("<div class=\"cellvol\">%s</div>", Util.html(volunteers)));

@@ -1,0 +1,181 @@
+2016-07-11 10:51:23 EDT  jasonc
+
+    1.18d:
+    - Removed mention of 150 person limit from invite email (Ky, Canaan)
+    - Added person's name to subject line of approval email (Jason)
+    - "Ticket source" now displays correctly in detail views (Jason)
+    - Removed "View Camper Groups" page links (Jason)
+    - Removed note about "this page is new" from invite manager page (Jason)
+    - Added some more info to "View Site Configuration" page (Jason)
+    - MiscTable, misc/cells.jsp uses it now, provides CSV download link (Jason)
+    
+--- CHANGES POORLY LOGGED FROM THIS POINT DOWN ---
+
+2016-07-09 22:13:02 EDT  jasonc
+
+    - 2016 updates
+    - version 1.18c; initial release for 2016
+
+2016-07-08 21:20:58 EDT  jasonc
+
+    D15 Final
+
+2015-08-14 00:08:31 EDT  jasonc
+
+    - invite page improvements
+    - invite comments now take on invite date instead of registration date
+
+2015-08-05 15:46:12 EDT  jasonc
+
+    tooltip comments in reg data view
+    invite comments
+
+2015-07-31 20:57:33 EDT  jasonc
+
+    - added notify.debug option and javamail session debug output to help narrow down cause of mailer thread hanging.
+    - removed disengage@disorient.info email address from stupid approval survey.
+
+2015-07-31 18:33:38 EDT  jasonc
+
+    - Basic comment form for you guys to add comments on users.
+    - Mention ASCOA official name on dues payment page.
+    - Include accurate invite expiration date instead of "august 1st" in invite email.
+    - 1 cell filter
+
+2015-07-26 00:01:05 EDT  jasonc
+
+    Version 1.14c:
+      - Invite emails now have name in subject line.
+      - Tier 1 (camper and RV) pushed back 24 hours, terms updated.
+      - Fixed bug where spaces in "days" on invite form caused errors.
+      - Acceptance email text now has som
+
+2015-07-24 19:43:05 EDT  jasonc
+
+    - minor fixes
+    - csv cell importer
+
+2015-07-24 16:49:12 EDT  jasonc
+
+    - 2015 updates
+    - rsvp landing page
+    - reg form goes directly to cells signup
+
+2015-07-16 22:40:22 EDT  jasonc
+
+    - invite code entry
+    - option view
+
+2015-07-14 02:20:56 EDT  jasonc
+
+    invite mode and invite manager
+
+2015-07-11 20:04:51 EDT  jasonc
+
+    - misc folder with tools
+    - 2015 prep
+    - improved sort in reg data view
+
+2014-10-09 00:35:23 EDT  jasonc
+
+    disengage mailer
+
+2014-08-05 19:12:36 EDT  jasonc
+
+    new cells page
+
+2014-08-02 19:53:09 EDT  jasonc
+
+    - tier 1 pushed back to 18th
+    - do not fill in driving location on registration form by default
+    - changed wording of driving location question on reg form
+    - cell list hides full cells
+
+2014-07-14 13:49:53 EDT  jasonc
+
+    ability to hide cells when full
+
+2014-07-14 10:57:30 EDT  jasonc
+
+    added sacramento and seattle to location list
+
+2014-07-14 10:49:53 EDT  jasonc
+
+    enforce two-word real name for first and last
+
+2014-07-13 22:43:26 EDT  jasonc
+
+    - filter for people needing to sign up for work cells
+    - added missing "home" links to cell view page
+
+2014-07-13 13:22:43 EDT  jasonc
+
+    separate logged in vs global announcements
+
+2014-07-11 20:38:55 EDT  jasonc
+
+    - removed teepee option 
+    - 30 minute cache expiration on css files
+    - removed disengage 8pm note from terms (hacked on server side previously)
+    - site-wide maintenance messages (use "announcement" option in database)
+
+2014-07-10 03:46:34 EDT  jasonc
+
+    2014 updates
+    automated password reset
+
+2014-07-06 00:43:51 EDT  jasonc
+
+    - year and version number in footer
+    - year and dues in d13.ThisYear
+    - tiered rv dues
+    - moved living space questions from approval survey to registration form
+    - updated details page for 2014
+    - "other" due amount text box hidden if "other" not selected
+
+2013-09-05 11:08:27 EDT  jasonc
+
+    support for closing registration post-event
+
+2013-08-01 16:59:08 EDT  jasonc
+
+    paypal fees
+    draft for cell view page
+
+2013-07-30 13:12:10 EDT  jasonc
+
+    dues report
+
+2013-07-25 23:52:35 EDT  jasonc
+
+    approval email updated
+    search box
+    fixed approval survey quick filter (now only shows approved users)
+
+2013-07-17 17:33:04 EDT  jasonc
+
+    rv type field
+    standalone notifier 
+
+2013-07-14 21:22:58 EDT  jasonc
+
+    - smtp/notification options now stored in 'options' table of database
+    - fixed some types in rules page
+    
+
+2013-07-13 17:08:18 EDT  jasonc
+
+    - admin help page
+    - whitespace trimmed in jsp output
+    - fixed column width for "helped off playa" in summary view
+    - email links in summary view
+    - preparing infrastructure for more notification emails
+    - send approval/rejection email on state change
+    - temporarily disable email until mail.disorient.info connection problems can be resolved
+    - extended arrival/departure dates in registration form
+    
+
+2013-07-11 02:37:57 EDT  jasonc
+
+    Initial import.
+    

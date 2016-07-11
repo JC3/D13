@@ -63,6 +63,7 @@ if (editor.getRole().canViewComments())
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="disorient.css">
+<link rel="icon" href="favicon.ico">
 <style type="text/css">
 table.form td.key { white-space: nowrap; font-weight: bold; color: #ff8000; vertical-align: top; border-top: 1px solid #202020; }
 table.form td.value { vertical-align: top; border-top: 1px solid #202020; }
@@ -215,6 +216,9 @@ here.</div>
 <tr><td colspan="2" class="title">Approve / Reject User
 <tr><td class="left"><input class="dcheckbox" type="checkbox" name="c1" id="c1" value="1"><td>I have thoroughly reviewed the above application and if I approve it, I believe that <%=Util.html(editee.getRealName()) %> is a DOer who will positively contribute to our camp.
 <tr><td class="left"><input class="dcheckbox" type="checkbox" name="c2" id="c2" value="1"><td>I understand that I have been trusted with the responsibility to enforce our maximum camper limit so that we can provide <%=Util.html(editee.getRealName()) %> with food, water, power, and a place to live for a week.
+<% if (!editee.isInMandatoryCells()) { %>
+<tr><td colspan="2" style="text-align:center;"><span style="color: red;">Warning: This user has not signed up for all of the mandatory cells!</span>
+<% } %>
 <% if (!editee.isInEnoughCells()) { %>
 <tr><td colspan="2" style="text-align:center;"><span style="color: red;">Warning: This user has not signed up for enough volunteer cells!</span>
 <% } %>

@@ -58,6 +58,7 @@ Cell root = Cell.findRoot();
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="disorient.css">
+<link rel="icon" href="favicon.ico">
 <style type="text/css">
 table.form td { vertical-align: top; border-bottom: 1px solid #202020; padding: 0; margin: 0; }
 table.form td.bottom { border: 0; padding-top: 1ex; }
@@ -70,6 +71,8 @@ td.cellcheck { white-space: nowrap; }
 table.form a:link { color: #00a0ff; }
 table.form a:visited { color: #00a0ff; }
 table.form a:active { color: #00a0ff; }
+.mandatory-cell-left { border-left: 4px solid red; padding-left: 4px !important; position: relative; left: -8px; }
+.mandatory-cell-title { background: red; }
 </style>
 <script language="JavaScript" type="text/javascript">
 function setVisible (id, visible) {

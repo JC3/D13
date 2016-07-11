@@ -35,7 +35,13 @@ public class EditCells {
             if (!editee.isEditableBy2(editor))
                 throw new SecurityException("Permission denied.");
             
-            applyCellChanges(context.getRequest().getParameterMap(), editee);
+            // simple logic for now: if user is editing their own cells assume they are in reg flow and
+            // do not let them proceed if mandatory cells are missing. bug: admins editing their own cells
+            // should be exempt from this but are not.
+            boolean requireMandatory = (editor.getUserId() == editee.getUserId());
+        
+            // applyCellChanges will set failed/errorMessage if mandatory requirements aren't met
+            applyCellChanges(context.getRequest().getParameterMap(), editee, requireMandatory);
 
         } catch (Throwable t) {
             
@@ -68,7 +74,9 @@ public class EditCells {
         
     }
     
-    private void applyCellChanges (Map<String,String[]> params, User user) {
+    private void applyCellChanges (Map<String,String[]> params, User user, boolean requireMandatory) {
+        
+        boolean mandatoryMissing = false;
         
         Set<Long> remove = stringsToLongSet(params.get("xc"));
         Set<Long> add = stringsToLongSet(params.get("c")); 
@@ -76,7 +84,10 @@ public class EditCells {
         
         for (Long r:remove) {
             try {
-                user.removeFromCell(Cell.findById(r));
+                Cell c = Cell.findById(r);
+                user.removeFromCell(c);
+                if (c.isMandatory())
+                    mandatoryMissing = true;
             } catch (Throwable t) {
                 System.err.println(t.getMessage());
             }
@@ -88,6 +99,14 @@ public class EditCells {
             } catch (Throwable t) {
                 System.err.println(t.getMessage());
             }
+        }
+        
+        // note that even in this case; cells are still modified. this doesn't really have any negative
+        // side effects and is a kludgy way to make sure the user's cell selections aren't lost if they
+        // are kicked back to the cell editor page.
+        if (requireMandatory && mandatoryMissing) {
+            failed = true;
+            errorMessage = "Some of the cells below are mandatory. You must sign up for them!";
         }
         
     }

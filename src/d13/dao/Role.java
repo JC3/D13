@@ -2,7 +2,12 @@ package d13.dao;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import org.hibernate.criterion.Order;
+
+import d13.util.HibernateUtil;
 
 public class Role implements Comparable<Role> {
 
@@ -22,6 +27,7 @@ public class Role implements Comparable<Role> {
     public static String VIEW_INVITES = "viewinvites";
     public static String LEAVE_COMMENTS = "comment";
     public static String VIEW_COMMENTS = "viewcomments";
+    public static String VIEW_ADMIN_DATA = "viewadmindata";
     
     private long roleId;
     private String name = "";
@@ -40,6 +46,7 @@ public class Role implements Comparable<Role> {
     private boolean viewInvites;
     private boolean leaveComments;
     private boolean viewComments;
+    private boolean viewAdminData;
     private Set<String> rights; 
     
     Role () {
@@ -61,60 +68,64 @@ public class Role implements Comparable<Role> {
         return !getRights().isEmpty();
     }
     
-    public boolean canViewUsers () {
+    @Privilege public boolean canViewUsers () {
         return viewUsers;
     }
     
-    public boolean canEditUsers () {
+    @Privilege public boolean canEditUsers () {
         return editUsers;
     }
     
-    public boolean canReviewUsers () {
+    @Privilege public boolean canReviewUsers () {
         return reviewUsers;
     }
     
-    public boolean canAdmitUsers () {
+    @Privilege public boolean canAdmitUsers () {
         return admitUsers;
     }
     
-    public boolean canFinalizeUsers () {
+    @Privilege public boolean canFinalizeUsers () {
         return finalizeUsers;
     }
    
-    public boolean canViewLogs () {
+    @Privilege public boolean canViewLogs () {
         return viewLogs;
     }
     
-    public boolean canEditDues () {
+    @Privilege public boolean canEditDues () {
         return editDues;
     }
     
-    public boolean canMaintenanceLogin () {
+    @Privilege public boolean canMaintenanceLogin () {
         return maintenanceLogin;
     }
     
-    public boolean canViewFullCells () {
+    @Privilege public boolean canViewFullCells () {
         return viewFullCells;
     }
    
-    public boolean canInviteUsers () {
+    @Privilege public boolean canInviteUsers () {
         return inviteUsers;
     }
     
-    public boolean isAlwaysInvited () {
+    @Privilege public boolean isAlwaysInvited () {
         return alwaysInvited;
     }
     
-    public boolean canViewInvites () {
+    @Privilege public boolean canViewInvites () {
         return viewInvites;
     }
     
-    public boolean canLeaveComments () {
+    @Privilege public boolean canLeaveComments () {
         return leaveComments;
     }
     
-    public boolean canViewComments () {
+    @Privilege public boolean canViewComments () {
         return viewComments;
+    }
+    
+    @Privilege public boolean canViewAdminData () {
+        return viewAdminData;
     }
     
     public Set<String> getRights () {
@@ -134,6 +145,7 @@ public class Role implements Comparable<Role> {
             if (viewInvites) rights.add(VIEW_INVITES);
             if (leaveComments) rights.add(LEAVE_COMMENTS);
             if (viewComments) rights.add(VIEW_COMMENTS);
+            if (viewAdminData) rights.add(VIEW_ADMIN_DATA);
             rights = Collections.unmodifiableSet(rights);
         }
         return rights;
@@ -162,4 +174,17 @@ public class Role implements Comparable<Role> {
             return -1;
     }
     
+    public static List<Role> findAll () {
+        
+        @SuppressWarnings("unchecked")
+        List<Role> roles = (List<Role>)HibernateUtil.getCurrentSession()
+                .createCriteria(Role.class)
+                .addOrder(Order.desc("level"))
+                .addOrder(Order.asc("roleId"))
+                .list();
+        
+        return roles;
+
+    }
+
 }

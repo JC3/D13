@@ -22,6 +22,7 @@ if (!user.getRole().isSpecial())
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Disorient</title>
 <link rel="stylesheet" type="text/css" href="disorient.css">
+<link rel="icon" href="favicon.ico">
 <style type="text/css">
 h1 { font-size: larger; font-weight: bold; }
 .section { padding-left: 4ex; }
