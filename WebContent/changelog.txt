@@ -1,3 +1,15 @@
+2016-07-11 19:32:24 EDT  jasonc
+
+    1.18e
+      - Ability to have certain cells be mandatory. (Rebecca)
+      - Bartending cell is now mandatory. (Rebecca)
+      - Added new privilege viewAdminData. (Jason)
+      - The site configuration view page now requires viewAdminData privilege. (Jason)
+      - Added a special user/role/privilege summary page, requires viewAdminData privilege. (Jason)
+      - Added icon for browser bars. (Jason)
+      - Cells and questionnaire text can be exported to CSV from /misc/index.jsp. (Jason)
+      - Clicking version # in footer shows changelog, except I forgot to add this version to the changelog, oops. (Jason)
+      
 2016-07-11 10:51:23 EDT  jasonc
 
     1.18d:
