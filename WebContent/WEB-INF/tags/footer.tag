@@ -1,5 +1,7 @@
 <%@ tag language="java" pageEncoding="ISO-8859-1"%>
 <%@ tag import="d13.ThisYear" %>
+<%@ tag import="d13.dao.*" %>
+<%@ tag import="d13.web.*" %>
 </div><!-- #dbody -->
 <div id="dfooter">
 
@@ -15,7 +17,12 @@ If you have any questions, <a href="mailto:camp@disorient.info?subject=Disorient
 </div>
 
 <div style="float:none;text-align:center;" class="version">
-<%=ThisYear.CAMP_YEAR %>-<%=ThisYear.SYSTEM_VERSION %>
+<%
+    SessionData sess = new SessionData(session);
+    User user = sess.isLoggedIn() ? sess.getUser() : null;
+    boolean cl = (user != null && user.getRole().canViewUsers());
+%>
+<%= cl ? "<a href=\"changelog.txt\">" : "" %><%=ThisYear.CAMP_YEAR %>-<%=ThisYear.SYSTEM_VERSION %><%= cl ? "</a>" : "" %>
 </div>
 
 </div>

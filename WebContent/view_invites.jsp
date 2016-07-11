@@ -43,6 +43,7 @@ boolean show_actions = sess.getUser().getRole().canInviteUsers();
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.0.min.js"></script>
 <script type="text/javascript" src="<%=root %>/ext/jquery.tooltipster.min.js"></script>
 <link rel="stylesheet" type="text/css" href="disorient.css">
+<link rel="icon" href="favicon.ico">
 <style type="text/css">
 #emailtext {
     width: 40ex;

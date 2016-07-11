@@ -73,6 +73,7 @@ String makeQuery (String qf, String sortby, String search) {
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.0.min.js"></script>
 <script type="text/javascript" src="<%=root %>/ext/jquery.tooltipster.min.js"></script>
 <link rel="stylesheet" type="text/css" href="disorient.css">
+<link rel="icon" href="favicon.ico">
 <style type="text/css">
 /*td { border-bottom: 1px solid black; border-right: 1px solid #e0e0e0; white-space: nowrap; vertical-align: top; }*/
 /*th { border-bottom: 1px solid black; border-right: 1px solid #e0e0e0; font-weight: bold; white-space: nowrap; }*/

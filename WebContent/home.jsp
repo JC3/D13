@@ -50,6 +50,7 @@ if (cs != null) {
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Disorient</title>
 <link rel="stylesheet" type="text/css" href="disorient.css"/>
+<link rel="icon" href="favicon.ico">
 </head>
 <body>
 <dis:header/>
@@ -132,12 +133,18 @@ here periodically for status updates!</div>
 <li><a href="view_finance.jsp">View Dues Report</a>
 <%   if (RuntimeOptions.Global.isInviteOnly()) { %>
 <%     if (user.getRole().canInviteUsers()) { %>
-<li><a href="view_invites.jsp">View/Manage Invites</a>
+<li><a href="view_invites.jsp">View / Manage Invites</a>
 <%     } else if (user.getRole().canViewInvites()) { %>
 <li><a href="view_invites.jsp">View Invites</a>
 <%     } %>
 <%   } %>
-<li><a href="view_options.jsp">View Site Configuration</a>
+<%   if (user.getRole().canViewAdminData()) { %>
+<li>System Info
+<ul>
+  <li><a href="view_roles.jsp">View Special Users / Privileges / Roles</a>
+  <li><a href="view_options.jsp">View Site Configuration</a>
+</ul>
+<%   } %>
 <li><a href="adminhelp.jsp">Help</a>
 </ul>
 <% } %>
