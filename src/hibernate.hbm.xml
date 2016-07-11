@@ -30,6 +30,17 @@
   PRIMARY KEY (`commentId`),
   KEY `subject` (`subject`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+   2016:
+   DB changes to make:
+  - profile location 5 ("New England") replace as other + text
+  - profile location other + "Austin" replace with 9
+  - drop groupLeaderId
+  - drop mealPreference
+  - delete from cells
+  - delete from user_cells
+  - rebuild cells from csv
+   
 	    
      -->
     
@@ -173,7 +184,7 @@
 		<property name="personalProject" type="text"/>
 		<property name="comments" type="text"/>
         <property name="haveVehiclePass" not-null="true"/>
-        <property name="tixSource" not-null="true"/>
+        <property name="tixSource" not-null="true" type="d13.dao.types.TicketSourceType"/>
     </class>
     
     <class name="d13.dao.ActivityLogEntry" table="activity_log">

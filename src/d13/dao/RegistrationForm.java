@@ -49,7 +49,7 @@ public class RegistrationForm {
     private String personalProject;
     private String comments;
     private boolean haveVehiclePass;
-    private int tixSource; // TODO: TixSourceSelection
+    private TicketSource tixSource = TicketSource.NONE; 
     
     RegistrationForm () {
     }
@@ -197,6 +197,10 @@ public class RegistrationForm {
     public Long getRvTypeId () {
         return rvType == null ? null : (long)rvType.toDBId();
     }
+    
+    public Long getTixSourceId () {
+        return tixSource == null ? null : (long)tixSource.toDBId();
+    }
 
     @DataView(i=191, n="Sharing Space With", longtext=true)
     public String getSharingWith() {
@@ -298,7 +302,7 @@ public class RegistrationForm {
     }
 
     @DataView(i=102, n="Ticket Source")
-    public int getTixSource() {
+    public TicketSource getTixSource() {
         return tixSource;
     }
 
@@ -389,8 +393,19 @@ public class RegistrationForm {
         this.haveVehiclePass = have;
     }
     
-    public void setTixSource(int tixSource) {
+    public void setTixSource(TicketSource tixSource) {
+        if (tixSource == null)
+            throw new IllegalArgumentException("Ticket source must be specified.");
         this.tixSource = tixSource;
+    }
+    
+    public void setTixSourceId (Long tixSourceId) {
+        if (tixSourceId == null)
+            throw new IllegalArgumentException("Ticket source must be specified.");
+        TicketSource ts = TicketSource.fromDBId((int)(long)tixSourceId);
+        if (ts == null)
+            throw new IllegalArgumentException("Invalid ticket source ID for ticket source.");
+        this.tixSource = ts;
     }
 
     public void setDrivingFromToOther (String drivingFromToOther) {

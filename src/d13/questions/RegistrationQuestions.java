@@ -5,6 +5,7 @@ import java.util.List;
 
 import d13.dao.Location;
 import d13.dao.RVSelection;
+import d13.dao.TicketSource;
 
 public class RegistrationQuestions {
 
@@ -168,10 +169,10 @@ public class RegistrationQuestions {
         q.addChoice("needRideFrom", "Departure", 1);
         qs.add(q);
 
-        q = Question.newSingleChoice("tixSource", "Do you have a regular BM ticket or a Disorient Group Sale ticket?", null);
-        q.addChoice("Regular", 0);
-        q.addChoice("Group Sale", 1);
-        q.addChoice("I don't have a ticket.", 2);
+        q = Question.newSingleChoice("tixSourceId", "Do you have a regular BM ticket or a Disorient Group Sale ticket?", null);
+        q.addChoice("Regular", TicketSource.REGULAR.toDBId());
+        q.addChoice("Group Sale", TicketSource.DGS.toDBId());
+        q.addChoice("I don't have a ticket.", TicketSource.NONE.toDBId());
         qs.add(q);
         
         q = Question.newSingleChoice("tixForSale", "Do you have any BM tickets for sale?", null);

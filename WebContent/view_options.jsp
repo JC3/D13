@@ -4,6 +4,7 @@
 <%@ page import="d13.*" %>
 <%@ page import="d13.web.*" %>
 <%@ page import="d13.util.Util" %>
+<%@ page import="d13.notify.BackgroundNotificationManager" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Collections" %>
@@ -25,7 +26,9 @@ if (!sess.getUser().getRole().isSpecial()) {
 
 List<RuntimeOptions.RuntimeOption> options = new ArrayList<RuntimeOptions.RuntimeOption>(RuntimeOptions.getOptions());
 options.add(new RuntimeOptions.RuntimeOption("$CAMP_YEAR", Integer.toString(ThisYear.CAMP_YEAR)));
-options.add(new RuntimeOptions.RuntimeOption("$SYSTEM_VERSION", ThisYear.SYSTEM_VERSION));          
+options.add(new RuntimeOptions.RuntimeOption("$SYSTEM_VERSION", ThisYear.SYSTEM_VERSION));
+options.add(new RuntimeOptions.RuntimeOption("$GRACE_PERIOD_DAYS", Integer.toString(ThisYear.GRACE_PERIOD_DAYS)));
+options.add(new RuntimeOptions.RuntimeOption("$BNM_POLL_INTERVAL", Integer.toString(BackgroundNotificationManager.POLL_INTERVAL)));
             
 Collections.sort(options, new Comparator<RuntimeOptions.RuntimeOption>() {
     @Override public int compare (RuntimeOptions.RuntimeOption a, RuntimeOptions.RuntimeOption b) {
@@ -37,6 +40,10 @@ Collections.sort(options, new Comparator<RuntimeOptions.RuntimeOption>() {
             return aglobal ? -1 : 1;
     }
 });
+
+List<DueCalculator.Tier> pdues = new ArrayList<DueCalculator.Tier>(), rdues = new ArrayList<DueCalculator.Tier>();
+ThisYear.setupPersonalTiers(pdues);
+ThisYear.setupRVTiers(rdues);
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -96,6 +103,30 @@ Collections.sort(options, new Comparator<RuntimeOptions.RuntimeOption>() {
 <tr>
   <td><%= Util.html(o.getName()) %>
   <td><%= value_html %>
+<% } %>
+</table>
+
+<table class="summary" cellspacing="0">
+<tr>
+    <th>Due Type
+    <th>Name
+    <th>Amount
+    <th>Deadline
+<% for (DueCalculator.Tier t : pdues) { 
+    String name_html = Util.html(t.getName()); %>
+<tr>
+    <td>Personal
+    <td><%= name_html %>
+    <td><%= Util.intAmountToString(t.getAmount()) %>
+    <td><%= DefaultDataConverter.objectAsString(t.getEnd()) %>
+<% } %>
+<% for (DueCalculator.Tier t : rdues) { 
+    String name_html = Util.html(t.getName()); %>
+<tr>
+    <td>R.V.
+    <td><%= name_html %>
+    <td><%= Util.intAmountToString(t.getAmount()) %>
+    <td><%= DefaultDataConverter.objectAsString(t.getEnd()) %>
 <% } %>
 </table>
 

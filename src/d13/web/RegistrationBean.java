@@ -44,7 +44,7 @@ public class RegistrationBean {
     private String personalProject;
     private String comments;
     private boolean haveVehiclePass;
-    private Long tixSource;
+    private Long tixSourceId;
     
     public RegistrationBean () {
     }
@@ -362,16 +362,16 @@ public class RegistrationBean {
         return haveVehiclePass;
     }
 
-    public Long getTixSource() {
-        return tixSource;
+    public Long getTixSourceId() {
+        return tixSourceId;
     }
 
     public void setHaveVehiclePass(boolean haveVehiclePass) {
         this.haveVehiclePass = haveVehiclePass;
     }
 
-    public void setTixSource(Long tixSource) {
-        this.tixSource = tixSource;
+    public void setTixSourceId(Long tixSourceId) {
+        this.tixSourceId = tixSourceId;
     }
 
 }

@@ -7,6 +7,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import d13.dao.Gender;
 import d13.dao.RVSelection;
+import d13.dao.TicketSource;
 import d13.dao.User;
 import d13.dao.UserState;
 
@@ -34,6 +35,8 @@ public class DefaultDataConverter implements DataConverter {
             return ((UserState)object).toString();
         else if (object instanceof RVSelection)
             return ((RVSelection)object).toString();
+        else if (object instanceof TicketSource)
+            return ((TicketSource)object).toDisplayString();
         else
             return object.toString();
     }

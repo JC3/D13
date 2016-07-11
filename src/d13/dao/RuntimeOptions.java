@@ -1,5 +1,6 @@
 package d13.dao;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -15,7 +16,10 @@ public class RuntimeOptions {
         RuntimeOption (String name) { this.name = name; }
         public RuntimeOption (String name, String value) { this.name = name; this.value = value; }
         public boolean isSecure () {
-            return name.startsWith("notify.smtp") || name.startsWith("dues.paypal");
+            if (SECURE_WHITELIST.contains(name))
+                return false;
+            else
+                return name.startsWith("notify.smtp") || name.startsWith("dues.paypal");
         }
         public String getName () {
             return name;
@@ -23,6 +27,13 @@ public class RuntimeOptions {
         public String getValue () {
             return value;
         }
+        private static final List<String> SECURE_WHITELIST = Arrays.asList(
+            "notify.smtp_host",
+            "notify.smtp_port",
+            "notify.smtp_auth",
+            "notify.smtp_tls",
+            "notify.smtp_ssl"
+        );
     }
  
     public static void setOption (String name, String value, Session session) {

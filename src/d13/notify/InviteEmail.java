@@ -43,7 +43,7 @@ public class InviteEmail extends Email {
         sb.append("<p>Dear [realname],</p>");
 
         sb.append("<p>It is our Sweet 16 and preparations are well underway for our annual pilgrimage. This message is sent again with love and a dedication to radical self-reliance. May you have your best Burn yet!</p>");
-        sb.append("<p>In 2016 Disorient, we will continue to conduct a social experiment of our own, moving further towards a smaller 150 person camp, with an invite-only system. This is an exercise in going \"Tighter and Brighter\" as our camp population will be somewhat reduced to fine-tune, document, and share our best practices. Our collective experience enables us to envision a better camp on many levels. There are no tourists in D16ORIENT.</p>");
+        sb.append("<p>In 2016 Disorient, we will continue to conduct a social experiment of our own. This is an exercise in going \"Tighter and Brighter\" as our camp population will be somewhat reduced to fine-tune, document, and share our best practices. Our collective experience enables us to envision a better camp on many levels. There are no tourists in D16ORIENT.</p>");
         sb.append("<p>This is an invitation to apply to join us! Unfortunately, we cannot guarantee a spot in camp for all applicants. It is up to all of us to build our camp together, and the best way you can become involved this year is to participate and commit to creating Disorient for you and your fellow Disorienters.</p>");
         sb.append("<p>Here are some of the important roles available this year. If you think you can help in any of these areas, please sign up for the related cells on the registration application:</p>");
         sb.append("<ul>");

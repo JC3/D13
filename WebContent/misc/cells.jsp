@@ -3,6 +3,7 @@
 <%@ page import="d13.dao.*" %>
 <%@ page import="d13.web.*" %>
 <%@ page import="d13.util.Util" %>
+<%@ page import="d13.web.MiscTable" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Collection" %>
 <%@ page import="java.util.ArrayList" %>
@@ -30,6 +31,27 @@ if (!sess.getUser().getRole().canViewUsers())
 
 List<Cell> cells = new ArrayList<Cell>();
 buildCellList(cells, Cell.findRoot());
+
+MiscTable table = new MiscTable();
+table.setDefaultStyles("cat", "name", "people", "hide", "desc");
+table.setHeader("Category", "Name", "People", "Hide when full?", "Description");
+
+for (Cell c : cells) {
+    MiscTable.Row row = table.addRow();
+    row.add(c.getParentName());
+    row.add(c.getName());
+    row.add(Integer.toString(c.getPeople()));
+    row.add(c.isHideWhenFull() ? "Yes" : "No");
+    row.add(c.getDescription());
+}
+
+if (request.getParameterMap().containsKey("download")) {
+    response.resetBuffer();
+    response.setContentType("text/csv");
+    response.setHeader("Content-Disposition", "attachment;filename=cells.csv");
+    table.setShowHeader(false).toCSV(out);
+    return;
+}
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -45,22 +67,11 @@ th.hide { white-space: nowrap; }
 </head>
 <body>
 
-<table border="1">
-<tr>
-    <th class="name">Name</th>
-    <th class="people">People</th>
-    <th class="hide">Hide when full?</th>
-    <th class="desc">Description</th>
-</tr>
-<% for (Cell c : cells) { %>
-<tr>
-    <td class="name"><%=Util.html(c.getFullName()) %></td>
-    <td class="people"><%=c.getPeople() %></td>
-    <td class="hide"><%=c.isHideWhenFull() ? "Yes" : "No" %></td>
-    <td class="desc"><%=Util.html(c.getDescription()) %></td>
-</tr>
-<% } %>
-</table>
+<p><a href="cells.jsp?download">Download CSV</a></p>
+<hr>
+<%= table.setShowHeader(true).toHTMLTable() %>
+<hr>
+<textarea rows="10" cols="80"><%= Util.html(table.setShowHeader(false).toCSV()) %></textarea>
 
 </body>
 </html>

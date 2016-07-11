@@ -25,6 +25,9 @@ public class DueCalculator {
         public int getAmount () {
             return amount;
         }
+        public DateTime getEnd () {
+            return end;
+        }
     }
     
     public static class Amount {

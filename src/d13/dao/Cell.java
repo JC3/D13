@@ -95,6 +95,13 @@ public class Cell {
             return getName();
     }
     
+    public String getParentName () {
+        if (parent != null && !parent.getName().equals(ROOT_NAME))
+            return parent.getFullName();
+        else
+            return null;
+    }
+    
     public String getName() {
         return name;
     }
