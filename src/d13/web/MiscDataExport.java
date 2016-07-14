@@ -80,8 +80,8 @@ public class MiscDataExport {
         List<Cell> cells = new ArrayList<Cell>();
         buildCellList(cells, Cell.findRoot());
 
-        table.setDefaultStyles("cat", "name", "people", "hide", "mand", "desc");
-        table.setHeader("Category", "Name", "People", "Hide when full?", "Mandatory?", "Description");
+        table.setDefaultStyles("cat", "name", "people", "hide", "mand", "hidn", "desc");
+        table.setHeader("Category", "Name", "People", "Hide when full?", "Mandatory?", "Hidden?", "Description");
 
         for (Cell c : cells) {
             MiscTable.Row row = table.addRow();
@@ -90,6 +90,7 @@ public class MiscDataExport {
             row.add(Integer.toString(c.getPeople()));
             row.add(c.isHideWhenFull() ? "Yes" : "No");
             row.add(c.isMandatory() ? "Yes" : "No");
+            row.add(c.isHidden() ? "Yes" : "No");
             row.add(c.getDescription());
         }
 

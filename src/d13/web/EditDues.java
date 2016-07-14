@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 
 import d13.dao.DueItem;
 import d13.dao.User;
@@ -66,6 +67,13 @@ public class EditDues {
             user.getPersonalDueItem().setCustomAmount(personalCustom ? personalAmount : DueItem.NO_CUSTOM_AMOUNT);
             user.getRvDueItem().setCustomAmount(rvCustom ? rvAmount : DueItem.NO_CUSTOM_AMOUNT);
             user.setCustomDueComments(bean.getExplain());
+            
+            String reason = StringUtils.trimToNull(bean.getExplain());
+            String log = String.format("Custom dues set (Personal:%s, RV:%s). Reason: %s",
+                    personalCustom ? Util.intAmountToString(personalAmount) : "Default",
+                    rvCustom ? Util.intAmountToString(rvAmount) : "Default",
+                    reason == null ? "None Given" : reason);
+            user.addComment(session.getUser(), log); // add as comment, seems more appropriate, i think
             
         } catch (InvocationTargetException x) {
             

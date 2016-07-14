@@ -33,6 +33,8 @@ if (!sess.isLoggedIn()) {
 if (!sess.getUser().getRole().canViewUsers())
     return;
 
+boolean canEdit = sess.getUser().getRole().canEditCells();
+
 List<Cell> cells = new ArrayList<Cell>();
 buildCellList(cells, Cell.findRoot());
 
@@ -97,6 +99,36 @@ table.volunteers th {
     white-space:nowrap;
     background:#603000;
 }
+.indicator {
+    font-family:"Consolas", "Monaco", "Courier New", monospace;
+    font-size:90%;
+    color:#cccccc;
+}
+td.indicator {
+    text-align:center;
+    padding-right:2px;
+}
+.indicator-empty {
+    color:red;
+}
+.indicator-full {
+    color:yellow !important;
+}
+.history {
+}
+.history h1 {
+    font-size: medium;
+    color: #ff8000;
+}
+.history .who {
+    font-size: small;
+    color: #ffeedd;
+}
+.history .desc {
+    font-size: small;
+    color: #ffeedd;
+    padding-left: 4ex;
+}
 </style>
 <script language="JavaScript" type="text/javascript">
 function showDetails (id) {
@@ -140,13 +172,36 @@ function displayAnchor () {
 <table width="100%">
 
 <tr><td id="leftside">
-<% for (Cell cell:cells) { %>
-<a href="javascript:showDetails('<%=cell.getCellId() %>');"><%=Util.html(cell.getFullName()) %></a><br>
+
+  <table border="0" cellspacing="0" cellpadding="0">
+<% for (Cell cell:cells) { 
+    int max = cell.getPeople();
+    int tot = cell.getUsers().size();
+    String excls = "";
+    if (cell.isFull()) excls += " indicator-full";
+    if (cell.getUsers().isEmpty()) excls += " indicator-empty";
+%>
+    <tr>
+      <td class="indicator"><%= cell.isHidden() ? "H" : "" %>
+      <td class="indicator"><%= cell.isMandatory() ? "M" : "" %>
+      <td class="indicator<%= excls %>"><%= ((max > 0) ? String.format("%2d/%2d", tot, max) : String.format("%2d   ", tot)).replaceAll(" ", "&nbsp;") %>
+      <td style="padding-left:4px"><a href="javascript:showDetails('<%=cell.getCellId() %>');"><%=Util.html(cell.getFullName()) %></a><br>
 <% } %>
+  </table>
 
 <td id="rightside">
 <div id="instructions">
-Click a cell on the left to view details.
+<p>Click a cell on the left to view details. The numbers and letters to the left of the cell names mean:</p>
+<ul>
+<li>An <span class="indicator">H</span> means the cell is hidden.
+<li>An <span class="indicator">M</span> means the cell is mandatory.
+<li>The number of people in the cell and total number of people needed is also shown.
+<li>If the number is <span class="indicator-empty">red</span> then the cell is empty.
+<li>If the number is <span class="indicator-full">yellow</span> then the cell is full.
+</ul>
+<% if (canEdit) { %>
+<p>You can edit cell descriptions and such by clicking a cell name then clicking the edit link in the details.</p>
+<% } %>
 </div>
 <% for (Cell cell:cells) { 
 List<User> approved = new ArrayList<User>();
@@ -238,8 +293,30 @@ java.util.Collections.sort(pending, new User.RealNameComparator());
 
 </table>
 
-</div>
+<% if (canEdit) {
+    List<CellActivityLogEntry> logs = cell.getActivityLog();
+    %>
+<hr>
+<p><a href="editcell.jsp?c=<%= cell.getCellId() %>&next=<%= this_url %>%23<%= cell.getCellId() %>">Edit Cell Details</a></p>
+  <% if (logs != null && !logs.isEmpty()) { %>
+  <div class="history">
+  <h1>Edit History:</h1>
+    <%
+       DefaultDataConverter ddc = new DefaultDataConverter();
+       for (CellActivityLogEntry e:logs) { 
+          String datestr = Util.html(ddc.asString(e.getTime()));
+          String whostr = Util.html(e.getByWho().getEmail());
+          String descstr = Util.html(e.getDescription()); 
+    %>
+          <div class="who"><%=datestr%>, <a href="mailto:<%=whostr%>"><%=whostr%></a>:</div>
+          <div class="desc"><%=descstr%></div>
+    <% } %>
+  </div>
+  <% } %>
 <% } %>
+
+</div>
+<% } /* end loop over each cell */ %>
 </table>
 
 </div>

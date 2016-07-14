@@ -32,6 +32,7 @@ public class SessionData {
     public static final String SA_DUES_INVOICE_ID = "jsp.dueconfirm.invoice_id";
     public static final String SA_EDIT_DUES_ERROR = "jsp.editdues.error";
     public static final String SA_EDIT_DUES_DEFAULTS = "jsp.editdues.defaults";
+    public static final String SA_EDIT_CELL_ERROR = "jsp.editcell.error";
     public static final String SA_PWRESET_ERROR = "jsp.pwreset.error";
     public static final String SA_MANAGE_INVITES_ERROR = "jsp.invites.error";
     public static final String SA_MANAGE_INVITES_WARNING = "jsp.invites.warning";
@@ -39,6 +40,7 @@ public class SessionData {
     public static final String SA_MANAGE_INVITES_EXPIRES = "jsp.invites.expires";
     public static final String SA_MANAGE_INVITES_COMMENT = "jsp.invites.comment";
     public static final String SA_INVITE_ERROR = "jsp.invite.error";
+    public static final String SA_EDIT_ANNOUNCE_ERROR = "jsp.editannounce.error";
     
     //private static final String SA_EMAIL = "info.disorient.SessionData.email";
     private static final String SA_USERID = "info.disorient.SessionData.userid";

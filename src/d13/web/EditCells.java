@@ -36,8 +36,7 @@ public class EditCells {
                 throw new SecurityException("Permission denied.");
             
             // simple logic for now: if user is editing their own cells assume they are in reg flow and
-            // do not let them proceed if mandatory cells are missing. bug: admins editing their own cells
-            // should be exempt from this but are not.
+            // do not let them proceed if mandatory cells are missing. 
             boolean requireMandatory = (editor.getUserId() == editee.getUserId());
         
             // applyCellChanges will set failed/errorMessage if mandatory requirements aren't met
@@ -76,18 +75,13 @@ public class EditCells {
     
     private void applyCellChanges (Map<String,String[]> params, User user, boolean requireMandatory) {
         
-        boolean mandatoryMissing = false;
-        
         Set<Long> remove = stringsToLongSet(params.get("xc"));
         Set<Long> add = stringsToLongSet(params.get("c")); 
         remove.removeAll(add);
         
         for (Long r:remove) {
             try {
-                Cell c = Cell.findById(r);
-                user.removeFromCell(c);
-                if (c.isMandatory())
-                    mandatoryMissing = true;
+                user.removeFromCell(Cell.findById(r));
             } catch (Throwable t) {
                 System.err.println(t.getMessage());
             }
@@ -104,7 +98,7 @@ public class EditCells {
         // note that even in this case; cells are still modified. this doesn't really have any negative
         // side effects and is a kludgy way to make sure the user's cell selections aren't lost if they
         // are kicked back to the cell editor page.
-        if (requireMandatory && mandatoryMissing) {
+        if (requireMandatory && !user.isInMandatoryCells()) {
             failed = true;
             errorMessage = "Some of the cells below are mandatory. You must sign up for them!";
         }
