@@ -154,6 +154,11 @@ public class Cell {
         return (people > 0 && users.size() >= people);
     }
     
+    // TODO: use isReallyHidden() for logic in CellList and elsewhere, right now only used in view_cells2.jsp
+    public boolean isReallyHidden () {
+        return isHidden() || (isFull() && isHideWhenFull());
+    }
+    
     public List<CellActivityLogEntry> getActivityLog () {
         return Collections.unmodifiableList(activityLog);
     }
