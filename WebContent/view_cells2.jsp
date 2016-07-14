@@ -114,6 +114,21 @@ td.indicator {
 .indicator-full {
     color:yellow !important;
 }
+.cell-mandatory {
+    background:#800000;
+}
+.cell-hidden {
+    color: #bb6000;
+}
+td.cell-hidden a:link {
+    color: #bb6000;
+}
+td.cell-hidden a:visited {
+    color: #bb6000;
+}
+td.cell-hidden a:active {
+    color: #bb6000;
+}
 .history {
 }
 .history h1 {
@@ -178,14 +193,16 @@ function displayAnchor () {
     int max = cell.getPeople();
     int tot = cell.getUsers().size();
     String excls = "";
+    String nexcls = "";
     if (cell.isFull()) excls += " indicator-full";
     if (cell.getUsers().isEmpty()) excls += " indicator-empty";
+    if (cell.isMandatory()) nexcls += " cell-mandatory";
+    if (cell.isReallyHidden()) nexcls += " cell-hidden";
 %>
     <tr>
-      <td class="indicator"><%= cell.isHidden() ? "H" : "" %>
-      <td class="indicator"><%= cell.isMandatory() ? "M" : "" %>
+      <td class="indicator"><%= cell.isHidden() ? "H" : (cell.isHideWhenFull() ? "A" : "") %>
       <td class="indicator<%= excls %>"><%= ((max > 0) ? String.format("%2d/%2d", tot, max) : String.format("%2d   ", tot)).replaceAll(" ", "&nbsp;") %>
-      <td style="padding-left:4px"><a href="javascript:showDetails('<%=cell.getCellId() %>');"><%=Util.html(cell.getFullName()) %></a><br>
+      <td class="<%= nexcls %>" style="padding-left:4px"><a href="javascript:showDetails('<%=cell.getCellId() %>');"><%=Util.html(cell.getFullName()) %></a><br>
 <% } %>
   </table>
 
@@ -193,12 +210,17 @@ function displayAnchor () {
 <div id="instructions">
 <p>Click a cell on the left to view details. The numbers and letters to the left of the cell names mean:</p>
 <ul>
-<li>An <span class="indicator">H</span> means the cell is hidden.
-<li>An <span class="indicator">M</span> means the cell is mandatory.
+<li>An <span class="indicator">H</span> means the cell is set to always be hidden.
+<li>An <span class="indicator">A</span> means the cell is set to auto hide when full.
+<li>If the cell name is <span class="cell-hidden">dark orange</span> then it is currently hidden as per above rules.
 <li>The number of people in the cell and total number of people needed is also shown.
 <li>If the number is <span class="indicator-empty">red</span> then the cell is empty.
 <li>If the number is <span class="indicator-full">yellow</span> then the cell is full.
+<li>If the cell name is highlighted <span class="cell-mandatory">red</span> then the cell is mandatory.
 </ul>
+<p>Cells that are <span class="cell-mandatory">mandatory</span> but also <span class="cell-hidden">hidden</span> are weird and should be avoided.
+They won't cause problems for users but do take up space adding warnings to the server logs and are probably a general sign that the cell's rules and
+purpose should be reconsidered.</p>
 <% if (canEdit) { %>
 <p>You can edit cell descriptions and such by clicking a cell name then clicking the edit link in the details.</p>
 <% } %>

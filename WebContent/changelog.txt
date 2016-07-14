@@ -1,18 +1,23 @@
+2016-07-14 13:26:20 EDT  jasonc
+
+    1.18f2
+    - some tweaks to the styling in the cell list on view_cells2.jsp
+
 2016-07-14 00:02:35 EDT  jasonc
 
     1.18f
-      - cells can be marked as hidden (e.g. if we've got them taken care of internally)
-      - cleaned up some mandatory cell logic internally
-      - full cells ignore mandatory status (this would be a setup mistake anyways)
-      - for administrators hidden cells show up as blue in the cell list
-      - hidden cells ignore mandatory status (users would get stuck on cells page)
-      - cell view page now displays hidden/mandatory/volunteer count status in the list
-      - new edit cells privilege
-      - cell editor (can't create/delete/move cells; but can edit descriptions, etc.)
-      - cell signup page now displays newlines in cell descriptions
-      - custom due changes are now logged and displayed in the comment log on the users detail page
-      - new edit announcement privilege
-      - site announcement can now be edited
+    - cells can be marked as hidden (e.g. if we've got them taken care of internally)
+    - cleaned up some mandatory cell logic internally
+    - full cells ignore mandatory status (this would be a setup mistake anyways)
+    - for administrators hidden cells show up as blue in the cell list
+    - hidden cells ignore mandatory status (users would get stuck on cells page)
+    - cell view page now displays hidden/mandatory/volunteer count status in the list
+    - new edit cells privilege
+    - cell editor (can't create/delete/move cells; but can edit descriptions, etc.)
+    - cell signup page now displays newlines in cell descriptions
+    - custom due changes are now logged and displayed in the comment log on the users detail page
+    - new edit announcement privilege
+    - site announcement can now be edited
 
 2016-07-11 19:32:24 EDT  jasonc
 
