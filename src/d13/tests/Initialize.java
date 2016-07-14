@@ -60,7 +60,7 @@ public class Initialize {
             Reader reader = new FileReader("cells.csv");
             for (CSVRecord record : CSVFormat.EXCEL.parse(reader)) {
                 
-                if (record.size() < 5)
+                if (record.size() < 6)
                     continue;
                 
                 String category = record.get(0).trim();
@@ -72,9 +72,10 @@ public class Initialize {
                 }
                 boolean hide = record.get(3).trim().toLowerCase().startsWith("y");
                 boolean mand = record.get(4).trim().toLowerCase().startsWith("y");
-                String desc = (record.size() < 5 ? null : record.get(5).trim());
+                boolean hidn = record.get(5).trim().toLowerCase().startsWith("y");
+                String desc = (record.size() < 6 ? null : record.get(6).trim());
                 
-                System.out.println(category  +" -> " + name + " -> " + people + " -> " + hide + " -> " + mand);
+                System.out.println(category  +" -> " + name + " -> " + people + " -> " + hide + " -> " + mand + " -> " + hidn);
                 System.out.println("  " + desc);
                 
                 Cell cat = categories.get(category);
@@ -88,6 +89,7 @@ public class Initialize {
                 cell.setDescription(desc);
                 cell.setHideWhenFull(hide);
                 cell.setMandatory(mand);
+                cell.setHidden(hidn);
                 
             }
             

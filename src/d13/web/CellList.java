@@ -48,10 +48,13 @@ public class CellList {
         
         boolean isInCell = user.isInCell(cell);
         
-        if (cellfull && cell.isHideWhenFull()) {
+        if ((cellfull && cell.isHideWhenFull()) || cell.isHidden()) {
             if (user.getRole().canViewFullCells()) {
                 trstyle = "";
-                titlestyle = " style=\"color:red;\"";
+                if (cell.isHidden())
+                    titlestyle = " style=\"color:cyan;\""; // hidden cells are yellow i guess
+                else
+                    titlestyle = " style=\"color:red;\""; // full cells are red
             } else if (!isInCell) {
                 trstyle = " style=\"display:none;\"";
                 titlestyle = "";
@@ -60,13 +63,14 @@ public class CellList {
         
         String tdstyle = "";
         String titleexclass = "";
-        if (cell.isMandatory()) {
+        boolean mandatory = cell.isMandatoryFor(user);
+        if (mandatory) {
             tdstyle = " class=\"mandatory-cell-left\"";
             titleexclass += " mandatory-cell-title";
         }
         
         out.println(String.format("<tr%s><td%s width=\"100%%\">", trstyle, tdstyle));
-        out.println(String.format("<div class=\"cellname%s\"%s>%s%s</div>", titleexclass, titlestyle, cell.isMandatory() ? "REQUIRED: " : "", Util.html(cell.getFullName())));
+        out.println(String.format("<div class=\"cellname%s\"%s>%s%s</div>", titleexclass, titlestyle, mandatory ? "REQUIRED: " : "", Util.html(cell.getFullName())));
                 
         if (volunteers != null)
             out.println(String.format("<div class=\"cellvol\">%s</div>", Util.html(volunteers)));
@@ -74,11 +78,19 @@ public class CellList {
         String desc = cell.getDescription();
         if (desc != null && !desc.trim().isEmpty()) {
             out.println(String.format("<div class=\"celllink\" id=\"celllink_%s\"><a href=\"#\" onclick=\"return showMore(%s);\">[ Read More ]</a></div>", cell.getCellId(), cell.getCellId()));
-            out.println(String.format("<div class=\"celldesc\" id=\"celldesc_%s\">%s</div>", cell.getCellId(), Util.html(desc)));
+            out.println(String.format("<div class=\"celldesc\" id=\"celldesc_%s\">%s</div>", cell.getCellId(), addLineBreaks(Util.html(desc))));
         }
         
         out.println(String.format("<td class=\"cellcheck\"><div><input type=\"hidden\" name=\"xc\" value=\"%s\"><input type=\"checkbox\" name=\"c\" value=\"%s\"%s>Volunteer!</div>", cell.getCellId(), cell.getCellId(), isInCell ? " checked" : ""));
         
     }
-       
+     
+    
+    private static String addLineBreaks (String html) {
+        
+        return html.trim().replaceAll("\\n", "<br>").replaceAll("\\r", "");
+        
+    }
+    
+    
 }

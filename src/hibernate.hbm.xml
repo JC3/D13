@@ -115,6 +115,8 @@
         <property name="leaveComments" not-null="true"/>
         <property name="viewComments" not-null="true"/>
         <property name="viewAdminData" not-null="true"/>
+        <property name="editCells" not-null="true"/>
+        <property name="editAnnouncements" not-null="true"/>
     </class>
 
     <class name="d13.dao.RuntimeOptions$RuntimeOption" table="options">
@@ -203,6 +205,14 @@
         <property name="time" not-null="true" type="d13.dao.types.DateTimeType"/>
         <property name="comment" not-null="true"/>
     </class>
+    
+    <class name="d13.dao.CellActivityLogEntry" table="cell_activity_log">
+        <id name="entryId"><generator class="native"/></id>
+        <many-to-one name="toCell" class="d13.dao.Cell" not-null="true"/>
+        <many-to-one name="byWho" class="d13.dao.User" not-null="true"/>
+        <property name="time" not-null="true" type="d13.dao.types.DateTimeType"/>
+        <property name="description" not-null="true"/>
+    </class>
 
     <class name="d13.dao.Invite" table="invites">
         <id name="inviteId"><generator class="native"/></id>
@@ -280,6 +290,7 @@
         <property name="startDate"/>
         <property name="endDate"/>
         <property name="mandatory" not-null="true"/>
+        <property name="hidden" not-null="true"/>
         <set name="users" inverse="true" table="users_cells">
             <key column="cellId"/>
             <many-to-many column="userId" class="d13.dao.User"/>
@@ -288,6 +299,11 @@
             <key column="parent"/>
             <index column="`index`"/>
             <one-to-many class="d13.dao.Cell"/>
+        </list>
+        <list name="activityLog" cascade="all">
+            <key column="toCell"/>
+            <index column="`index`"/>
+            <one-to-many class="d13.dao.CellActivityLogEntry"/>
         </list>
     </class>
 

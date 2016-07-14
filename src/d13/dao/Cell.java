@@ -25,8 +25,10 @@ public class Cell {
     private boolean category;
     private boolean hideWhenFull;
     private boolean mandatory;
+    private boolean hidden;
     private Set<User> users = new HashSet<User>(0);
     private List<Cell> children = new ArrayList<Cell>();
+    private List<CellActivityLogEntry> activityLog = new ArrayList<CellActivityLogEntry>();
     
     Cell () {
     }
@@ -127,6 +129,35 @@ public class Cell {
         return mandatory;
     }
     
+    public boolean isHidden () {
+        return hidden;
+    }
+    
+    public boolean isMandatoryFor (User user) {
+        if (user == null || !isMandatory()) {
+            return false;
+        }
+        if (isHidden()) { // cell is hidden; do not make hidden cells mandatory, users will get stuck
+            System.err.println("WARNING: Mandatory cell is hidden; ignoring mandatory status: " + getCellId() + " " + getFullName());
+            return false;
+        }
+        if (getPeople() > 0 && getUsers().size() >= getPeople()) { // cell is full; do not make full cells mandatory, users will get stuck on cell page
+            System.err.println("WARNING: Mandatory cell is full; ignoring mandatory status: " + getCellId() + " " + getFullName());
+            return false;
+        }
+        // TODO: administrators? special right for that? for now make them required for admins.
+        return true;
+    }
+    
+    // TODO: use isFull() for logic in CellList and elsewhere, right now only used in view_cells2.jsp
+    public boolean isFull () {
+        return (people > 0 && users.size() >= people);
+    }
+    
+    public List<CellActivityLogEntry> getActivityLog () {
+        return Collections.unmodifiableList(activityLog);
+    }
+    
     public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
@@ -157,6 +188,10 @@ public class Cell {
         this.mandatory = m;
     }
     
+    public void setHidden (boolean h) {
+        this.hidden = h;
+    }
+    
     void addUser (User user) {
         if (user != null)
             users.add(user);
@@ -165,6 +200,35 @@ public class Cell {
     void removeUser (User user) {
         if (user != null)
             users.remove(user);
+    }
+    
+    public void addActivityLogEntry (CellActivityLogEntry entry) {
+        if (entry != null)
+            activityLog.add(entry);
+    }
+
+    public static int CHANGED_NAME = 1<<0;
+    public static int CHANGED_DESCRIPTION = 1<<1;
+    public static int CHANGED_PEOPLE = 1<<2;
+    public static int CHANGED_HIDEWHENFULL = 1<<3;
+    public static int CHANGED_MANDATORY = 1<<4;
+    public static int CHANGED_HIDDEN = 1<<5;
+    
+    public void addEditedActivityLogEntry (User who, int whatChanged) {
+        String entry = "";
+        if ((whatChanged & CHANGED_PEOPLE) != 0)
+            entry += String.format(", Volunteers: %d", people);
+        if ((whatChanged & CHANGED_HIDEWHENFULL) != 0)
+            entry += String.format(", Auto-hide: %s", hideWhenFull ? "Yes" : "No");
+        if ((whatChanged & CHANGED_MANDATORY) != 0)
+            entry += String.format(", Mandatory: %s", mandatory ? "Yes" : "No");
+        if ((whatChanged & CHANGED_HIDDEN) != 0)
+            entry += String.format(", Hidden: %s", hidden ? "Yes" : "No");
+        if ((whatChanged & CHANGED_NAME) != 0)
+            entry += String.format(", Name: \"%s\"", name);
+        if ((whatChanged & CHANGED_DESCRIPTION) != 0)
+            entry += String.format(", Text: \"%s\"", description);
+        addActivityLogEntry(new CellActivityLogEntry(this, who, "Details edited" + entry));
     }
     
     public static Cell findById (Long id) {
@@ -201,6 +265,11 @@ public class Cell {
 
     }
     
+    /**
+     * This returns *all* mandatory cells (i.e. all cells that might be mandatory for a user). Further
+     * per-user filtering should be done {@link Cell#isMandatoryFor(User)} to check for specific users.
+     * All site business logic goes through that (BUG: except the view_data.jsp quick filter, TODO).
+     */
     public static List<Cell> findMandatory () {
         
         @SuppressWarnings("unchecked")

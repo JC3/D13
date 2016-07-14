@@ -102,14 +102,14 @@ public class User {
         // 2016 - added ability for cells to be mandatory; mandatory cells do not count towards warning threshold
         int cellCount = 0;
         for (Cell c : cells)
-            if (!c.isMandatory())
+            if (!c.isMandatoryFor(this))
                 ++ cellCount;
         return cellCount > LOW_CELL_THRESHOLD;
     }
     
     public boolean isInMandatoryCells () {
         for (Cell c : Cell.findMandatory())
-            if (!isInCell(c))
+            if (c.isMandatoryFor(this) && !isInCell(c))
                 return false;
         return true;
     }

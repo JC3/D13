@@ -22,12 +22,14 @@ public class Role implements Comparable<Role> {
     public static String EDIT_DUES = "editdues";
     public static String MAINTENANCE_LOGIN = "maintlogin";
     public static String VIEW_FULL_CELLS = "viewfullcells";
+    public static String EDIT_CELLS = "editcells";
     public static String INVITE_USERS = "inviteu";
     public static String ALWAYS_INVITED = "alwaysinvited";
     public static String VIEW_INVITES = "viewinvites";
     public static String LEAVE_COMMENTS = "comment";
     public static String VIEW_COMMENTS = "viewcomments";
     public static String VIEW_ADMIN_DATA = "viewadmindata";
+    public static String EDIT_ANNOUNCEMENTS = "editannounce";
     
     private long roleId;
     private String name = "";
@@ -41,12 +43,14 @@ public class Role implements Comparable<Role> {
     private boolean editDues;
     private boolean maintenanceLogin;
     private boolean viewFullCells;
+    private boolean editCells;
     private boolean inviteUsers;
     private boolean alwaysInvited;
     private boolean viewInvites;
     private boolean leaveComments;
     private boolean viewComments;
     private boolean viewAdminData;
+    private boolean editAnnouncements;
     private Set<String> rights; 
     
     Role () {
@@ -103,6 +107,10 @@ public class Role implements Comparable<Role> {
     @Privilege public boolean canViewFullCells () {
         return viewFullCells;
     }
+    
+    @Privilege public boolean canEditCells () {
+        return editCells;
+    }
    
     @Privilege public boolean canInviteUsers () {
         return inviteUsers;
@@ -128,6 +136,10 @@ public class Role implements Comparable<Role> {
         return viewAdminData;
     }
     
+    @Privilege public boolean canEditAnnouncements () {
+        return editAnnouncements;
+    }
+    
     public Set<String> getRights () {
         if (rights == null) {
             rights = new HashSet<String>();
@@ -140,12 +152,14 @@ public class Role implements Comparable<Role> {
             if (editDues) rights.add(EDIT_DUES);
             if (maintenanceLogin) rights.add(MAINTENANCE_LOGIN);
             if (viewFullCells) rights.add(VIEW_FULL_CELLS);
+            if (editCells) rights.add(EDIT_CELLS);
             if (inviteUsers) rights.add(INVITE_USERS);
             if (alwaysInvited) rights.add(ALWAYS_INVITED);
             if (viewInvites) rights.add(VIEW_INVITES);
             if (leaveComments) rights.add(LEAVE_COMMENTS);
             if (viewComments) rights.add(VIEW_COMMENTS);
             if (viewAdminData) rights.add(VIEW_ADMIN_DATA);
+            if (editAnnouncements) rights.add(EDIT_ANNOUNCEMENTS);
             rights = Collections.unmodifiableSet(rights);
         }
         return rights;

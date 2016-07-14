@@ -3,6 +3,7 @@ package d13.dao;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 
 import d13.util.HibernateUtil;
@@ -120,6 +121,12 @@ public class RuntimeOptions {
         /** Returns null, or returns style. Never returns empty string. */
         public static String getLoggedInAnnouncementStyleOverride () {
             return nullOrElse("announcement.login.style");
+        }
+        
+        /** Set log in announcement, null to clear. */
+        public static void setLoggedInAnnouncement (String announce) {
+            announce = StringUtils.trimToNull(announce);
+            RuntimeOptions.setOption("announcement.login", announce);
         }
 
     }

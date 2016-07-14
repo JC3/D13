@@ -128,7 +128,7 @@ here periodically for status updates!</div>
   <li><a href="view_data.jsp?qf=9">Only not-yet-approved users that need to sign up for work cells.</a>
   <li><a href="view_data.jsp?qf=10">Only approved users that need to sign up for work cells.</a>  
 </ul>
-<li><a href="view_cells2.jsp">View Cells</a>
+<li><a href="view_cells2.jsp">View<%= user.getRole().canEditCells() ? " / Edit" : "" %> Cells</a>
 <!-- <li><a href="view_groups.jsp">View Camper Groups</a> (removed for 2016 when group leader went away) -->
 <li><a href="view_finance.jsp">View Dues Report</a>
 <%   if (RuntimeOptions.Global.isInviteOnly()) { %>
@@ -137,6 +137,9 @@ here periodically for status updates!</div>
 <%     } else if (user.getRole().canViewInvites()) { %>
 <li><a href="view_invites.jsp">View Invites</a>
 <%     } %>
+<%   } %>
+<%   if (user.getRole().canEditAnnouncements()) { %>
+<li><a href="editannounce.jsp">Edit Announcement Message</a>
 <%   } %>
 <%   if (user.getRole().canViewAdminData()) { %>
 <li>System Info
