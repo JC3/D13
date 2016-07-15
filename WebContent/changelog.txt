@@ -1,3 +1,8 @@
+2016-07-14 22:08:43 EDT  jasonc
+
+    1.18g
+    - users cannot proceed past cell signups if they are below minimum cell threshold
+
 2016-07-14 13:26:20 EDT  jasonc
 
     1.18f2
