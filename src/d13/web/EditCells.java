@@ -73,6 +73,7 @@ public class EditCells {
         
     }
     
+    // note: requireMandatory now also controls requiring minimum non-mandatory cells. too lazy to rename.
     private void applyCellChanges (Map<String,String[]> params, User user, boolean requireMandatory) {
         
         Set<Long> remove = stringsToLongSet(params.get("xc"));
@@ -98,9 +99,15 @@ public class EditCells {
         // note that even in this case; cells are still modified. this doesn't really have any negative
         // side effects and is a kludgy way to make sure the user's cell selections aren't lost if they
         // are kicked back to the cell editor page.
-        if (requireMandatory && !user.isInMandatoryCells()) {
-            failed = true;
-            errorMessage = "Some of the cells below are mandatory. You must sign up for them!";
+        if (requireMandatory) {
+            if (!user.isInMandatoryCells()) {
+                failed = true;
+                errorMessage = "Hey there! Some of the cells below are mandatory. You must sign up for them!";
+            } else if (!user.isInEnoughCells()) {
+                failed = true;
+                errorMessage = "Hey there! You must sign up for at least " + User.LOW_CELL_THRESHOLD + " non-mandatory cells. " +
+                               "Don't worry, you can come back and change later if something piques your interest post registration!";
+            }
         }
         
     }

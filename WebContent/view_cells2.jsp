@@ -108,11 +108,17 @@ td.indicator {
     text-align:center;
     padding-right:2px;
 }
+.indicator-letter {
+    color:#00ccff;
+}
 .indicator-empty {
     color:red;
 }
-.indicator-full {
+.indicator-low {
     color:yellow !important;
+}
+.indicator-full {
+    color:#00ff00 !important;
 }
 .cell-mandatory {
     background:#800000;
@@ -161,8 +167,8 @@ function showDetails (id) {
 			obj.style.display = 'none';
 	    }
 	}
+    window.location.hash = '#' + id;
 	if (gotone) {
-	    window.location.hash = '#' + id;
 	    document.getElementById('instructions').style.display = 'none';
 	} else {
         document.getElementById('instructions').style.display = 'block';
@@ -178,7 +184,7 @@ function displayAnchor () {
 <body onLoad="displayAnchor();">
 <dis:header/>
 <div class="nav">
-  <a href="home.jsp">Home</a>
+  <a href="home.jsp">Home</a> | <a href="javascript:showDetails('help');">Help</a>
 </div>
 <!-- ----------------------------------------------------------------- -->
 
@@ -195,12 +201,15 @@ function displayAnchor () {
     String excls = "";
     String nexcls = "";
     if (cell.isFull()) excls += " indicator-full";
-    if (cell.getUsers().isEmpty()) excls += " indicator-empty";
+    if (cell.getUsers().isEmpty()) 
+        excls += " indicator-empty";
+    else if (cell.getPeople() > 0 && cell.getUsers().size() <= cell.getPeople() / 2) 
+        excls += " indicator-low";
     if (cell.isMandatory()) nexcls += " cell-mandatory";
     if (cell.isReallyHidden()) nexcls += " cell-hidden";
 %>
     <tr>
-      <td class="indicator"><%= cell.isHidden() ? "H" : (cell.isHideWhenFull() ? "A" : "") %>
+      <td class="indicator indicator-letter"><%= cell.isHidden() ? "H" : (cell.isHideWhenFull() ? "A" : "") %>
       <td class="indicator<%= excls %>"><%= ((max > 0) ? String.format("%2d/%2d", tot, max) : String.format("%2d   ", tot)).replaceAll(" ", "&nbsp;") %>
       <td class="<%= nexcls %>" style="padding-left:4px"><a href="javascript:showDetails('<%=cell.getCellId() %>');"><%=Util.html(cell.getFullName()) %></a><br>
 <% } %>
@@ -210,13 +219,14 @@ function displayAnchor () {
 <div id="instructions">
 <p>Click a cell on the left to view details. The numbers and letters to the left of the cell names mean:</p>
 <ul>
-<li>An <span class="indicator">H</span> means the cell is set to always be hidden.
-<li>An <span class="indicator">A</span> means the cell is set to auto hide when full.
+<li>An <span class="indicator indicator-letter">H</span> means the cell is set to always be hidden.
+<li>An <span class="indicator indicator-letter">A</span> means the cell is set to auto hide when full.
 <li>If the cell name is <span class="cell-hidden">dark orange</span> then it is currently hidden as per above rules.
 <li>The number of people in the cell and total number of people needed is also shown.
 <li>If the number is <span class="indicator-empty">red</span> then the cell is empty.
-<li>If the number is <span class="indicator-full">yellow</span> then the cell is full.
-<li>If the cell name is highlighted <span class="cell-mandatory">red</span> then the cell is mandatory.
+<li>If the number is <span class="indicator-low">yellow</span> then the cell is &le; half full.
+<li>If the number is <span class="indicator-full">green</span> then the cell is full.
+<li>If the cell name is <span class="cell-mandatory">highlighted</span> then the cell is mandatory.
 </ul>
 <p>Cells that are <span class="cell-mandatory">mandatory</span> but also <span class="cell-hidden">hidden</span> are weird and should be avoided.
 They won't cause problems for users but do take up space adding warnings to the server logs and are probably a general sign that the cell's rules and
@@ -346,7 +356,7 @@ java.util.Collections.sort(pending, new User.RealNameComparator());
 <!-- ----------------------------------------------------------------- -->
 <br>
 <div class="nav">
-  <a href="home.jsp">Home</a>
+  <a href="home.jsp">Home</a> | <a href="javascript:showDetails('help');">Help</a>
 </div>
 <dis:footer/>
 </body>

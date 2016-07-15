@@ -24,7 +24,7 @@ public class User {
     public static final String RT_PWRESET_EXPIRE_MINUTES = "user.pwreset_expire_minutes";
     public static final String RT_PWRESET_EXPIRE_MINUTES_DEFAULT = "10";
  
-    public static final int LOW_CELL_THRESHOLD = 1;
+    public static final int LOW_CELL_THRESHOLD = 2;
     
     private long userId;
     private String email;
@@ -104,7 +104,7 @@ public class User {
         for (Cell c : cells)
             if (!c.isMandatoryFor(this))
                 ++ cellCount;
-        return cellCount > LOW_CELL_THRESHOLD;
+        return cellCount >= LOW_CELL_THRESHOLD;
     }
     
     public boolean isInMandatoryCells () {

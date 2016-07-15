@@ -52,7 +52,7 @@ public class CellList {
             if (user.getRole().canViewFullCells()) {
                 trstyle = "";
                 if (cell.isHidden())
-                    titlestyle = " style=\"color:cyan;\""; // hidden cells are yellow i guess
+                    titlestyle = " style=\"color:cyan;\""; // hidden cells are blue i guess
                 else
                     titlestyle = " style=\"color:red;\""; // full cells are red
             } else if (!isInCell) {
