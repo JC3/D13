@@ -10,13 +10,13 @@
 <%@ page import="java.lang.reflect.*" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="dis" %>
 <%!
-String getPrivilegeName (String s) {
-    return Introspector.decapitalize(s.replaceFirst("[a-z]*", ""));
+String getPrivilegeName (Method m) {
+    return Introspector.decapitalize(m.getName().replaceFirst("[a-z]*", ""));
 }
 void writeRoleHeaders (JspWriter out, List<Method> privs) throws IOException {
     for (Method priv : privs) {
-        out.append("  <th class=\"rotate\"><div><span>")
-           .append(Util.html(getPrivilegeName(priv.getName())))
+        out.append("  <th class=\"rotate role-text\"><div><span>")
+           .append(Util.html(getPrivilegeName(priv)))
            .append("</span></div>\n");
     }
 }
@@ -32,7 +32,7 @@ void writeRoleCells (JspWriter out, List<Method> privs, Role r) throws IOExcepti
         } catch (Exception x) {
             value = "?";
         }
-        out.append("  <td>")
+        out.append("  <td class=\"role-check role-text\">")
            .append(Util.html(value))
            .append("\n");
     }
@@ -57,6 +57,12 @@ List<Method> privs = new ArrayList<Method>();
 for (Method m : Role.class.getDeclaredMethods())
     if (m.isAnnotationPresent(Privilege.class))
         privs.add(m);
+
+Collections.sort(privs, new Comparator<Method>(){
+    @Override public int compare (Method a, Method b) {
+        return getPrivilegeName(a).compareToIgnoreCase(getPrivilegeName(b));
+    }
+});
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -84,6 +90,7 @@ for (Method m : Role.class.getDeclaredMethods())
     margin: 0;
     padding: 2px 0.5ex 2px 0.5ex;
     background: #202020;
+    vertical-align: bottom;
 }
 .summary td {
     vertical-align: top;
@@ -95,23 +102,34 @@ for (Method m : Role.class.getDeclaredMethods())
     white-space: nowrap;
 }
 th.rotate {
-  /* Something you can count on */
-  height: 140px;
-  white-space: nowrap;
+    height: 140px;
+    white-space: nowrap;
+    vertical-align: middle;
 }
 
 th.rotate > div {
-  transform: 
-    /* Magic Numbers */
-    translate(0px, 60px)
-    /* 45 is really 360 - 45 */
-    rotate(270deg);
-  width: 30px;
+    transform: 
+    translate(12px, 55px)
+    rotate(295deg);
+    width: 30px;
 }
 th.rotate > div > span {
-  border-bottom: 1px solid #bbb;
-  padding: 5px 10px;
-}</style>
+    border-bottom: 1px solid #bbb;
+    /*padding: 5px 10px;*/
+    padding: 2px;
+}
+.role-check {
+    text-align: right;
+    padding-right: 10px !important;
+}
+.role-text {
+    font-size: 90%;
+    font-weight: normal;
+    font-family: monospace;
+    padding-left: 0px !important;
+    padding-right: 2px !important;
+}
+</style>
 </head>
 <body>
 <dis:header/>
@@ -120,7 +138,7 @@ th.rotate > div > span {
   <a href="home.jsp">Home</a>
 </div>
 
-<p>This page is hard to read and I don't care.</p>
+<div style="text-align:center">This page is hard to read and I don't care.</div>
 
 <table class="summary" cellspacing="0">
 <tr>

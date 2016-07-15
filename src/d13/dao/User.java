@@ -719,7 +719,10 @@ public class User {
         List<User> users = (List<User>)HibernateUtil.getCurrentSession()
                 .createCriteria(User.class)
                 .add(Restrictions.isNotNull("role"))
-                .addOrder(Order.asc("realName"))
+                .createAlias("role", "role")
+                .addOrder(Order.desc("role.level"))
+                .addOrder(Order.asc("role.id"))
+                .addOrder(Order.asc("userId"))
                 .list();
         
         return users;
