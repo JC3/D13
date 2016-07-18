@@ -65,10 +65,21 @@ public class EditRegistration {
             if (editee.getState() == UserState.NEW_USER) {
                 editee.setState(UserState.NEEDS_REVIEW);
                 sendmail = true;
+                // also this is a good place to implicitly accept invite if alwaysInvited (2016-jul-15)
+                // todo: for some reason the comment add in acceptByEmail() yields a hibernate error: failed to lazily initialize a collection
+                /*
+                if (editee.getRole().isAlwaysInvited()) {
+                    try {
+                        Invite.acceptByEmail(editee);
+                    } catch (Throwable t) {
+                        System.err.println("INVITE WARN: When implicitly accepting invite for " + editee.getUserId() + " " + editee.getEmail() + ": " + t.getMessage());
+                    }
+                }
+                */
             }
             HibernateUtil.getCurrentSession().merge(editee);
             HibernateUtil.getCurrentSession().merge(form);
-                        
+
             if (sendmail)
                 QueuedEmail.queueNotification(QueuedEmail.TYPE_REVIEW, editee);
            

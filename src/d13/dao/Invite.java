@@ -2,6 +2,7 @@ package d13.dao;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -212,6 +213,10 @@ public class Invite {
         status = STATUS_ACCEPTED;
     }
     
+    public static void acceptByEmail (User acceptor) {
+        findByEmail(acceptor.getEmail()).accept(acceptor);
+    }
+    
     public void reject (User rejector) {
         checkStateForResolve(rejector, true);
         resolvedOn = DateTime.now();
@@ -254,6 +259,21 @@ public class Invite {
         
         return invite;
 
+    }
+    
+    public static Invite findByEmail (String email) {
+        
+        email = StringUtils.trimToNull(email);
+        if (email == null)
+            throw new IllegalArgumentException("Invite email address must be specified.");
+        
+        Invite invite = (Invite)HibernateUtil.getCurrentSession()
+                .createCriteria(Invite.class)
+                .add(Restrictions.eq("inviteeEmail", email))
+                .uniqueResult();
+        
+        return invite;
+        
     }
 
 
