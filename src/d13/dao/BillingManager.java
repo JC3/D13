@@ -42,7 +42,7 @@ public class BillingManager {
     
     
     private static PaymentItem getPersonalPaymentItem (User user, DateTime when) {
-    
+
         DueItem due = user.getPersonalDueItem();
         if (!due.isPayable())
             return null;

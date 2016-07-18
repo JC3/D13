@@ -1,5 +1,7 @@
 package d13.util;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.MessageDigest;
 
 import javax.mail.internet.InternetAddress;
@@ -17,6 +19,27 @@ public class Util {
         
     }
 
+    public static String getAbsoluteUrl (HttpServletRequest request, String rootRelative) {
+        
+        String abs = null;
+        URL req = null, root = null, url = null;
+        
+        try {
+            req = new URL(request.getRequestURL().toString());
+            root = new URL(req, request.getContextPath() + "/");
+            url = new URL(root, rootRelative);
+            abs = url.toString();
+        } catch (MalformedURLException e) {
+        }
+
+        //System.out.println(rootRelative + " => " + req + " => " + root + " => " + url + " => " + abs);
+        //System.out.println("  " + request.getRequestURI());
+        //System.out.println("  " + request.getContextPath());
+        
+        return abs;
+        
+    }
+    
     public static String getCompleteUrl (HttpServletRequest request) {
         StringBuffer requestURL = request.getRequestURL();
         String queryString = request.getQueryString();

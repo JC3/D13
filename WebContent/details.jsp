@@ -50,13 +50,18 @@ boolean needsReview = canReview && (editee.getState() == UserState.NEEDS_REVIEW)
 boolean needsAdmit = canAdmit && (editee.getState() == UserState.REGISTERED);
 boolean needsFinalize = canFinalize && (editee.getState() == UserState.APPROVE_PENDING || editee.getState() == UserState.REJECT_PENDING);
 
-List<ActivityLogEntry> logs = null;
-if (editor.getRole().canViewLogs())
-    logs = editee.getActivityLog();
+List<Note> notes = view.getNotes();
+String noteTitle = null;
 
-List<Comment> comments = null;
-if (editor.getRole().canViewComments())
-    comments = editee.getComments();    
+if (notes != null) {
+    noteTitle = editor.getRole().canViewLogs() ? "Activity Logs" : "";
+    if (editor.getRole().canViewComments()) {
+        if (!noteTitle.isEmpty())
+            noteTitle += " / ";
+        noteTitle += "Comments";
+    }
+}
+
 %>
 <!DOCTYPE html>
 <html>
@@ -73,6 +78,8 @@ td.wide { text-align: center; vertical-align: top; }
 table.form td.cell { border: 0; text-indent: 4ex; vertical-align: top; border-top: 1px solid #202020; }
 table.form td.log { border: 0; text-indent: 2ex; vertical-align: top; font-size: smaller; }
 table.form td.log2 { border: 0; padding-left: 4ex; vertical-align: top; font-size: smaller; }
+table.form td.log-comment { color: #80ffff; }
+table.form td.log-activity { color: #d4d4d4; }
 table.form td.title { text-align: center; font-weight: bold; color: #ff8080; }
 table.form td.status { text-align: center; color: #ff8000; }
 .approved { color: #00ff00; font-weight: bold; }
@@ -148,37 +155,23 @@ here.</div>
 <%   } %>
 <% } %>
 
-<% if (logs != null) { %>
-<tr><td class="key" colspan="2">Activity Log:
-  <% if (logs.isEmpty()) { %>
-     <tr><td class="log" colspan="2">Empty.
-  <% } else {
-       DefaultDataConverter ddc = new DefaultDataConverter();
-       for (ActivityLogEntry e:logs) { 
-          String datestr = Util.html(ddc.asString(e.getTime()));
-          String whostr = Util.html(e.getByWho().getEmail());
-          String descstr = Util.html(e.getDescription()); %>
-          <tr><td class="log" colspan="2"><%=datestr%>, <a href="mailto:<%=whostr%>"><%=whostr%></a>:
-          <tr><td class="log2" colspan="2"><%=descstr%>
-  <%   }
-     } %>
-<% } %>
-
-<% if (comments != null) { %>
-<tr><td class="key" colspan="2"><a name="comments"></a>Comments:
-  <% if (comments.isEmpty()) { %>
+<% if (notes != null) { %>
+<tr><td class="key" colspan="2"><a name="comments"></a><%= noteTitle %>:
+  <% if (notes.isEmpty()) { %>
      <tr><td class="log" colspan="2">None.
   <% } else { 
        DefaultDataConverter ddc = new DefaultDataConverter();
-       for (Comment c:comments) { 
-           String datestr = Util.html(ddc.asString(c.getTime()));
-           String authstr = Util.html(c.getAuthor().getEmail());
-           String textstr = Util.html(c.getComment()).replace("\n", "<br/>"); %>
+       for (Note n:notes) { 
+           String datestr = Util.html(ddc.asString(n.getTime()));
+           String authstr = Util.html(n.getAuthorEmail());
+           String textstr = Util.html(n.getText()).replace("\n", "<br/>");
+           boolean comment = n.isComment(); %>
           <tr><td class="log" colspan="2"><%=datestr%>, <a href="mailto:<%=authstr%>"><%=authstr%></a>:
-          <tr><td class="log2" colspan="2"><%=textstr%>
+          <tr><td class="log2 <%= comment ? "log-comment" : "log-activity" %>" colspan="2"><%=textstr%>
        <% } 
      } %>
 <% } %>
+
 </table>
 
 <% if (canComment) { %>
@@ -187,7 +180,7 @@ here.</div>
 <input type="hidden" name="subject" value="<%= editee.getUserId() %>">
 <table class="form" style="margin-top: 1ex;">
 <tr><td class="title">Post Comment
-<tr><td class="wide" style="padding-top: 1ex;"><textarea style="width:100%" class="dtextarea" name="comment" placeholder="You cannot edit or delete comments, so think before posting."></textarea>
+<tr><td class="wide" style="padding-top: 1ex;"><textarea style="width:100%" class="dtextarea" name="comment" placeholder="You cannot edit or delete comments, so think before posting. Comments are not visible to users."></textarea>
 <tr><td class="wide" style="padding-top: 1ex;"><input type="submit" class="dbutton" value="Post">
 </table>
 </form>

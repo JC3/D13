@@ -113,6 +113,11 @@ h1 {
 <li>You will have a grace period of <strong><%= ThisYear.GRACE_PERIOD_DAYS %> days</strong> after you are approved to pay the tier that was active <strong>at the time you originally completed the registration form</strong>! After that period is over, your tier will be determined by the date of your payment.
 </ul>
 
+<p><strong>HOW TO PAY DUES: </strong> Once your application is reviewed, you will receive due payment instructions via email. Please be patient, the registration team works
+hard to review applications as quickly as possible -- but do not worry: Remember, your due tier is determined by when you <em>register</em> and you'll have <%= ThisYear.GRACE_PERIOD_DAYS %>
+days to pay that tier after you receive the instruction email. <strong>If you have any issues with invites, team members that have not received them, etc., it is ENTIRELY YOUR RESPONSIBILITY
+to resolve these issues in a timely manner so that you and your team can meet tier deadlines.</strong></p>
+
 <p>Campers have the opportunity to earn back a rebate for each day of Disengage worked at the end of the event, between Monday and Wednesday. Rebate breakdown is as follows:</p>
 
 <ul>

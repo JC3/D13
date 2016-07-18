@@ -7,6 +7,9 @@
 <%@ page import="java.util.regex.*" %>
 <%@ page import="org.joda.time.*" %>
 <%@ page import="org.apache.commons.lang.StringUtils" %>
+<%@ page import="org.apache.commons.codec.language.*" %>
+<%@ page import="org.apache.commons.codec.*" %>
+
 <%@ taglib tagdir="/WEB-INF/tags" prefix="dis" %>
 <%!
 static class Problem {
@@ -36,10 +39,92 @@ static int countMatches (String s, String regex) {
     
 }
 
-static String onPlaya (String s) {
+static class CheckCtx {
+    Caverphone2 cav = new Caverphone2();
+    Nysiis nys = new Nysiis();
+    DaitchMokotoffSoundex dmk = new DaitchMokotoffSoundex();
+    Map<String,String> cavCache = new HashMap<String,String>();
+    Map<String,String> nysCache = new HashMap<String,String>();
+    Map<String,String> dmkCache = new HashMap<String,String>();
+    String cachedCav (String s) {
+        String enc = cavCache.get(s);
+        if (enc == null) {
+            enc = cav.encode(s);
+            cavCache.put(s, enc);
+        }
+        return enc;
+    }
+    String cachedNys (String s) {
+        String enc = nysCache.get(s);
+        if (enc == null) {
+            enc = nys.encode(s);
+            nysCache.put(s, enc);
+        }
+        return enc;
+    }
+    String cachedDmk (String s) {
+        String enc = dmkCache.get(s);
+        if (enc == null) {
+            enc = dmk.encode(s);
+            dmkCache.put(s, enc);
+        }
+        return enc;
+    }
+}
+
+static boolean phoneticEquals (String n1, String n2, CheckCtx ctx) {
+    
+    List<String> ns1 = Arrays.asList(n1.split("\\b"));
+    List<String> ns2 = Arrays.asList(n2.split("\\b"));
+    int matches = 0;
+    
+    for (int i1 = 0; i1 < ns1.size(); ++ i1) {
+        if (ns1.get(i1) == null)
+            continue;
+        for (int i2 = 0; i2 < ns2.size(); ++ i2) {
+            if (ns2.get(i2) == null)
+                continue;
+            if (ctx.cachedCav(ns1.get(i1)).equals(ctx.cachedCav(ns2.get(i2))) || 
+                ctx.cachedNys(ns1.get(i1)).equals(ctx.cachedNys(ns2.get(i2))) ||
+                ctx.cachedDmk(ns1.get(i1)).equals(ctx.cachedDmk(ns2.get(i2)))) 
+            {
+                ++ matches;
+                ns1.set(i1, null);
+                ns2.set(i2, null);
+                break;
+            }
+        }
+    }
+    
+    return (matches == Math.min(ns1.size(), ns2.size()));
+    
+}
+
+static boolean phoneticEqualsSimple (String n1, String n2, CheckCtx ctx) {
+
+    /*
+    return (ctx.cachedCav(n1).equals(ctx.cachedCav(n2)) || 
+            ctx.cachedNys(n1).equals(ctx.cachedNys(n2)) ||
+            ctx.cachedDmk(n1).equals(ctx.cachedDmk(n2)));
+    */
+    if (n1.equalsIgnoreCase(n2))
+        return true;
+    else {
+        try {
+		    RefinedSoundex ref = new RefinedSoundex();
+		    return ref.encode(n1).equals(ref.encode(n2));
+        } catch (Throwable t) {
+            //System.out.println(n1 + " => " + n2 + ": " + t.getMessage());
+            return false;
+        }
+    }
+    
+}
+
+static String onPlaya (String s, List<String> usernamesForFuzzy, List<String> playanamesForFuzzy, int fuzzyThresh, boolean phonetic, CheckCtx ctx) {
     
     Matcher m = Pattern.compile("[\\p{IsL}]+").matcher(s);
-
+    
     String n = null;
     Set<String> people = new TreeSet<String>();
     while (m.find()) {
@@ -52,6 +137,31 @@ static String onPlaya (String s) {
                 if (nuu.getState() != UserState.NEW_USER) {
                     people.add(nuu.getRealName());
                 }
+            }
+            if (usernamesForFuzzy != null) {
+                if (fuzzyThresh > 0) {
+	                for (String uname : usernamesForFuzzy)
+	                    if (StringUtils.getLevenshteinDistance(nm, uname) < fuzzyThresh)
+	                        people.add(uname/* + " [lev]"*/);
+	            }
+                if (phonetic) {
+	                for (String uname : usernamesForFuzzy)
+	                    if (phoneticEquals(uname, nm, ctx))
+	                        people.add(uname/* + " [phonetic]"*/);
+	            }
+            }
+        }
+        // playa names
+        if (playanamesForFuzzy != null) {
+            //if (fuzzyThresh > 0) {
+            //    for (String uname : playanamesForFuzzy)
+            //        if (StringUtils.getLevenshteinDistance(n, uname) < fuzzyThresh)
+            //            people.add(uname + " [playa,lev]");
+            //}
+            if (phonetic) {
+                for (String uname : playanamesForFuzzy)
+                    if (phoneticEqualsSimple(uname, n, ctx))
+                        people.add(uname + " [Playa Name]");
             }
         }
     }
@@ -84,10 +194,10 @@ static ReviewTimes calcReviewTimes (User u) {
     
 }
 
-void writeProblems (JspWriter out, List<Problem> problems, String name) throws java.io.IOException {
+static void writeProblems (JspWriter out, List<Problem> problems, String name, String detailUrlFmt) throws java.io.IOException {
 
     out.println("<tr>");
-    out.println("  <td class=\"section\" colspan=\"5\">" + Util.html(name));
+    out.println("  <td class=\"section\" colspan=\"5\">" + Util.html(name) + " (" + problems.size() + ")");
     
     out.println("<tr>");
     out.println("  <td class=\"header\">ID");
@@ -108,7 +218,8 @@ void writeProblems (JspWriter out, List<Problem> problems, String name) throws j
         String rowspan = (p.following > 1 ? (" rowspan=\"" + p.following + "\"") : "");
         out.println("<tr>");
         if (p.following > 0) {
-	        out.println("  <td" + rowspan + " class=\"info\">" + p.who.getUserId());
+            String detailUrl = String.format(detailUrlFmt, p.who.getUserId());
+	        out.println(String.format("  <td%s class=\"info userid\"><a href=\"%s\" target=\"_blank\">%s</a>", rowspan, Util.html(detailUrl), p.who.getUserId()));
 	        out.println("  <td" + rowspan + " class=\"info\">" + Util.html(p.who.getRealName()));
 	        out.println("  <td" + rowspan + " class=\"info\">" + Util.html(p.who.getEmail()));
 	        out.println("  <td" + rowspan + " class=\"info\">" + Util.html(p.who.getState().toString()));
@@ -140,6 +251,8 @@ if (!user.getRole().canViewUsers())
 
 boolean sep = (request.getParameter("separate") != null);
 
+long tstart = System.nanoTime();
+
 List<User> users = User.findAll("realName");
 
 List<Problem> allprob = new ArrayList<Problem>();
@@ -148,6 +261,29 @@ List<Problem> eprob = new ArrayList<Problem>();
 List<Problem> rprob = new ArrayList<Problem>();
 List<Problem> vprob = new ArrayList<Problem>();
 List<Problem> cprob = new ArrayList<Problem>();
+
+List<String> usernamesForFuzzy = null, playanamesForFuzzy = null;
+if (true) {
+    usernamesForFuzzy = new ArrayList<String>();
+    for (User u : users)
+        if (u.getState() != UserState.NEW_USER)
+            usernamesForFuzzy.add(u.getRealName());
+}
+if (true) {
+    playanamesForFuzzy = new ArrayList<String>();
+    for (User u : users)
+        if (u.getState() != UserState.NEW_USER && !StringUtils.trimToEmpty(u.getPlayaName()).isEmpty())
+            playanamesForFuzzy.add(u.getPlayaName());
+}
+
+int optQuickReviewTime = 180;
+int optQuickApproveTime = 45;
+int optECMinLetters = 5;
+int optECMinNumbers = 10;
+int optECFuzzyThreshold = 3;
+boolean optECPhonetic = true;
+
+CheckCtx ctx = new CheckCtx();
 
 for (User u : users) {
     
@@ -160,9 +296,9 @@ for (User u : users) {
     // --- reviewed too quickly ---
     
     ReviewTimes rt = calcReviewTimes(u);
-    if (rt.rrt >= 0 && rt.rrt <= 180)
+    if (rt.rrt >= 0 && rt.rrt <= optQuickReviewTime)
         probadd(allprob, qprob, new Problem(u, "Quick review (review completed " + rt.rrt + " seconds after registering); might want to re-review."));
-    if (rt.rat >= 0 && rt.rat <= 45)
+    if (rt.rat >= 0 && rt.rat <= optQuickApproveTime)
         probadd(allprob, qprob, new Problem(u, "Quick approve (approved " + rt.rat + " seconds after review); might want to re-review."));
     
     // --- emergency contact ---
@@ -171,9 +307,9 @@ for (User u : users) {
     String op = null;
     boolean momordad = (em.toLowerCase().contains("mom") || em.toLowerCase().contains("dad"));
     
-    if ((countMatches(em, "[a-zA-Z]") < 5 && !momordad) || countMatches(em, "[0-9]") < 10) {
-        probadd(allprob, eprob, new Problem(u, "Emergency contact info seem incomplete (need name and number): '" + em + "'"));
-    } else if ((op = onPlaya(em)) != null) {
+    if ((countMatches(em, "[a-zA-Z]") < optECMinLetters && !momordad) || countMatches(em, "[0-9]") < optECMinNumbers) {
+        probadd(allprob, eprob, new Problem(u, "Emergency contact info seems incomplete (need name and number): '" + em + "'"));
+    } else if ((op = onPlaya(em, usernamesForFuzzy, playanamesForFuzzy, optECFuzzyThreshold, optECPhonetic, ctx)) != null) {
         probadd(allprob, eprob, new Problem(u, "Emergency contact possibly camping with Disorient (must be off playa): '" + em + "', found a registered user named " + op + "."));
     }
     
@@ -229,6 +365,11 @@ for (User u : users) {
     
 }
 
+long tdelta = System.nanoTime() - tstart;
+double msgen = tdelta / 1000000000.0;
+
+String detailUrlFmt = Util.getAbsoluteUrl(request, "details.jsp") + "?u=%s";
+
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -247,6 +388,9 @@ table.problems td {
 }
 table.problems td.info {
     white-space: nowrap;
+}
+table.problems td.userid {
+    text-align: right;
 }
 table.problems td.section {
     text-align: center;
@@ -270,16 +414,27 @@ table.problems td.spacer {
 <p><a href="check.jsp?separate">Split Up Problem Lists</a></p>
 <% } %>
 
+<p>Check Time: <%= String.format("%.3f", msgen) %> seconds (please refresh this page sparingly)</p>
+<p><b>Some problems below may be false positives, use judgment before emailing users.</b></p>
+
 <table class="problems">
 <% if (sep) { %>
-<% writeProblems(out, qprob, "Quick Review / Approve"); %>
-<% writeProblems(out, eprob, "Suspicious Emergency Contact"); %>
-<% writeProblems(out, rprob, "RV Inconsistencies"); %>
-<% writeProblems(out, vprob, "Vehicle Issues"); %>
-<% writeProblems(out, cprob, "Cell Signup Issues"); %>
+<% writeProblems(out, qprob, "Quick Review / Approve", detailUrlFmt); %>
+<% writeProblems(out, eprob, "Suspicious Emergency Contact", detailUrlFmt); %>
+<% writeProblems(out, rprob, "RV Inconsistencies", detailUrlFmt); %>
+<% writeProblems(out, vprob, "Vehicle Issues", detailUrlFmt); %>
+<% writeProblems(out, cprob, "Cell Signup Issues", detailUrlFmt); %>
 <% } else { %>
-<% writeProblems(out, allprob, "Possible Problems"); %>
+<% writeProblems(out, allprob, "Possible Problems", detailUrlFmt); %>
 <% } %>
+</table>
+
+<table class="config">
+<tr><td>Quick Review Threshold:<td><%= optQuickReviewTime %> seconds
+<tr><td>Quick Approve Threshold:<td><%= optQuickApproveTime %> seconds
+<tr><td>Emergency Contact Min. Letters:<td><%= optECMinLetters %> (excluding "mom" or "dad")
+<tr><td>Emergency Contact Min. Numbers:<td><%= optECMinNumbers %>
+<tr><td>Emergency Contact Match Methods:<td>Substring<%= optECFuzzyThreshold > 0 ? String.format(", Levenshtein (&lt; %d)", optECFuzzyThreshold) : "" %><%= optECPhonetic ? ", Phonetic (Names: NYSIIS / Caverphone / Daitch-Mokotoff, Playa Names: Refined Soundex)" : "" %>
 </table>
 
 </body>
