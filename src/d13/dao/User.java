@@ -713,6 +713,18 @@ public class User {
 
     }
     
+    /*
+    public static User findSystemAdministrator () {
+        
+        User user = (User)HibernateUtil.getCurrentSession()
+                .createCriteria(User.class)
+                .add(Restrictions.eq("role", 1))
+                .uniqueResult();
+        
+        return user;
+        
+    }*/
+    
     public static List<User> findSpecial () {
         
         @SuppressWarnings("unchecked")

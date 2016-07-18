@@ -15,8 +15,10 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import d13.ThisYear;
+import d13.dao.ActivityLogEntry;
 import d13.dao.ApprovalSurvey;
 import d13.dao.Cell;
+import d13.dao.Comment;
 import d13.dao.RegistrationForm;
 import d13.dao.Role;
 import d13.dao.User;
@@ -103,7 +105,7 @@ public class DataViewer {
         public List<String> hrefs;
         private List<Object> sortvalues;
     }
-    
+        
     private boolean failed;
     private static final List<ViewDescriptor> userProps = getDataViewProps(User.class);
     private static final List<ViewDescriptor> rformProps = getDataViewProps(RegistrationForm.class);
@@ -112,6 +114,7 @@ public class DataViewer {
     private final List<String> columns; // must be same order as getDataViewRow
     private final List<String> colclasses;
     private final List<Row> rows = new ArrayList<Row>();
+    private List<Note> notes;
     private boolean downloadCSV;
     private User theSingleUser; 
     
@@ -199,8 +202,7 @@ public class DataViewer {
        
         for (List<ViewDescriptor> vds:lists)
             for (ViewDescriptor vd:vds) {
-                columns.add(vd.field);
-                
+                columns.add(vd.field);               
             }
         
         return columns;
@@ -409,6 +411,23 @@ public class DataViewer {
             theSingleUser = user;
             rows.add(getDataViewRow(user, current, (flags & FLAG_NO_CELLS) != 0));
             
+            if (current.getRole().canViewLogs()) {
+                if (notes == null)
+                    notes = new ArrayList<Note>();
+                for (ActivityLogEntry e : user.getActivityLog())
+                    notes.add(Note.from(e));
+            }
+            
+            if (current.getRole().canViewComments()) {
+                if (notes == null)
+                    notes = new ArrayList<Note>();
+                for (Comment c : user.getComments())
+                    notes.add(Note.from(c));
+            }
+            
+            if (notes != null)
+                Collections.sort(notes);
+            
         } else {
             
             downloadCSV = (context.getRequest().getParameter("download") != null);
@@ -451,6 +470,10 @@ public class DataViewer {
   
     public List<Row> getRows () {
         return rows;
+    }
+    
+    public List<Note> getNotes () {
+        return notes;
     }
     
     public boolean isFailed () {

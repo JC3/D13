@@ -1,3 +1,14 @@
+2016-07-18 02:51:11 EDT  jasonc
+ 
+    1.19
+    - due payment instructions added to terms page
+    - due payment instructions added to "thanks for registering" message
+    - user activity log and comments are now combined into one list
+    - misc/check.jsp more comprehensive text matching for emergency contact info search
+    - misc/check.jsp now links to user profiles
+    - new "view site activity" experimental activity log page
+    - comment field on user details page now points out that users can't see comments
+
 2016-07-16 01:20:29 EDT  jasonc
 
     1.18h

@@ -78,7 +78,7 @@ out this form, then you will not be camping with us this year!</div>
 "sign up for cells" below to volunteer for cells. <strong>Anything</strong> you can do will help us all have a great burn!</div>
 <% } else { %>
 <div class="notice">Thank you for applying to Disorient! Your application is complete and is now being reviewed. Please check back
-here periodically for status updates!</div>
+here periodically for status updates! <strong>If your application is approved, you will receive due payment instructions via email!</strong></div>
 <% } %>
 
 <div class="content">
@@ -138,6 +138,7 @@ here periodically for status updates!</div>
 <li><a href="view_invites.jsp">View Invites</a>
 <%     } %>
 <%   } %>
+<li><a href="activity.jsp">View Site Activity</a>
 <%   if (user.getRole().canEditAnnouncements()) { %>
 <li><a href="editannounce.jsp">Edit Announcement Message</a>
 <%   } %>
