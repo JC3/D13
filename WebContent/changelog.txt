@@ -1,7 +1,13 @@
+2016-07-16 01:20:29 EDT  jasonc
+
+    1.18h
+    - application consistency check tool
+
 2016-07-14 22:08:43 EDT  jasonc
 
     1.18g
     - users cannot proceed past cell signups if they are below minimum cell threshold
+    - some tweaks to styling in view_roles.jsp
 
 2016-07-14 13:26:20 EDT  jasonc
 
