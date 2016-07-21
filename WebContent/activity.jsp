@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ page import="d13.ThisYear" %>
@@ -5,7 +6,8 @@
 <%@ page import="d13.web.*" %>
 <%@ page import="d13.util.Util" %>
 <%@ page import="java.util.*" %>
-<%@ taglib tagdir="/WEB-INF/tags" prefix="dis" %>
+<%@ page import="org.joda.time.*" %>
+<%@taglib tagdir="/WEB-INF/tags" prefix="dis"%>
 <%!
 static String getTypeString (Note.Type t) {
     switch (t) {
@@ -19,6 +21,48 @@ static String getTypeString (Note.Type t) {
     case TIER_END: return "Tier End";
     }
     return "?";
+}
+
+static String getTargetUrl (Note n, String next) {
+    try {
+	    User u = n.getTargetUser();
+	    Cell c = n.getTargetCell();
+	    if (u != null) {
+	        return "details.jsp?u=" + u.getUserId() + "&next=" + URLEncoder.encode(next, "us-ascii");
+	    } else if (c != null) {
+	        return "view_cells2.jsp?next=" + URLEncoder.encode(next, "us-ascii") + "#" + c.getCellId();
+	    } else {
+	        return null;
+	    }
+    } catch (Throwable t) {
+        return null; // shouldn't happen
+    }
+}
+
+static String getAuthorUrl (Note n) {
+    User u = n.getAuthor();
+    if (u != null)
+        return "mailto:" + u.getEmail();
+    else
+        return null;
+}
+
+static String makeLink (String text, String url) {
+    
+    if (text == null)
+        return "";
+    else if (url == null)
+        return Util.html(text);
+    else
+        return String.format("<a href=\"%s\">%s</a>", Util.html(url), Util.html(text));
+    
+}
+
+static String dateString (long millis) {
+    if (millis == 0)
+        return "beginning of time";
+    else
+        return Util.html(DefaultDataConverter.objectAsString(new DateTime(millis)));
 }
 %>
 <%
@@ -34,8 +78,12 @@ if (!viewer.getRole().isSpecial())
     return;
 
 String success_target = request.getParameter("next");
+String back_link_name = "Go Back";
 String this_page = Util.getCompleteUrl(request);
-if (success_target == null || success_target.trim().isEmpty()) success_target = "home.jsp";
+if (success_target == null || success_target.trim().isEmpty()) {
+    success_target = "home.jsp";
+    back_link_name = "Home";
+}
 
 List<Note> notes = new ArrayList<Note>();
 notes.addAll(Note.allUsers(viewer, User.findAll()));
@@ -45,6 +93,20 @@ notes.addAll(Note.allTiers());
 Collections.sort(notes, Note.DESCENDING);
 
 DefaultDataConverter ddc = new DefaultDataConverter(true);
+
+String this_url = Util.getCompleteUrl(request);
+
+long timestamp_login = sess.getAttributeLong(SessionData.SA_GLOBAL_PREVIOUS_LOGIN);
+long timestamp_24 = DateTime.now().minusHours(24).getMillis();
+long timestamp_action = 0;
+
+//easiest way to get last action time is from notes at this point
+for (Note n : notes) {
+    if (n.getAuthor() != null && n.getAuthor().getUserId() == sess.getUserId() && n.getTime() != null) {
+        timestamp_action = n.getTime().getMillis();
+        break;
+    }
+}
 %>
 <!DOCTYPE html>
 <html>
@@ -55,7 +117,8 @@ DefaultDataConverter ddc = new DefaultDataConverter(true);
 <title>Disorient</title>
 <style type="text/css">
 table.notes {
-    border-collapse: collapse;
+    /*border-collapse: collapse;*/
+    border-spacing: 0;
     width: 90% !important; 
 }
 table.notes th {
@@ -63,12 +126,17 @@ table.notes th {
     text-align: left;
     font-size: 90%;
 }
+table.notes th.header {
+    text-align: center;
+}
 table.notes td {
     vertical-align: top;
     border-top: 1px solid #505050;
+    border-right: 1px solid #202020;
+    /*
     border-bottom: 1px solid #505050;
     border-left: 1px solid #202020;
-    border-right: 1px solid #202020;
+    */
     padding-left: 0.5ex;
     padding-right: 0.5ex;
     margin-left: 0;
@@ -89,45 +157,103 @@ table.notes .target-user {
 table.notes .target-cell {
 }
 table.notes .text {
+    border-right: 0;
 }
-table.notes tr.type-activity td {
-    color: #ffff00;
+table.notes tr.type-activity td,
+table.notes tr.type-activity a:link,
+table.notes tr.type-activity a:hover,
+table.notes tr.type-activity a:visited,
+table.notes tr.type-activity a:active {
+    color: #ffff50;
 }
-table.notes tr.type-registration td {
-    color: #ff8000;
+table.notes tr.type-registration td,
+table.notes tr.type-registration a:link,
+table.notes tr.type-registration a:hover,
+table.notes tr.type-registration a:visited,
+table.notes tr.type-registration a:active {
+    color: #ff9950;
 }
-table.notes tr.type-comment td {
-    color: #00ffff;
+table.notes tr.type-comment td,
+table.notes tr.type-comment a:link,
+table.notes tr.type-comment a:hover,
+table.notes tr.type-comment a:visited,
+table.notes tr.type-comment a:active {
+    color: #50ffff;
 }
-table.notes tr.type-cell td {
-    color: #ff0000;
+table.notes tr.type-cell td,
+table.notes tr.type-cell a:link,
+table.notes tr.type-cell a:hover,
+table.notes tr.type-cell a:visited,
+table.notes tr.type-cell a:active {
+    color: #ff5050;
 }
-table.notes tr.type-personaldue,tr.type-rvdue td {
-    color: #00ff00;
+table.notes tr.type-personaldue,
+table.notes tr.type-personaldue a:link,
+table.notes tr.type-personaldue a:hover,
+table.notes tr.type-personaldue a:visited,
+table.notes tr.type-personaldue a:active,
+tr.type-rvdue td,
+table.notes tr.type-rvdue a:link,
+table.notes tr.type-rvdue a:hover,
+table.notes tr.type-rvdue a:visited,
+table.notes tr.type-rvdue a:active {
+    color: #50ff50;
 }
-table.notes tr.type-invite td {
-    color: #ff00ff;
+table.notes tr.type-invite td,
+table.notes tr.type-invite a:link,
+table.notes tr.type-invite a:hover,
+table.notes tr.type-invite a:visited,
+table.notes tr.type-invite a:active {
+    color: #ff50ff;
 }
-table.notes tr.type-tier td {
+table.notes tr.type-tier td,
+table.notes tr.type-tier a:link,
+table.notes tr.type-tier a:hover,
+table.notes tr.type-tier a:visited,
+table.notes tr.type-tier a:active {
     color: white;
     background: #800000;
 }
 </style>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.0.min.js"></script>
+<script type="text/javascript">
+function showAfter (timestamp, datestr) {
+    $('tr.noterow').filter(function() { 
+        return $(this).data('timestamp') >= timestamp; 
+    }).toggle(true);
+    $('tr.noterow').filter(function() { 
+        return $(this).data('timestamp') < timestamp; 
+    }).toggle(false);
+    $('#header').text(datestr);
+}
+$(document).ready(function() {
+	showAfter(0, '<%= dateString(0) %>');
+})
+</script>
 </head>
 <body>
 
 <dis:header/>
-<div class="nav"><a href="<%=Util.html(success_target) %>">Go Back</a></div>
+<div class="nav"><a href="<%=Util.html(success_target) %>"><%= back_link_name %></a></div>
 
-<div>THIS PAGE IS STILL UNDER CONSTRUCTION. DON'T COMPLAIN ABOUT IT.</div>
+<div style="margin-left:auto;margin-right:auto;text-align:center;white-space:nowrap;">
+<div style="text-align:left;display:inline-block;">
+  <input type="radio" name="displaytime" onclick="showAfter(0, '<%= dateString(0) %>');" checked>Show all activity.<br>
+  <input type="radio" name="displaytime" onclick="showAfter(<%= timestamp_login %>, '<%= dateString(timestamp_login) %>');">Show activity since last log in.<br>
+  <input type="radio" name="displaytime" onclick="showAfter(<%= timestamp_24 %>, '<%= dateString(timestamp_login) %>');">Show activity in last 24 hours.<br>
+  <input type="radio" name="displaytime" onclick="showAfter(<%= timestamp_action %>, '<%= dateString(timestamp_login) %>');">Show activity since your last action.<br>
+  </div>
+</div>
 
 <table class="form notes">
 <tr>
-  <th class="time">Time
-  <th class="author">By
-  <th class="target">To
-  <th class="type">Type
-  <th class="text">Description
+  <th class="header" colspan="5">Activity since <span id="header"></span>:
+<tr>
+  <th class="time">When
+  <th class="target">Who
+  <th class="author">By Who
+  <th class="type">What
+  <th class="text">Details
 <% for (Note note : notes) {
     // small hack since we're also displaying invites
     if (note.isComment() && note.getText().startsWith("[Invite Comment]"))
@@ -135,17 +261,19 @@ table.notes tr.type-tier td {
     String authorName = (note.getAuthor() != null ? note.getAuthor().getRealName() : "");
     String targetName = note.getTargetName();
     String text = note.getText();
-    String typestr = getTypeString(note.getType()); %>
-<tr class="type-<%= note.getType().getName() %>">
+    String typestr = getTypeString(note.getType()); 
+    long timestamp = note.getTime().getMillis();
+    %>
+<tr class="noterow type-<%= note.getType().getName() %>" data-timestamp="<%= timestamp %>">
   <td class="time"><%= Util.html(ddc.asString(note.getTime())) %>
-  <td class="author"><%= Util.html(authorName) %>
-  <td class="target <%= note.isCell() ? "target-cell" : "target-user" %>"><%= Util.html(targetName == null ? "" : targetName) %>
+  <td class="target <%= note.isCell() ? "target-cell" : "target-user" %>"><%= makeLink(targetName, getTargetUrl(note, this_url)) %>
+  <td class="author"><%= makeLink(authorName, getAuthorUrl(note)) %>
   <td class="type"><%= Util.html(typestr) %>
   <td class="text"><%= Util.html(text) %>
 <% } %>
 </table>
 
-<div class="nav"><a href="<%=Util.html(success_target) %>">Go Back</a></div>
+<div class="nav"><a href="<%=Util.html(success_target) %>"><%= back_link_name %></a></div>
 <dis:footer/>
 
 </body>

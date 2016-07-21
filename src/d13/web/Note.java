@@ -206,24 +206,25 @@ public abstract class Note implements Comparable<Note> {
     private static abstract class UserNote extends Note {
         private final User u;
         UserNote (User u, Type t) { super(t); this.u = u; }
-        @Override public User getAuthor () { return u; }
+        @Override public User getAuthor () { return null; }
+        @Override public User getTargetUser () { return u; }
     }
     
     private static class PersonalDuePaymentNote extends UserNote {
         PersonalDuePaymentNote (User u) { super(u, Type.PERSONAL_DUE); }
-        @Override public DateTime getTime () { return getAuthor().getPersonalPaidDate(); }
+        @Override public DateTime getTime () { return getTargetUser().getPersonalPaidDate(); }
         @Override public String getText () { return "Personal dues paid."; }
     }
     
     private static class RVDuePaymentNote extends UserNote {
         RVDuePaymentNote (User u) { super(u, Type.RV_DUE); }
-        @Override public DateTime getTime () { return getAuthor().getRvPaidDate(); }
+        @Override public DateTime getTime () { return getTargetUser().getRvPaidDate(); }
         @Override public String getText () { return "RV dues paid."; }
     }
     
     private static class RegistrationNote extends UserNote {
         RegistrationNote (User u) { super(u, Type.REGISTRATION); }
-        @Override public DateTime getTime () { return getAuthor().getRegisteredOn(); }
+        @Override public DateTime getTime () { return getTargetUser().getRegisteredOn(); }
         @Override public String getText () { return "Registration form complete."; }
     }
     

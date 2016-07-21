@@ -1,3 +1,11 @@
+2016-07-19  jasonc
+
+    1.19c
+    - a bunch of work statistics unceremoniously dumped to bottom of home page
+
+    1.19b
+    - activity log page cleaned up a bit
+
 2016-07-18 02:51:11 EDT  jasonc
  
     1.19
