@@ -41,6 +41,7 @@ public class SessionData {
     public static final String SA_MANAGE_INVITES_COMMENT = "jsp.invites.comment";
     public static final String SA_INVITE_ERROR = "jsp.invite.error";
     public static final String SA_EDIT_ANNOUNCE_ERROR = "jsp.editannounce.error";
+    public static final String SA_GLOBAL_PREVIOUS_LOGIN = "global.prevlogin";
     
     //private static final String SA_EMAIL = "info.disorient.SessionData.email";
     private static final String SA_USERID = "info.disorient.SessionData.userid";
@@ -107,6 +108,19 @@ public class SessionData {
             return session.getAttribute(key);
         } catch (Exception x) {
             return null;
+        }
+        
+    }
+    
+    
+    public long getAttributeLong (String key) {
+        
+        Object o = getAttribute(key);
+        
+        try {
+            return (o == null) ? 0 : Long.parseLong(o.toString());
+        } catch (Exception x) {
+            return 0;
         }
         
     }
@@ -196,6 +210,8 @@ public class SessionData {
         
         if (RuntimeOptions.Global.isMaintenanceMode() && !user.getRole().canMaintenanceLogin())
             throw new SecurityException("Sorry, the system is temporarily down for maintenance.");
+        
+        session.setAttribute(SA_GLOBAL_PREVIOUS_LOGIN, user.getLastLogin() == null ? 0 : user.getLastLogin().getMillis());
         
         user.setLastLoginNow();
         session.setAttribute(SA_USERID, user.getUserId());

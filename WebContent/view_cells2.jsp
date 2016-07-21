@@ -39,6 +39,10 @@ List<Cell> cells = new ArrayList<Cell>();
 buildCellList(cells, Cell.findRoot());
 
 String this_url = Util.html(java.net.URLEncoder.encode(Util.getCompleteUrl(request), "us-ascii"));
+
+String back_url = request.getParameter("next");
+if (back_url == null)
+    back_url = "home.jsp";
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -184,7 +188,7 @@ function displayAnchor () {
 <body onLoad="displayAnchor();">
 <dis:header/>
 <div class="nav">
-  <a href="home.jsp">Home</a> | <a href="javascript:showDetails('help');">Help</a>
+  <a href="<%= Util.html(back_url) %>">Go Back</a> | <a href="javascript:showDetails('help');">Help</a>
 </div>
 <!-- ----------------------------------------------------------------- -->
 
@@ -356,7 +360,7 @@ java.util.Collections.sort(pending, new User.RealNameComparator());
 <!-- ----------------------------------------------------------------- -->
 <br>
 <div class="nav">
-  <a href="home.jsp">Home</a> | <a href="javascript:showDetails('help');">Help</a>
+  <a href="<%= Util.html(back_url) %>">Go Back</a> | <a href="javascript:showDetails('help');">Help</a>
 </div>
 <dis:footer/>
 </body>

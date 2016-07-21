@@ -5,6 +5,27 @@
 <%@ page import="d13.dao.*" %>
 <%@ page import="d13.util.Util" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="dis" %>
+<%!
+static String minsec (double seconds) {
+    long tmil = (long)(seconds * 1000.0 + 0.5);
+    long mil = tmil % 60000; tmil /= 60000;
+    long min = tmil % 60; tmil /= 60;
+    long hrs = tmil;
+    if (hrs == 0 && min == 0)
+        return String.format("%.1f", seconds);
+    else if (hrs == 0)
+        return String.format("%d:%04.1f", min, mil / 1000.0, seconds);
+    else
+        return String.format("%d:%02d:%04.1f", hrs, min, mil / 1000.0, seconds);
+}
+
+static String timeStr (double median, double mean) {
+    if (median < 0 || mean < 0)
+        return "-";
+    else
+        return Util.html(String.format("%s / %s", minsec(median), minsec(mean)));
+}
+%>
 <%
 SessionData sess = new SessionData(session);
 if (!sess.isLoggedIn()) {
@@ -43,6 +64,8 @@ if (cs != null) {
         }
     }
 }
+
+WorkStatistics stats = new WorkStatistics(user);
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -51,6 +74,34 @@ if (cs != null) {
 <title>Disorient</title>
 <link rel="stylesheet" type="text/css" href="disorient.css"/>
 <link rel="icon" href="favicon.ico">
+<style type="text/css">
+table.stats {
+    font-size: 80%;
+    font-family: monospace;
+    white-space: nowrap;
+    border-spacing: 0;
+}
+table.stats td.n, table.stats td.t {
+    text-align: right;
+}
+table.stats td {
+    border-right: 1px solid #303030;
+    padding-left: 0.5ex;
+    padding-right: 0.5ex;
+}
+table.stats td.cant {
+    color: #303030;
+}
+table.stats th {
+    border-right: 1px solid #303030;
+}
+table.stats tr.odd td {
+    background: #1a1a1a;
+}
+table.stats .right {
+    border-right: 0 !important;
+}
+</style>
 </head>
 <body>
 <dis:header/>
@@ -158,6 +209,58 @@ here periodically for status updates! <strong>If your application is approved, y
 <li><a href="do_logout.jsp">Log Out</a>
 </ul>
 </div>
+
+<% if (stats.getUserStatistics() != null) { %>
+<table class="form stats">
+<tr>
+  <th>
+  <th>
+  <th>
+  <th colspan="5">Count
+  <th colspan="4">Median / Mean Time (HH:MM:SS.S)
+  <th colspan="5" class="right">Multiple Actions
+<tr>
+  <th>Name
+  <th>Role
+  <th>Login
+  <th>Inv.
+  <th>Rev.
+  <th>Adm.
+  <th>Fin.
+  <th>Tot.
+  <th>Rev.
+  <th>Adm.
+  <th>Fin.
+  <th>Response
+  <th>R&amp;A
+  <th>A&amp;F
+  <th>R&amp;F
+  <th>All
+  <th class="right">Any
+<%   int row = 0; 
+     for (WorkStatistics.UserStatistics s : stats.getUserStatistics()) { 
+       ++ row; %>
+<tr class="<%= (row % 2 == 0) ? "even" : "odd" %>">
+  <td class="s"><%= Util.html(s.getName()) %>
+  <td class="s"><%= Util.html(s.getRoleDisplay()) %>
+  <td class="s"><%= Util.html(DefaultDataConverter.objectAsString(s.getLastLogin())) %>
+  <td class="n<%= s.getUser().getRole().canInviteUsers() ? "" : " cant" %>"><%= s.getInvited() %>
+  <td class="n<%= s.getUser().getRole().canReviewUsers() ? "" : " cant" %>"><%= s.getReviewed() %>
+  <td class="n<%= s.getUser().getRole().canAdmitUsers() ? "" : " cant" %>"><%= s.getAdmitted() %>
+  <td class="n<%= s.getUser().getRole().canFinalizeUsers() ? "" : " cant" %>"><%= s.getFinalized() %>
+  <td class="n"><%= s.getActions() %>
+  <td class="t<%= s.getUser().getRole().canReviewUsers() ? "" : " cant" %>"><%= timeStr(s.getMedianReviewTime(), s.getMeanReviewTime()) %>
+  <td class="t<%= s.getUser().getRole().canAdmitUsers() ? "" : " cant" %>"><%= timeStr(s.getMedianAdmitTime(), s.getMeanAdmitTime()) %>
+  <td class="t<%= s.getUser().getRole().canFinalizeUsers() ? "" : " cant" %>"><%= timeStr(s.getMedianFinalizeTime(), s.getMeanFinalizeTime()) %>
+  <td class="t<%= s.getUser().getRole().canReviewUsers() ? "" : " cant" %>"><%= timeStr(s.getMedianResponseTime(), s.getMeanResponseTime()) %>
+  <td class="n"><%= s.getReviewAdmitOverlap() %>
+  <td class="n"><%= s.getAdmitFinalizeOverlap() %>
+  <td class="n"><%= s.getReviewFinalizeOverlap() %>
+  <td class="n"><%= s.getCompleteOverlap() %>
+  <td class="n right"><%= s.getAnyOverlap() %>
+<%   } %>
+</table>
+<% } %>
 
 <dis:footer/>
 
