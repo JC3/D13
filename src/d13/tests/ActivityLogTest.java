@@ -17,9 +17,9 @@ public class ActivityLogTest {
         
         HibernateUtil.beginTransaction();
         user = User.findByEmail("jason.cipriani@gmail.com");
-        user.addActivityLogEntry(new ActivityLogEntry(user, "tested log"));
-        user.addActivityLogEntry(new ActivityLogEntry(user, "tested log again"));
-        user.addActivityLogEntry(new ActivityLogEntry(user, "tested log and again"));
+        user.addActivityLogEntry(new ActivityLogEntry(user, "tested log", 0));
+        user.addActivityLogEntry(new ActivityLogEntry(user, "tested log again", 0));
+        user.addActivityLogEntry(new ActivityLogEntry(user, "tested log and again", 0));
         HibernateUtil.commitTransaction();
 
     }

@@ -256,7 +256,7 @@ $(document).ready(function() {
   <th class="text">Details
 <% for (Note note : notes) {
     // small hack since we're also displaying invites
-    if (note.isComment() && note.getText().startsWith("[Invite Comment]"))
+    if (note.getType() == Note.Type.COMMENT && note.getText().startsWith("[Invite Comment]"))
         continue;
     String authorName = (note.getAuthor() != null ? note.getAuthor().getRealName() : "");
     String targetName = note.getTargetName();

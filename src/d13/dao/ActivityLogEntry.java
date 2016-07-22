@@ -8,27 +8,33 @@ import d13.util.HibernateUtil;
 
 public class ActivityLogEntry {
     
+    public static final int TYPE_REVIEW = 0;
+    public static final int TYPE_EDIT = 1;
+    
     private long entryId;
     private DateTime time;
     private User toWho;
     private User byWho;
     private String description;
+    private int type;
    
     ActivityLogEntry () {      
     }
     
-    public ActivityLogEntry (User who, String description) {
+    public ActivityLogEntry (User who, String description, int type) {
         this.time = DateTime.now();
         this.toWho = who;
         this.byWho = who;
         this.description = description;
+        this.type = type;
     }
     
-    public ActivityLogEntry (User who, String description, User by) {
+    public ActivityLogEntry (User who, String description, int type, User by) {
         this.time = DateTime.now();
         this.toWho = who;
         this.byWho = by;
         this.description = description;
+        this.type = type;
     }
     
     public long getEntryId () {
@@ -49,6 +55,10 @@ public class ActivityLogEntry {
     
     public String getDescription () {
         return description;
+    }
+    
+    public int getType () {
+        return type;
     }
 
     public static List<ActivityLogEntry> findAll () {

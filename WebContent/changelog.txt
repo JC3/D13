@@ -1,3 +1,10 @@
+2016-07-21  jasonc
+
+  1.19d
+  - Corrected 2015 dates in reg form arrival / departure dates to 2016.
+  - Manual db update to correct the above, let me know if there are unexplained server errors.
+
+
 2016-07-19  jasonc
 
     1.19c

@@ -3,6 +3,10 @@ package d13.questions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
+
+import d13.ThisYear;
+import d13.ThisYear.PlayaWeek;
 import d13.dao.Location;
 import d13.dao.RVSelection;
 import d13.dao.TicketSource;
@@ -10,6 +14,15 @@ import d13.dao.TicketSource;
 public class RegistrationQuestions {
 
     private static final List<Question> qs;
+    
+    static void addDateChoice (Question q, ThisYear.PlayaWeek week, int daysSinceMonday) {
+        
+        DateTime when = week.getDate(daysSinceMonday);
+        String ui = when.toString("EEEE M/d");
+        String db = when.toString("M/d/YYYY");
+        q.addChoice(ui, db);
+
+    }
     
     static {
         
@@ -54,28 +67,28 @@ public class RegistrationQuestions {
                 "If you are acting as a sponsor for another camper (or campers), please write their names and a ~100 word recommendation for each here. If you are a sponsor for somebody and do not write a recommendation here, we will contact you during the approval process for a recommendation."));
         
         // end if
-        
+
         q = Question.newDropList("arrivalDate", "Date of arrival on the playa.", "Want to arrive early and help Alpha Camp build Disorient?");
-        q.addChoice("Monday 8/22", "8/22/2015");
-        q.addChoice("Tuesday 8/23", "8/23/2015");
-        q.addChoice("Wednesday 8/24", "8/24/2015");
-        q.addChoice("Thursday 8/25", "8/25/2015");
-        q.addChoice("Friday 8/26", "8/26/2015");
-        q.addChoice("Saturday 8/27", "8/27/2015");
-        q.addChoice("Sunday 8/28", "8/28/2015");
-        q.addChoice("Monday 8/29", "8/29/2015");
-        q.addChoice("Tuesday 8/30", "8/30/2015");
+        addDateChoice(q, PlayaWeek.ALPHA, 0); // mon
+        addDateChoice(q, PlayaWeek.ALPHA, 1);
+        addDateChoice(q, PlayaWeek.ALPHA, 2);
+        addDateChoice(q, PlayaWeek.ALPHA, 3);
+        addDateChoice(q, PlayaWeek.ALPHA, 4);
+        addDateChoice(q, PlayaWeek.ALPHA, 5);
+        addDateChoice(q, PlayaWeek.ALPHA, 6); // sun
+        addDateChoice(q, PlayaWeek.ALPHA, 7); // mon
+        addDateChoice(q, PlayaWeek.ALPHA, 8); // tue
         qs.add(q);
         
         q = Question.newDropList("departureDate", "Date of departure from the playa.", "Remember, you can get up to a $240 rebate if you stay for Disengage!");
-        q.addChoice("Thursday 9/1", "9/1/2015");
-        q.addChoice("Friday 9/2", "9/2/2015");
-        q.addChoice("Saturday 9/3", "9/3/2015");
-        q.addChoice("Sunday 9/4", "9/4/2015");
-        q.addChoice("Monday 9/5", "9/5/2015");
-        q.addChoice("Tuesday 9/6", "9/6/2015");
-        q.addChoice("Wednesday 9/7", "9/7/2015");
-        q.addChoice("Thursday 9/8", "9/8/2015");
+        addDateChoice(q, PlayaWeek.DISENGAGE, -4); // thu
+        addDateChoice(q, PlayaWeek.DISENGAGE, -3);
+        addDateChoice(q, PlayaWeek.DISENGAGE, -2);
+        addDateChoice(q, PlayaWeek.DISENGAGE, -1);
+        addDateChoice(q, PlayaWeek.DISENGAGE, 0);  // mon
+        addDateChoice(q, PlayaWeek.DISENGAGE, 1);
+        addDateChoice(q, PlayaWeek.DISENGAGE, 2);
+        addDateChoice(q, PlayaWeek.DISENGAGE, 3);  // thu
         qs.add(q);
         
         q = Question.newDropList("departureTime", "Time of departure from the playa.", null);

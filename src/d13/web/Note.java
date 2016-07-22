@@ -28,7 +28,6 @@ public abstract class Note implements Comparable<Note> {
     public User getTargetUser () { return null; }
     public Cell getTargetCell () { return null; }
     public abstract String getText ();
-    public boolean isComment () { return false; }
     public boolean isCell () { return false; }
     public final Type getType () { return type; }
     
@@ -168,7 +167,8 @@ public abstract class Note implements Comparable<Note> {
         RV_DUE("rvdue"),
         REGISTRATION("registration"),
         INVITE("invite"),
-        TIER_END("tier");
+        TIER_END("tier"),
+        DATA_EDIT("edit");
         private final String name;
         private Type (String name) { this.name = name; }
         public String getName () { return name; }
@@ -176,11 +176,17 @@ public abstract class Note implements Comparable<Note> {
     
     private static class ActivityLogNote extends Note {
         private final ActivityLogEntry e;
-        ActivityLogNote (ActivityLogEntry e) { super(Type.ACTIVITY); this.e = e; }
+        ActivityLogNote (ActivityLogEntry e) { super(logtonote(e)); this.e = e; }
         @Override public DateTime getTime () { return e.getTime(); }
         @Override public User getAuthor () { return e.getByWho(); }
         @Override public String getText () { return e.getDescription(); }
         @Override public User getTargetUser () { return e.getToWho(); }
+        private static Type logtonote (ActivityLogEntry e) {
+            if (e.getType() == ActivityLogEntry.TYPE_EDIT)
+                return Type.DATA_EDIT;
+            else
+                return Type.ACTIVITY;
+        }
     }
 
     private static class CommentNote extends Note {
@@ -189,7 +195,6 @@ public abstract class Note implements Comparable<Note> {
         @Override public DateTime getTime () { return e.getTime(); }
         @Override public User getAuthor () { return e.getAuthor(); }
         @Override public String getText () { return e.getComment(); }
-        @Override public boolean isComment () { return true; }
         @Override public User getTargetUser () { return e.getSubject(); }
     }
 

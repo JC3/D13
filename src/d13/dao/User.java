@@ -465,17 +465,17 @@ public class User {
             activityLog.add(entry);
     }
     
-    public void addBasicActivityLogEntry (String description) {
-        addActivityLogEntry(new ActivityLogEntry(this, description));
+    public void addBasicActivityLogEntry (String description, int type) {
+        addActivityLogEntry(new ActivityLogEntry(this, description, type));
     }
     
-    public void addBasicActivityLogEntry (String description, User who) {
-        addActivityLogEntry(new ActivityLogEntry(this, description, who));
+    public void addBasicActivityLogEntry (String description, int type, User who) {
+        addActivityLogEntry(new ActivityLogEntry(this, description, type, who));
     }
 
     public void addStateActivityLogEntry (User editor, UserState old) {
         String description = String.format("Changed from %s to %s.", old.toString(), state.toString());
-        addActivityLogEntry(new ActivityLogEntry(this, description, editor));
+        addActivityLogEntry(new ActivityLogEntry(this, description, ActivityLogEntry.TYPE_REVIEW, editor));
     }
 
     public List<Comment> getComments () {

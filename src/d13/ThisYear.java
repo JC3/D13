@@ -11,7 +11,8 @@ import d13.dao.DueCalculator.Tier;
 public class ThisYear {
 
     public static final int CAMP_YEAR = 2016;
-    public static final String SYSTEM_VERSION = "v1.19c";
+    public static final String SYSTEM_VERSION = "v1.19d";
+    public static final DateTime PLAYA_MONDAY = new DateTime(2016, 8, 29, 12, 0);
     
     /*
      * 2016
@@ -48,5 +49,23 @@ RV Fee Tier 3: $1550 if paid by 11:59 PM (Eastern Time) on August 16th
         rvTiers.add(new Tier(null, 155000, "R.V. Tier 3"));
         
     }
+    
+    public static enum PlayaWeek {
+        
+        ALPHA(-1),
+        FESTIVAL(0),
+        DISENGAGE(1);
+        
+        final int offset;
+        
+        PlayaWeek (int offset) { 
+            this.offset = offset;
+        }
 
+        public DateTime getDate (int daysFromMonday) {
+            return PLAYA_MONDAY.plusWeeks(offset).plusDays(daysFromMonday);
+        }
+        
+    }
+    
 }
