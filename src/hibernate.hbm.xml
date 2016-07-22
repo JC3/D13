@@ -195,6 +195,7 @@
         <property name="time" not-null="true" type="d13.dao.types.DateTimeType"/>
         <many-to-one name="toWho" class="d13.dao.User" not-null="true"/>
         <many-to-one name="byWho" class="d13.dao.User"/>
+        <property name="type" not-null="true"/>
         <property name="description"/>
     </class>
     

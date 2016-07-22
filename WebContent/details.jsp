@@ -165,9 +165,14 @@ here.</div>
            String datestr = Util.html(ddc.asString(n.getTime()));
            String authstr = Util.html(n.getAuthorEmail());
            String textstr = Util.html(n.getText()).replace("\n", "<br/>");
-           boolean comment = n.isComment(); %>
+           String typecls;
+           switch (n.getType()) {
+           case COMMENT: typecls = "log-comment"; break;
+           default: typecls = "log-activity"; break;
+           }
+           %>
           <tr><td class="log" colspan="2"><%=datestr%>, <a href="mailto:<%=authstr%>"><%=authstr%></a>:
-          <tr><td class="log2 <%= comment ? "log-comment" : "log-activity" %>" colspan="2"><%=textstr%>
+          <tr><td class="log2 <%= typecls %>" colspan="2"><%=textstr%>
        <% } 
      } %>
 <% } %>

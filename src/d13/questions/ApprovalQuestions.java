@@ -3,6 +3,8 @@ package d13.questions;
 import java.util.ArrayList;
 import java.util.List;
 
+import d13.ThisYear.PlayaWeek;
+
 public class ApprovalQuestions {
 
     private static final List<Question> qs;
@@ -48,12 +50,29 @@ public class ApprovalQuestions {
         
         q = Question.newMultiChoice("I am a Disengage Rock Star",
                 "Disengage rebate is up to $240. Please check EACH day that you plan to help DisEngage. Each full work day may entitle you to a rebate. **IMPORTANT: Keep this information updated if your travel plans change! We need an accurate headcount.");
-        q.addChoice("disengageSun", "Sunday, September 4th", 1);
-        q.addChoice("disengageMon", "Monday, September 5th", 1);
-        q.addChoice("disengageTue", "Tuesday, September 6th", 1);
-        q.addChoice("disengageWed", "Wednesday, September 7th", 1);
+        q.addChoice("disengageSun", PlayaWeek.DISENGAGE.getDate(-1).toString("EEEE M/d"), 1);
+        q.addChoice("disengageMon", PlayaWeek.DISENGAGE.getDate(0).toString("EEEE M/d"), 1);
+        q.addChoice("disengageTue", PlayaWeek.DISENGAGE.getDate(1).toString("EEEE M/d"), 1);
+        q.addChoice("disengageWed", PlayaWeek.DISENGAGE.getDate(2).toString("EEEE M/d"), 1);
         q.addChoice("disengageNone", "I'm sorry, I cannot stay to help.", 1);
         qs.add(q);
+        
+        // 2016 sql query to fix dates:
+        /*
+            update
+              registration_forms
+            set
+              arrivaldate=concat(left(arrivaldate,length(arrivaldate)-1), "6")
+            where
+              arrivaldate is not null;
+              
+            update
+              registration_forms
+            set
+              departuredate=concat(left(departuredate,length(departuredate)-1), "6")
+            where
+              departuredate is not null;
+         */
         
     }
     
