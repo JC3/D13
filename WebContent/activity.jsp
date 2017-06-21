@@ -233,7 +233,7 @@ table.notes tr.type-adminedit a:active {
     background: #000080;
 }
 </style>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.0.min.js"></script>
+<dis:jquery/>
 <script type="text/javascript">
 function showAfter (timestamp, datestr) {
     $('tr.noterow').filter(function() { 

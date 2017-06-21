@@ -42,6 +42,7 @@ public class SessionData {
     public static final String SA_INVITE_ERROR = "jsp.invite.error";
     public static final String SA_EDIT_ANNOUNCE_ERROR = "jsp.editannounce.error";
     public static final String SA_EDIT_TERMS_ERROR = "jsp.editterms.error";
+    public static final String SA_EDIT_TERMS_MESSAGE = "jsp.editterms.message";
     public static final String SA_EDIT_TERMS_TITLE = "jsp.editterms.title";
     public static final String SA_EDIT_TERMS_TEXT = "jsp.editterms.text";
     public static final String SA_GLOBAL_PREVIOUS_LOGIN = "global.prevlogin";

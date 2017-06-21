@@ -45,6 +45,8 @@ if (cont) {
 String terms_title_html = Util.html(RuntimeOptions.Global.getTermsTitle());
 String terms_markdown = RuntimeOptions.Global.getTermsText();
 String terms_text_html = mdparser.get().process(terms_markdown);
+String message = (String)sess.getAndClearAttribute(SessionData.SA_EDIT_TERMS_MESSAGE);
+String message_html = (message == null ? null : Util.html(message));
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -58,6 +60,10 @@ String terms_text_html = mdparser.get().process(terms_markdown);
 <dis:header/>
 <% if (loggedin /* 2014-07-10 added to allow anybody to view */ && sess.getUser().isTermsAgreed()) { %>
 <div class="nav"><a href="home.jsp">Home</a></div>
+<% } %>
+
+<% if (message != null) { %>
+<div class="message" style="margin-top:1em"><%=message_html%></div>
 <% } %>
 
 <div class="termstext">

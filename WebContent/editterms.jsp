@@ -27,6 +27,8 @@ if (success_target == null || success_target.trim().isEmpty()) success_target = 
 String root = pageContext.getServletContext().getContextPath();
 String error = (String)sess.getAndClearAttribute(SessionData.SA_EDIT_TERMS_ERROR);
 String error_html = (error == null ? null : Util.html(error));
+String message = (String)sess.getAndClearAttribute(SessionData.SA_EDIT_TERMS_MESSAGE);
+String message_html = (message == null ? null : Util.html(message));
 
 String terms_title = (String)sess.getAndClearAttribute(SessionData.SA_EDIT_TERMS_TITLE);
 String terms_text = (String)sess.getAndClearAttribute(SessionData.SA_EDIT_TERMS_TEXT);
@@ -96,6 +98,9 @@ $(document).ready(function () {
 <div class="nav"><a href="<%=Util.html(success_target) %>">Go Back</a></div>
 <% if (error != null) { %>
 <div class="error">Error: <%=error_html%></div>
+<% } %>
+<% if (message != null) { %>
+<div class="message"><%=message_html%></div>
 <% } %>
 
 <form action="do_editterms.jsp" method="post">

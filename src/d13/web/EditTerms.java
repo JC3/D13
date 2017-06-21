@@ -12,6 +12,7 @@ public class EditTerms {
 
     private boolean failed;
     private String errorMessage;
+    private String message;
     private String failTarget;
     private String successTarget;
     private String submittedTitle;
@@ -59,6 +60,15 @@ public class EditTerms {
             RuntimeOptions.Global.setTermsTitle(submittedTitle);
             RuntimeOptions.Global.setTermsText(submittedText);
             
+            switch ((int)(Math.random() * 2.0) % 2) {
+                case 0:
+                    message = "Behold, the virgin shall be with child, and bear HTML, and they shall call His name Updated Registration Terms.";
+                    break;
+                case 1:
+                    message = "So the LORD said, \"I will wipe from the face of the earth the old registration text -- and with it the animals, the birds and the creatures that move along the ground -- for I have updated it.\"";
+                    break;
+            }
+            
         } catch (Throwable t) {
             
             failed = true;
@@ -71,6 +81,10 @@ public class EditTerms {
     
     public String getErrorMessage () {
         return errorMessage;
+    }
+    
+    public String getMessage () {
+        return message;
     }
     
     public String getFailTarget () {
