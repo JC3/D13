@@ -2,10 +2,12 @@ package d13.dao;
 
 import org.joda.time.DateTime;
 
+import d13.changetrack.Track;
+import d13.changetrack.Trackable;
 import d13.util.Util;
 import d13.web.DataView;
 
-public class RegistrationForm {
+public class RegistrationForm implements Trackable {
 
     private long rformId;
     private User user;
@@ -78,71 +80,85 @@ public class RegistrationForm {
         return completionTime;
     }
 
+    @Track
     @DataView(i=10, n="Helped Off Playa", longtext=true)
     public String getHelpedOffPlaya() {
         return helpedOffPlaya;
     }
 
+    @Track
     @DataView(i=20, n="Helped Alpha?")
     public boolean isHelpedAlphaCamp() {
         return helpedAlphaCamp;
     }
 
+    @Track
     @DataView(i=30, n="Helped DPW?")
     public boolean isHelpedCampBuild() {
         return helpedCampBuild;
     }
 
+    @Track
     @DataView(i=40, n="Helped Disengage?")
     public boolean isHelpedDisengage() {
         return helpedDisengage;
     }
 
+    @Track
     @DataView(i=50, n="Helped Lead?")
     public boolean isHelpedLeadRoles() {
         return helpedLeadRoles;
     }
 
+    @Track
     @DataView(i=60, n="Helped Love Ministry?")
     public boolean isHelpedLoveMinistry() {
         return helpedLoveMinistry;
     }
 
+    @Track
     @DataView(i=70, n="Helped LNT?")
     public boolean isHelpedLNT() {
         return helpedLNT;
     }
 
+    @Track
     @DataView(i=80, n="Helped Other?")
     public boolean isHelpedOther() {
         return helpedOther;
     }
 
+    @Track
     @DataView(i=90, n="Helped Other", longtext=true)
     public String getHelpedOtherOther() {
         return helpedOtherOther;
     }
 
+    @Track
     @DataView(i=100, n="Dis Virgin?")
     public boolean isDisorientVirgin() {
         return disorientVirgin;
     }
 
+    @Track
     @DataView(i=110, n="BM Virgin?")
     public boolean isBmVirgin() {
         return bmVirgin;
     }
 
+    @Track
     @DataView(i=120, n="Sponsor", longtext=true)
     public String getSponsor() {
         return sponsor;
     }
 
+    @Track
     @DataView(i=130, n="Sponsor For", longtext=true)
     public String getSponsorFor() {
         return sponsorFor;
     }
 
+    @Track
     @DataView(i=140, n="Arrival Date")
     public String getArrivalDate() {
         return arrivalDate;
@@ -153,11 +169,13 @@ public class RegistrationForm {
         return arrivalTime;
     }*/
 
+    @Track
     @DataView(i=160, n="Departure Date")
     public String getDepartureDate() {
         return departureDate;
     }
 
+    @Track
     @DataView(i=170, n="Departure Time")
     public String getDepartureTime() {
         return departureTime;
@@ -179,6 +197,7 @@ public class RegistrationForm {
         return getDrivingFromToOther();
     }
     
+    @Track
     @DataView(i=180, n="From/To Location")
     public String getDrivingFromToDisplay () {
         if (drivingFromTo == null)
@@ -189,6 +208,7 @@ public class RegistrationForm {
             return drivingFromTo.toDisplayString();
     }
 
+    @Track
     @DataView(i=190, n="R.V.?")
     public RVSelection getRvType() {
         return rvType;
@@ -202,61 +222,73 @@ public class RegistrationForm {
         return tixSource == null ? null : (long)tixSource.toDBId();
     }
 
+    @Track
     @DataView(i=191, n="Sharing Space With", longtext=true)
     public String getSharingWith() {
         return sharingWith;
     }
 
+    @Track
     @DataView(i=192, n="Living In")
     public String getLivingIn() {
         return livingIn;
     }
     
+    @Track
     @DataView(i=193, n="Living In (Other)")
     public String getLivingInOther() {
         return livingInOther;
     }
 
+    @Track
     @DataView(i=194, n="Living Space Size", longtext=true)
     public String getLivingSpaceSize() {
         return livingSpaceSize;
     }
 
+    @Track
     @DataView(i=200, n="Driving?")
     public boolean isDriving() {
         return driving;
     }
 
+    @Track
     @DataView(i=210, n="Ride Space To?")
     public String getRideSpaceTo() {
         return rideSpaceTo;
     }
 
+    @Track
     @DataView(i=220, n="Ride Space From?")
     public String getRideSpaceFrom() {
         return rideSpaceFrom;
     }
 
+    @Track
     @DataView(i=230, n="Parking At Camp?")
     public boolean isParkAtCamp() {
         return parkAtCamp;
     }
 
+    @Track
     @DataView(i=240, n="Vehicle Comments", longtext=true)
     public String getVehicleComments() {
         return vehicleComments;
     }
 
+    @Track
     @DataView(i=250, n="Need Ride To?")
     public boolean isNeedRideTo() {
         return needRideTo;
     }
 
+    @Track
     @DataView(i=260, n="Need Ride From?")
     public boolean isNeedRideFrom() {
         return needRideFrom;
     }
 
+    @Track
     @DataView(i=265, n="Have Vehicle Pass?")
     public boolean isHaveVehiclePass() {
         return haveVehiclePass;
@@ -273,11 +305,13 @@ public class RegistrationForm {
     }
     */
 
+    @Track
     @DataView(i=2280, n="Personal Projects", longtext=true)
     public String getPersonalProject() {
         return personalProject;
     }
 
+    @Track
     @DataView(i=2290, n="User's Comments", longtext=true)
     public String getComments() {
         return comments;
@@ -287,6 +321,7 @@ public class RegistrationForm {
         return tixForSale;
     }
 
+    @Track
     @DataView(i=1000, n="Tickets For Sale")
     public int getNumForSale() {
         return tixForSale ? numForSale : 0;
@@ -296,11 +331,13 @@ public class RegistrationForm {
         return tixWanted;
     }
 
+    @Track
     @DataView(i=101, n="Tickets Needed")
     public int getNumWanted() {
         return tixWanted ? numWanted : 0;
     }
 
+    @Track
     @DataView(i=102, n="Ticket Source")
     public TicketSource getTixSource() {
         return tixSource;

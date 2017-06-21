@@ -1,6 +1,8 @@
 package d13.web;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,7 +42,7 @@ public class EditCells {
             boolean requireMandatory = (editor.getUserId() == editee.getUserId());
         
             // applyCellChanges will set failed/errorMessage if mandatory requirements aren't met
-            applyCellChanges(context.getRequest().getParameterMap(), editee, requireMandatory);
+            applyCellChanges(context.getRequest().getParameterMap(), editor, editee, requireMandatory);
 
         } catch (Throwable t) {
             
@@ -74,15 +76,20 @@ public class EditCells {
     }
     
     // note: requireMandatory now also controls requiring minimum non-mandatory cells. too lazy to rename.
-    private void applyCellChanges (Map<String,String[]> params, User user, boolean requireMandatory) {
+    private void applyCellChanges (Map<String,String[]> params, User editor, User user, boolean requireMandatory) {
         
         Set<Long> remove = stringsToLongSet(params.get("xc"));
         Set<Long> add = stringsToLongSet(params.get("c")); 
         remove.removeAll(add);
         
+        List<Cell> removed = new ArrayList<Cell>();
+        List<Cell> added = new ArrayList<Cell>();
+        
         for (Long r:remove) {
             try {
-                user.removeFromCell(Cell.findById(r));
+                Cell cell = Cell.findById(r);
+                if (user.removeFromCell(cell))
+                    removed.add(cell);
             } catch (Throwable t) {
                 System.err.println(t.getMessage());
             }
@@ -90,11 +97,15 @@ public class EditCells {
         
         for (Long r:add) {
             try {
-                user.addToCell(Cell.findById(r));
+                Cell cell = Cell.findById(r);
+                if (user.addToCell(cell))
+                    added.add(cell);
             } catch (Throwable t) {
                 System.err.println(t.getMessage());
             }
         }
+        
+        user.addCellActivityLogEntry(editor, added, removed, true);
         
         // note that even in this case; cells are still modified. this doesn't really have any negative
         // side effects and is a kludgy way to make sure the user's cell selections aren't lost if they

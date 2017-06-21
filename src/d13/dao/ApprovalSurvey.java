@@ -2,9 +2,11 @@ package d13.dao;
 
 import org.joda.time.DateTime;
 
+import d13.changetrack.Track;
+import d13.changetrack.Trackable;
 import d13.web.DataView;
 
-public class ApprovalSurvey {
+public class ApprovalSurvey implements Trackable {
 
     private long aformId;
     private User user;
@@ -52,31 +54,37 @@ public class ApprovalSurvey {
     }
     */
     
+    @Track
     @DataView(i=50, n="Placement Requests", longtext=true)
     public String getPlacementRequest() {
         return placementRequest;
     }
 
+    @Track
     @DataView(i=60, n="Disengage Sun.")
     public boolean isDisengageSun() {
         return disengageSun;
     }
 
+    @Track
     @DataView(i=70, n="Disengage Mon.")
     public boolean isDisengageMon() {
         return disengageMon;
     }
 
+    @Track
     @DataView(i=80, n="Disengage Tue.")
     public boolean isDisengageTue() {
         return disengageTue;
     }
 
+    @Track
     @DataView(i=90, n="Disengage Wed.")
     public boolean isDisengageWed() {
         return disengageWed;
     }
 
+    @Track
     @DataView(i=100, n="No Disengage")
     public boolean isDisengageNone() {
         return disengageNone;

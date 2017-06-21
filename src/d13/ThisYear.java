@@ -11,7 +11,7 @@ import d13.dao.DueCalculator.Tier;
 public class ThisYear {
 
     public static final int CAMP_YEAR = 2016;
-    public static final String SYSTEM_VERSION = "v1.19d";
+    public static final String SYSTEM_VERSION = "v1.20";
     public static final DateTime PLAYA_MONDAY = new DateTime(2016, 8, 29, 12, 0);
     
     /*

@@ -6,6 +6,7 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import d13.changetrack.Tracker;
 import d13.dao.ApprovalSurvey;
 import d13.dao.User;
 import d13.dao.UserState;
@@ -44,13 +45,18 @@ public class EditSurvey {
             
             ApprovalSurvey form = editee.getApproval();
             
+            Tracker tracker = new Tracker(form);
+
             // validate all before updating
+            editee.hibernateInitActivityLogHack();
             HibernateUtil.getCurrentSession().evict(form);
             HibernateUtil.getCurrentSession().evict(editee);
             BeanUtils.copyProperties(form, bean);
             form.validateMisc();
             if (!form.isCompleted())
                 form.setCompletionTimeNow();
+            else // don't log on first fill out
+                editee.addTrackerActivityLogEntry(editor, "Survey", tracker.compare(form), true);
             HibernateUtil.getCurrentSession().merge(editee);
             HibernateUtil.getCurrentSession().merge(form);
                         

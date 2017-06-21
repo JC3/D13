@@ -5,21 +5,26 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 
+import d13.changetrack.Track;
+import d13.changetrack.Trackable;
+import d13.changetrack.Tracker;
 import d13.util.HibernateUtil;
 import d13.util.Util;
 import d13.web.CompleteIncompleteBooleanConverter;
 import d13.web.DataView;
 
-public class User {
+public class User implements Trackable {
     
     public static final String RT_PWRESET_EXPIRE_MINUTES = "user.pwreset_expire_minutes";
     public static final String RT_PWRESET_EXPIRE_MINUTES_DEFAULT = "10";
@@ -38,7 +43,7 @@ public class User {
     private Gender gender;
     private String realName;
     private String playaName;
-    private Location location;
+    private Location location; 
     private String locationOther;
     private String phone;
     private String emergencyContact;
@@ -71,18 +76,20 @@ public class User {
         return Collections.unmodifiableSet(cells);
     }
     
-    public void addToCell (Cell c) {
+    public boolean addToCell (Cell c) {
         if (c == null)
             throw new IllegalArgumentException("Cell must be specified.");
-        cells.add(c);
+        boolean changed = cells.add(c);
         c.addUser(this);
+        return changed;
     }
     
-    public void removeFromCell (Cell c) {
+    public boolean removeFromCell (Cell c) {
         if (c == null)
             throw new IllegalArgumentException("Cell must be specified.");
-        cells.remove(c);
+        boolean changed = cells.remove(c);
         c.removeUser(this);
+        return changed;
     }
     
     void addInvoice (Invoice invoice) {
@@ -123,6 +130,7 @@ public class User {
         return userId;
     }
     
+    @Track
     @DataView(i=20, n="Email", email=true)
     public String getEmail() {
         return email;
@@ -160,16 +168,19 @@ public class User {
         return lastLogin;
     }
     
+    @Track
     @DataView(i=50, n="Gender")
     public Gender getGender() {
         return gender;
     }
     
+    @Track
     @DataView(i=60, n="Real Name")
     public String getRealName() {
         return realName;
     }
     
+    @Track
     @DataView(i=70, n="Playa Name")
     public String getPlayaName() {
         return playaName;
@@ -183,6 +194,7 @@ public class User {
         return locationOther;
     }
     
+    @Track 
     @DataView(i=80, n="Location")
     public String getLocationDisplay () {
         if (location == null)
@@ -193,11 +205,13 @@ public class User {
             return location.toDisplayString();
     }
     
+    @Track
     @DataView(i=90, n="Phone")
     public String getPhone() {
         return phone;
     }
     
+    @Track
     @DataView(i=100, n="Emergency Contact", longtext=true)
     public String getEmergencyContact() {
         return emergencyContact;
@@ -459,6 +473,10 @@ public class User {
     public List<ActivityLogEntry> getActivityLog () {
         return Collections.unmodifiableList(activityLog);
     }
+    
+    public void hibernateInitActivityLogHack () {
+        Hibernate.initialize(activityLog);
+    }
 
     public void addActivityLogEntry (ActivityLogEntry entry) {
         if (entry != null)
@@ -477,7 +495,59 @@ public class User {
         String description = String.format("Changed from %s to %s.", old.toString(), state.toString());
         addActivityLogEntry(new ActivityLogEntry(this, description, ActivityLogEntry.TYPE_REVIEW, editor));
     }
+    
+    private static String dispnull (String s) {
+        if (s == null)
+            return "blank";
+        else
+            return "\"" + s + "\"";
+    }
+    
+    public void addTrackerActivityLogEntry (User editor, String section, Map<String,Tracker.Change> changes, boolean onlyIfReviewed) {
+        
+        if (onlyIfReviewed && (getState() == UserState.NEW_USER || getState() == UserState.NEEDS_REVIEW))
+            return;
+        
+        if (changes.isEmpty())
+            return;
+        
+        String message = section + " edited:\n";
+        for (Tracker.Change c : changes.values())
+            message += " - " + c.getKey() + " changed from " + dispnull(c.getPrev()) + " to " + dispnull(c.getCurr()) + "\n";
+        
+        message = message.trim();
+        
+        addActivityLogEntry(new ActivityLogEntry(this, message, ActivityLogEntry.TYPE_EDIT, editor));
+        
+    }
 
+
+    public void addCellActivityLogEntry(User editor, List<Cell> added, List<Cell> removed, boolean onlyIfReviewed) {
+
+        if (onlyIfReviewed && (getState() == UserState.NEW_USER || getState() == UserState.NEEDS_REVIEW))
+            return;
+        
+        String message = "";
+        
+        if (!added.isEmpty()) {
+            message += "Joined cells:\n";
+            for (Cell c : added)
+                message += " - " + c.getFullName() + "\n";
+        }
+        
+        if (!removed.isEmpty()) {
+            message += "Left cells:\n";
+            for (Cell c : removed)
+                message += " - " + c.getFullName() + "\n";
+        }
+        
+        message = message.trim();
+        
+        if (!message.isEmpty())
+            addActivityLogEntry(new ActivityLogEntry(this, message, ActivityLogEntry.TYPE_EDIT, editor));
+        
+    }
+   
     public List<Comment> getComments () {
         return Collections.unmodifiableList(comments);
     }
@@ -993,6 +1063,5 @@ public class User {
         return users;
                 
     }
-   
     
 }
