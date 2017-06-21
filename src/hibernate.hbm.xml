@@ -42,8 +42,19 @@
   - rebuild cells from csv
    
    2017:
-   ALTER TABLE `roles` ADD `editTerms` TINYINT(1) NOT NULL DEFAULT '0' ;
-   ALTER TABLE `options` CHANGE `value` `value` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+    ALTER TABLE `roles` ADD `editTerms` TINYINT(1) NOT NULL DEFAULT '0' ;
+    ALTER TABLE `options` CHANGE `value` `value` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+	CREATE TABLE IF NOT EXISTS `general_log` (
+	  `entryId` bigint(20) NOT NULL AUTO_INCREMENT,
+	  `time` bigint(20) NOT NULL,
+	  `byWho` bigint(20) DEFAULT NULL,
+	  `type` int(11) NOT NULL,
+      `summary` text DEFAULT NULL,
+      `detail` text DEFAULT NULL,
+      `index` int(11) DEFAULT NULL,
+	  PRIMARY KEY (`entryId`),
+	  KEY `byWho` (`byWho`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 	    
      -->
     
@@ -203,6 +214,15 @@
         <property name="description"/>
     </class>
     
+    <class name="d13.dao.GeneralLogEntry" table="general_log">
+        <id name="entryId"><generator class="native"/></id>
+        <property name="time" not-null="true" type="d13.dao.types.DateTimeType"/>
+        <many-to-one name="byWho" class="d13.dao.User"/>
+        <property name="type" not-null="true"/>
+        <property name="summary"/>
+        <property name="detail"/>
+    </class>
+    
     <class name="d13.dao.Comment" table="comments">
         <id name="commentId"><generator class="native"/></id>
         <many-to-one name="author" class="d13.dao.User" not-null="true"/>
@@ -267,6 +287,11 @@
             <key column="toWho"/>
             <index column="`index`"/>
             <one-to-many class="d13.dao.ActivityLogEntry"/>
+        </list>
+        <list name="generalLog" cascade="all">
+            <key column="byWho"/>
+            <index column="`index`"/>
+            <one-to-many class="d13.dao.GeneralLogEntry"/>
         </list>
         <many-to-one name="personalDue" class="d13.dao.DueItem" cascade="all"/>
         <many-to-one name="rvDue" class="d13.dao.DueItem" cascade="all"/>

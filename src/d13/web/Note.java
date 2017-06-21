@@ -15,6 +15,7 @@ import d13.dao.Cell;
 import d13.dao.CellActivityLogEntry;
 import d13.dao.Comment;
 import d13.dao.DueCalculator.Tier;
+import d13.dao.GeneralLogEntry;
 import d13.dao.Invite;
 import d13.dao.User;
 
@@ -66,6 +67,10 @@ public abstract class Note implements Comparable<Note> {
     
     public static Note from (Tier t) {
         return (t == null || t.getEnd() == null) ? null : new TierEndNote(t);
+    }
+    
+    public static Note from (GeneralLogEntry e) {
+        return (e == null) ? null : new GeneralLogNote(e);
     }
     
     public static Note fromPersonalDues (User u) {
@@ -139,6 +144,13 @@ public abstract class Note implements Comparable<Note> {
                 notes.add(from(i));
         return notes;
     }
+    
+    public static List<Note> allGeneral (User viewer, Collection<GeneralLogEntry> entries) {
+        List<Note> notes = new ArrayList<Note>();
+        for (GeneralLogEntry e : entries)
+            notes.add(from(e));
+        return notes;
+    }
 
     private static Note nullIfFuture (Note n) {
         if (n == null || n.getTime().isAfterNow())
@@ -168,7 +180,8 @@ public abstract class Note implements Comparable<Note> {
         REGISTRATION("registration"),
         INVITE("invite"),
         TIER_END("tier"),
-        DATA_EDIT("edit");
+        DATA_EDIT("edit"),
+        ADMIN_EDIT("adminedit");
         private final String name;
         private Type (String name) { this.name = name; }
         public String getName () { return name; }
@@ -186,6 +199,17 @@ public abstract class Note implements Comparable<Note> {
                 return Type.DATA_EDIT;
             else
                 return Type.ACTIVITY;
+        }
+    }
+    
+    private static class GeneralLogNote extends Note {
+        private final GeneralLogEntry e;
+        GeneralLogNote (GeneralLogEntry e) { super(logtonote(e)); this.e = e; }
+        @Override public DateTime getTime () { return e.getTime(); }
+        @Override public User getAuthor () { return e.getByWho(); }
+        @Override public String getText () { return e.getSummary(); }
+        private static Type logtonote (GeneralLogEntry e) {
+            return Type.ADMIN_EDIT;
         }
     }
 

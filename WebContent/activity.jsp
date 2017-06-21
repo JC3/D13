@@ -20,6 +20,7 @@ static String getTypeString (Note.Type t) {
     case INVITE: return "Invite";
     case TIER_END: return "Tier End";
     case DATA_EDIT: return "Edited";
+    case ADMIN_EDIT: return "Admin";
     }
     return "?";
 }
@@ -91,6 +92,7 @@ notes.addAll(Note.allUsers(viewer, User.findAll()));
 notes.addAll(Note.allCells(viewer, Cell.findAll()));
 notes.addAll(Note.allInvites(viewer, Invite.findAll()));
 notes.addAll(Note.allTiers());
+notes.addAll(Note.allGeneral(viewer, GeneralLogEntry.findAll()));
 Collections.sort(notes, Note.DESCENDING);
 
 DefaultDataConverter ddc = new DefaultDataConverter(true);
@@ -221,6 +223,14 @@ table.notes tr.type-tier a:visited,
 table.notes tr.type-tier a:active {
     color: white;
     background: #800000;
+}
+table.notes tr.type-adminedit td,
+table.notes tr.type-adminedit a:link,
+table.notes tr.type-adminedit a:hover,
+table.notes tr.type-adminedit a:visited,
+table.notes tr.type-adminedit a:active {
+    color: white;
+    background: #000080;
 }
 </style>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.0.min.js"></script>

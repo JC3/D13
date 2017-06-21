@@ -56,6 +56,7 @@ public class User implements Trackable {
     private Invite currentInvite;
     private Set<Cell> cells = new HashSet<Cell>(0);
     private List<ActivityLogEntry> activityLog = new ArrayList<ActivityLogEntry>();
+    private List<GeneralLogEntry> generalLog = new ArrayList<GeneralLogEntry>();
     private DueItem personalDue;
     private DueItem rvDue;
     private String customDueComments;
@@ -474,8 +475,25 @@ public class User implements Trackable {
         return Collections.unmodifiableList(activityLog);
     }
     
+    public List<GeneralLogEntry> getGeneralLog () {
+        return Collections.unmodifiableList(generalLog);
+    }
+    
     public void hibernateInitActivityLogHack () {
         Hibernate.initialize(activityLog);
+    }
+
+    public void addGeneralLogEntry (GeneralLogEntry entry) {
+        if (entry != null)
+            generalLog.add(entry);
+    }
+    
+    public void addGeneralLogEntry (String summary, int type) {
+        addGeneralLogEntry(new GeneralLogEntry(summary, null, type, this));
+    }
+
+    public void addGeneralLogEntry (String summary, String detail, int type) {
+        addGeneralLogEntry(new GeneralLogEntry(summary, detail, type, this));
     }
 
     public void addActivityLogEntry (ActivityLogEntry entry) {

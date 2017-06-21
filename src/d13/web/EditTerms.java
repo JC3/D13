@@ -4,7 +4,9 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.lang.StringUtils;
 
+import d13.dao.GeneralLogEntry;
 import d13.dao.RuntimeOptions;
+import d13.dao.User;
 
 public class EditTerms {
 
@@ -21,10 +23,11 @@ public class EditTerms {
         successTarget = context.getRequest().getParameter("success_target");
 
         try {
-
+            
             if (!session.isLoggedIn())
                 throw new SecurityException("Permission denied.");
-            if (!session.getUser().getRole().canEditTerms())
+            User editor = session.getUser();
+            if (!editor.getRole().canEditTerms())
                 throw new SecurityException("Permission denied.");
 
             submittedTitle = StringUtils.trimToNull(context.getRequest().getParameter("terms_title"));
@@ -34,6 +37,24 @@ public class EditTerms {
                 throw new IllegalArgumentException("Title must not be blank.");
             if (submittedText == null)
                 throw new IllegalArgumentException("Terms must not be blank.");
+            
+            String oldTitle = RuntimeOptions.Global.getTermsTitle();
+            String oldText = RuntimeOptions.Global.getTermsText();
+            
+            if (!submittedTitle.equals(oldTitle))
+                editor.addGeneralLogEntry("Updated terms title: " + submittedTitle, submittedTitle, GeneralLogEntry.TYPE_TERMS_TITLE);
+            if (!submittedText.equals(oldText)) {
+                int oldn = (oldText == null) ? 0 : oldText.length();
+                int newn = submittedText.length();
+                String lstr;
+                if (newn < oldn)
+                    lstr = String.format("Updated terms text: Removed %s character(s).", oldn - newn);
+                else if (newn > oldn)
+                    lstr = String.format("Updated terms text: Added %s character(s)", newn - oldn);
+                else
+                    lstr = "Updated terms text.";
+                editor.addGeneralLogEntry(lstr, submittedText, GeneralLogEntry.TYPE_TERMS_TEXT);
+            }
             
             RuntimeOptions.Global.setTermsTitle(submittedTitle);
             RuntimeOptions.Global.setTermsText(submittedText);
