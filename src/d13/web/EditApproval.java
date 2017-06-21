@@ -41,11 +41,13 @@ public class EditApproval {
             return; // no such user
         }
    
-        boolean action_approve = "approve".equalsIgnoreCase(context.getRequest().getParameter("action"));
-        boolean action_reject = "reject".equalsIgnoreCase(context.getRequest().getParameter("action"));
-        boolean action_review = "review".equalsIgnoreCase(context.getRequest().getParameter("action"));
-        boolean action_final_approve = "final_approve".equalsIgnoreCase(context.getRequest().getParameter("action"));
-        boolean action_final_reject = "final_reject".equalsIgnoreCase(context.getRequest().getParameter("action"));
+        String action = context.getRequest().getParameter("action");
+        boolean action_approve = "approve".equalsIgnoreCase(action);
+        boolean action_reject = "reject".equalsIgnoreCase(action);
+        boolean action_review = "review".equalsIgnoreCase(action);
+        boolean action_final_approve = "final_approve".equalsIgnoreCase(action);
+        boolean action_final_reject = "final_reject".equalsIgnoreCase(action) || "final_reject_silent".equalsIgnoreCase(action);
+        boolean silent_reject = "final_reject_silent".equalsIgnoreCase(action);
    
         UserState oldState = user.getState();
         
@@ -66,7 +68,8 @@ public class EditApproval {
                 QueuedEmail.queueNotification(QueuedEmail.TYPE_APPROVED, user);
             } else if (action_final_reject && user.getState() != UserState.REJECTED) { 
                 user.setState(UserState.REJECTED);
-                QueuedEmail.queueNotification(QueuedEmail.TYPE_REJECTED, user);
+                if (!silent_reject)
+                    QueuedEmail.queueNotification(QueuedEmail.TYPE_REJECTED, user);
             }
          
         } else if (action_approve || action_reject) {
@@ -122,7 +125,7 @@ public class EditApproval {
         }                    
     
         if (user.getState() != oldState)
-            user.addStateActivityLogEntry(session.getUser(), oldState);
+            user.addStateActivityLogEntry(session.getUser(), oldState, silent_reject);
         
     }
     

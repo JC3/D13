@@ -443,7 +443,7 @@ public class User implements Trackable {
     }
     
     public void setState(UserState state) {
-        this.state = (state == null ? UserState.NEW_USER : state);       
+        this.state = (state == null ? UserState.NEW_USER : state);
     }
     
     public void setApprovedOnNow () {
@@ -509,8 +509,8 @@ public class User implements Trackable {
         addActivityLogEntry(new ActivityLogEntry(this, description, type, who));
     }
 
-    public void addStateActivityLogEntry (User editor, UserState old) {
-        String description = String.format("Changed from %s to %s.", old.toString(), state.toString());
+    public void addStateActivityLogEntry (User editor, UserState old, boolean silent) {
+        String description = String.format("Changed from %s to %s%s.", old.toString(), state.toString(), silent ? " (no email)" : "");
         addActivityLogEntry(new ActivityLogEntry(this, description, ActivityLogEntry.TYPE_REVIEW, editor));
     }
     
