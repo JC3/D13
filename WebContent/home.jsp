@@ -157,7 +157,7 @@ here periodically for status updates! <strong>If your application is approved, y
   <% if (!user.isPaid()) { %>
     <li><b>NEXT STEP: <a href="dues.jsp">Pay dues!</a></b>
   <% } else { %>
-    <li><a href="dues.jsp">Due Payments</a>
+    <li><a href="dues.jsp">Dues Payments</a>
   <% } %>
 <% } %>
 </ul>
