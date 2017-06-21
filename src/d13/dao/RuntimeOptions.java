@@ -19,6 +19,8 @@ public class RuntimeOptions {
         public boolean isSecure () {
             if (SECURE_WHITELIST.contains(name))
                 return false;
+            else if (name.startsWith("notify.email.") && !name.endsWith(".title"))
+                return true;
             else
                 return name.startsWith("notify.smtp") || name.startsWith("dues.paypal") || name.equals("terms.text");
         }

@@ -8,7 +8,7 @@ public enum Location {
     SF(4, "San Francisco Area"),
     SACRAMENTO(6, "Sacramento"),
     SEATTLE(7, "Seattle"),
-    DUBAI(8, "Dubai"),
+    RENO(10, "Reno"),
     AUSTIN(9, "Austin"),
     OTHER(0, "Other");
     
@@ -37,8 +37,8 @@ public enum Location {
         case 4: return SF;
         case 6: return SACRAMENTO;
         case 7: return SEATTLE;
-        case 8: return DUBAI;
         case 9: return AUSTIN;
+        case 10: return RENO;
         default: return null;
         }
     }

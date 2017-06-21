@@ -55,7 +55,13 @@
 	  PRIMARY KEY (`entryId`),
 	  KEY `byWho` (`byWho`)
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-	    
+	  
+	update users 
+      set locationOther = 'Dubai', location = 0
+      where location = 8
+	update users
+      set location=10, locationother = null
+      where location=0 and lower(locationother) like '%reno%'
      -->
     
 <hibernate-mapping default-access="field">
