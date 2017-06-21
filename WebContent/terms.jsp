@@ -44,7 +44,7 @@ if (cont) {
 
 String terms_title_html = Util.html(RuntimeOptions.Global.getTermsTitle());
 String terms_markdown = RuntimeOptions.Global.getTermsText();
-String terms_text_html = mdparser.get().process(terms_markdown);
+String terms_text_html = mdparser.get().process(terms_markdown == null ? "**An administrator needs to set the terms text!**" : terms_markdown);
 String message = (String)sess.getAndClearAttribute(SessionData.SA_EDIT_TERMS_MESSAGE);
 String message_html = (message == null ? null : Util.html(message));
 %>
