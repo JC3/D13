@@ -254,6 +254,7 @@ java.util.Collections.sort(pending, new User.RealNameComparator());
 
 <b>Cell:</b> <%= Util.html(cell.getFullName()) %><br>
 <b>Volunteers:</b> <%= cell.getUsers().size() + (cell.getPeople() > 0 ? " of " + cell.getPeople() : "") %><br>
+<b>Description:</b> <%= Util.html(cell.getDescription()) %><br>
 <hr>
 
 <b style="color: #ffddaa;">APPROVAL FINALIZED</b><br><br>

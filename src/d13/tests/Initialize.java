@@ -64,24 +64,35 @@ public class Initialize {
                     continue;
                 
                 String category = record.get(0).trim();
-                String name = record.get(1).trim();
+                String subcategory = record.get(1).trim();
+                String name = record.get(2).trim();
                 int people = 0;
                 try {
-                    people = Integer.parseInt(record.get(2));
+                    people = Integer.parseInt(record.get(3));
                 } catch (Exception x) {
                 }
-                boolean hide = record.get(3).trim().toLowerCase().startsWith("y");
-                boolean mand = record.get(4).trim().toLowerCase().startsWith("y");
-                boolean hidn = record.get(5).trim().toLowerCase().startsWith("y");
-                String desc = (record.size() < 6 ? null : record.get(6).trim());
+                boolean hide = record.get(4).trim().toLowerCase().startsWith("y");
+                boolean mand = record.get(5).trim().toLowerCase().startsWith("y");
+                boolean hidn = record.get(6).trim().toLowerCase().startsWith("y");
+                String desc = (record.size() < 7 ? null : record.get(7).trim());
                 
-                System.out.println(category  +" -> " + name + " -> " + people + " -> " + hide + " -> " + mand + " -> " + hidn);
+                System.out.println(category + " -> " + subcategory + " -> " + name + " -> " + people + " -> " + hide + " -> " + mand + " -> " + hidn);
                 System.out.println("  " + desc);
                 
                 Cell cat = categories.get(category);
                 if (cat == null) {
                     cat = root.addCategory(category);
                     categories.put(category, cat);
+                }
+                
+                if (subcategory.length() > 0) {
+                    String key = category + ":" + subcategory;
+                    Cell subcat = categories.get(key);
+                    if (subcat == null) {
+                        subcat = cat.addCategory(subcategory);
+                        categories.put(key, subcat);
+                    }
+                    cat = subcat;
                 }
                 
                 Cell cell = cat.addCell(name);
