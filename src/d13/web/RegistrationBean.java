@@ -6,15 +6,6 @@ import d13.dao.User;
 
 public class RegistrationBean {
 
-    private String helpedOffPlaya;
-    private boolean helpedAlphaCamp;
-    private boolean helpedCampBuild;
-    private boolean helpedDisengage;
-    private boolean helpedLeadRoles;
-    private boolean helpedLoveMinistry;
-    private boolean helpedLNT;
-    private boolean helpedOther;
-    private String helpedOtherOther;
     private boolean disorientVirgin;
     private boolean bmVirgin;
     private String sponsor;
@@ -45,6 +36,7 @@ public class RegistrationBean {
     private String comments;
     private boolean haveVehiclePass;
     private Long tixSourceId;
+    private Long shirtSizeId;
     
     public RegistrationBean () {
     }
@@ -56,42 +48,6 @@ public class RegistrationBean {
             x.printStackTrace();
         }
         //System.out.println(toString()); // TODO: remove this
-    }
-
-    public String getHelpedOffPlaya() {
-        return helpedOffPlaya;
-    }
-
-    public boolean isHelpedAlphaCamp() {
-        return helpedAlphaCamp;
-    }
-
-    public boolean isHelpedCampBuild() {
-        return helpedCampBuild;
-    }
-
-    public boolean isHelpedDisengage() {
-        return helpedDisengage;
-    }
-
-    public boolean isHelpedLeadRoles() {
-        return helpedLeadRoles;
-    }
-
-    public boolean isHelpedLoveMinistry() {
-        return helpedLoveMinistry;
-    }
-
-    public boolean isHelpedLNT() {
-        return helpedLNT;
-    }
-
-    public boolean isHelpedOther() {
-        return helpedOther;
-    }
-
-    public String getHelpedOtherOther() {
-        return helpedOtherOther;
     }
 
     public boolean isDisorientVirgin() {
@@ -188,44 +144,12 @@ public class RegistrationBean {
         return personalProject;
     }
 
+    public Long getShirtSizeId () {
+        return shirtSizeId;
+    }
+    
     public String getComments() {
         return comments;
-    }
-
-    public void setHelpedOffPlaya(String helpedOffPlaya) {
-        this.helpedOffPlaya = helpedOffPlaya;
-    }
-
-    public void setHelpedAlphaCamp(boolean helpedAlphaCamp) {
-        this.helpedAlphaCamp = helpedAlphaCamp;
-    }
-
-    public void setHelpedCampBuild(boolean helpedCampBuild) {
-        this.helpedCampBuild = helpedCampBuild;
-    }
-
-    public void setHelpedDisengage(boolean helpedDisengage) {
-        this.helpedDisengage = helpedDisengage;
-    }
-
-    public void setHelpedLeadRoles(boolean helpedLeadRoles) {
-        this.helpedLeadRoles = helpedLeadRoles;
-    }
-
-    public void setHelpedLoveMinistry(boolean helpedLoveMinistry) {
-        this.helpedLoveMinistry = helpedLoveMinistry;
-    }
-
-    public void setHelpedLNT(boolean helpedLNT) {
-        this.helpedLNT = helpedLNT;
-    }
-
-    public void setHelpedOther(boolean helpedOther) {
-        this.helpedOther = helpedOther;
-    }
-
-    public void setHelpedOtherOther(String helpedOtherOther) {
-        this.helpedOtherOther = helpedOtherOther;
     }
 
     public void setDisorientVirgin(boolean disorientVirgin) {
@@ -372,6 +296,10 @@ public class RegistrationBean {
 
     public void setTixSourceId(Long tixSourceId) {
         this.tixSourceId = tixSourceId;
+    }
+    
+    public void setShirtSizeId (Long shirtSizeId) {
+        this.shirtSizeId = shirtSizeId;
     }
 
 }

@@ -9,6 +9,7 @@ import d13.ThisYear;
 import d13.ThisYear.PlayaWeek;
 import d13.dao.Location;
 import d13.dao.RVSelection;
+import d13.dao.TeeShirtSize;
 import d13.dao.TicketSource;
 
 public class RegistrationQuestions {
@@ -29,21 +30,6 @@ public class RegistrationQuestions {
         Question q;
         qs = new ArrayList<Question>();
         
-        qs.add(Question.newLongText("helpedOffPlaya", 
-                "Have you contributed to any off-playa Disorient events?", 
-                "If so, which ones and in what capacity?"));
-        
-        q = Question.newMultiChoice("Have you contributed to any on-playa Disorient events?", 
-                "If so, please check all that apply.");
-        q.addChoice("helpedAlphaCamp", "Alpha Camp", 1);
-        q.addChoice("helpedCampBuild", "Camp Build / DPW", 1);
-        q.addChoice("helpedDisengage", "Disengage", 1);
-        q.addChoice("helpedLeadRoles", "Lead Camp Roles", 1);
-        q.addChoice("helpedLoveMinistry", "Love Ministry", 1);
-        q.addChoice("helpedLNT", "LNT", 1);
-        q.addOtherChoice("helpedOther", "Other", 1);
-        qs.add(q);
-
         q = Question.newSingleChoice("disorientVirgin", "Will this be your first time camping with Disorient?", null);
         q.addChoice("Yes", 1);
         q.addChoice("No", 0);
@@ -99,8 +85,8 @@ public class RegistrationQuestions {
         qs.add(q);
 
         q = Question.newSingleChoice("drivingFromToId",
-                "Where will you be driving from?",
-                "If you are flying into Reno and riding from there, please enter 'Reno', otherwise please enter whatever city you are riding (not flying) from to get to Reno or BRC.");
+                "Where will you be driving or riding from?",
+                "Where in North America (regardless of air travel) are you driving in from? If flying directly to the airfield at BRC, choose \"Flying to BRC\".");
         for (Location l:Location.values())
             if (l != Location.OTHER)
                 q.addChoice(l.toDisplayString(), l.toDBId());
@@ -214,6 +200,11 @@ public class RegistrationQuestions {
         qs.add(Question.newLongText("personalProject",
                 "Are you doing any personal projects on the playa this year?",
                 "If so, please briefly describe your project, let us know if there are any large items that require placement, and specify who is responsible for the project's disengage and on what day. Also, let us know if your project is something you would like to set up on Disorient's frontage for the general Burning Man public."));
+
+        q = Question.newSingleChoice("shirtSizeId", "What is your tee-shirt size?", null);
+        for (TeeShirtSize s:TeeShirtSize.values())
+            q.addChoice(s.toDisplayString(), s.toDBId());
+        qs.add(q);
 
         qs.add(Question.newLongText("comments", "Do you have anything else to add?", "Do you have any special skills to share with Disorient, or any other comments?"));
         

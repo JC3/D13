@@ -8,16 +8,23 @@ public enum Location {
     SF(4, "San Francisco Area"),
     SACRAMENTO(6, "Sacramento"),
     SEATTLE(7, "Seattle"),
-    RENO(10, "Reno"),
     AUSTIN(9, "Austin"),
+    RENO(10, "Reno"),
+    DIRECT(11, "Flying to BRC", true), // For driving questions only, not profile
     OTHER(0, "Other");
     
     private final int dbId;
     private final String displayString;
+    private final boolean hiddenInProfile;
     
     private Location (int dbId, String displayString) {
+        this(dbId, displayString, false);
+    }
+    
+    private Location (int dbId, String displayString, boolean hiddenInProfile) {
         this.dbId = dbId;
         this.displayString = displayString;
+        this.hiddenInProfile = hiddenInProfile;
     }
     
     public int toDBId () {
@@ -26,6 +33,10 @@ public enum Location {
     
     public String toDisplayString () {
         return displayString;
+    }
+    
+    public boolean isHiddenInProfile () {
+        return hiddenInProfile;
     }
     
     public static Location fromDBId (int dbId) {

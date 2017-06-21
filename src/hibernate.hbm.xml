@@ -56,7 +56,21 @@
 	  KEY `byWho` (`byWho`)
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 	  
-	update users 
+	ALTER TABLE `registration_forms` DROP `helpedOffPlaya`;
+		
+	ALTER TABLE `registration_forms`
+	  DROP `helpedAlphaCamp`,
+	  DROP `helpedCampBuild`,
+	  DROP `helpedDisengage`,
+	  DROP `helpedLeadRoles`,
+	  DROP `helpedLoveMinistry`,
+	  DROP `helpedLNT`,
+	  DROP `helpedOther`,
+	  DROP `helpedOtherOther`;
+	  
+	ALTER TABLE `registration_forms` ADD `shirtSize` INT NOT NULL;
+	
+  	update users 
       set locationOther = 'Dubai', location = 0
       where location = 8
 	update users
@@ -171,15 +185,6 @@
         <id name="rformId"><generator class="foreign"><param name="property">user</param></generator></id>
         <one-to-one name="user" class="d13.dao.User" constrained="true"/>
         <property name="completionTime" type="d13.dao.types.DateTimeType"/>
-		<property name="helpedOffPlaya" type="text"/>
-		<property name="helpedAlphaCamp"/>
-		<property name="helpedCampBuild"/>
-		<property name="helpedDisengage"/>
-		<property name="helpedLeadRoles"/>
-		<property name="helpedLoveMinistry"/>
-		<property name="helpedLNT"/>
-		<property name="helpedOther"/>
-		<property name="helpedOtherOther" type="text"/>
 		<property name="disorientVirgin"/>
 		<property name="bmVirgin"/>
 		<property name="sponsor" type="text"/>
@@ -209,6 +214,7 @@
 		<property name="comments" type="text"/>
         <property name="haveVehiclePass" not-null="true"/>
         <property name="tixSource" not-null="true" type="d13.dao.types.TicketSourceType"/>
+        <property name="shirtSize" not-null="true" type="d13.dao.types.TeeShirtSizeType"/>
     </class>
     
     <class name="d13.dao.ActivityLogEntry" table="activity_log">
