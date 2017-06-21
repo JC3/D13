@@ -4,6 +4,7 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import d13.changetrack.Tracker;
 import d13.dao.Gender;
 import d13.dao.Location;
 import d13.dao.RuntimeOptions;
@@ -91,7 +92,10 @@ public class EditUser {
                         throw new IllegalArgumentException("This email address is already in use.");
                 }
 
+                Tracker tracker = new Tracker(editee);
+                
                 // validate all before updating
+                editee.hibernateInitActivityLogHack();
                 HibernateUtil.getCurrentSession().evict(editee);
                 if (loginEdit) {
                     editee.setEmail(bean.getEmail());
@@ -113,7 +117,8 @@ public class EditUser {
                 }
                 editee.setLocationOther(bean.getLocationOther());
                 editee.setEmergencyContact(bean.getEmergencyContact());
-                HibernateUtil.getCurrentSession().merge(editee);
+                editee.addTrackerActivityLogEntry(editor, "Profile", tracker.compare(editee), true);
+                HibernateUtil.getCurrentSession().merge(editee);                
                 
             } else {
                 

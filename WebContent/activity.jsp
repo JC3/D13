@@ -19,6 +19,7 @@ static String getTypeString (Note.Type t) {
     case REGISTRATION: return "Registered";
     case INVITE: return "Invite";
     case TIER_END: return "Tier End";
+    case DATA_EDIT: return "Edited";
     }
     return "?";
 }
@@ -164,28 +165,35 @@ table.notes tr.type-activity a:link,
 table.notes tr.type-activity a:hover,
 table.notes tr.type-activity a:visited,
 table.notes tr.type-activity a:active {
-    color: #ffff50;
+    color: #ffff50; /*rgb(161,185,0); /*#ffff50;*/
 }
 table.notes tr.type-registration td,
 table.notes tr.type-registration a:link,
 table.notes tr.type-registration a:hover,
 table.notes tr.type-registration a:visited,
 table.notes tr.type-registration a:active {
-    color: #ff9950;
+    color: #ff9950; /* rgb(255,65,157); /*#ff9950;*/
 }
 table.notes tr.type-comment td,
 table.notes tr.type-comment a:link,
 table.notes tr.type-comment a:hover,
 table.notes tr.type-comment a:visited,
 table.notes tr.type-comment a:active {
-    color: #50ffff;
+    color: #50ffff; /*rgb(51,195,184); /*#50ffff;*/
 }
 table.notes tr.type-cell td,
 table.notes tr.type-cell a:link,
 table.notes tr.type-cell a:hover,
 table.notes tr.type-cell a:visited,
 table.notes tr.type-cell a:active {
-    color: #ff5050;
+    color: #ff5050; /*rgb(46,168,254); /*#ff5050;*/
+}
+table.notes tr.type-edit td,
+table.notes tr.type-edit a:link,
+table.notes tr.type-edit a:hover,
+table.notes tr.type-edit a:visited,
+table.notes tr.type-edit a:active {
+    color: #50ff50; /*rgb(131,137,237); /*#50ff50;*/
 }
 table.notes tr.type-personaldue,
 table.notes tr.type-personaldue a:link,
@@ -197,14 +205,14 @@ table.notes tr.type-rvdue a:link,
 table.notes tr.type-rvdue a:hover,
 table.notes tr.type-rvdue a:visited,
 table.notes tr.type-rvdue a:active {
-    color: #50ff50;
+    color: #ffffff; /*rgb(219,166,0); /*#ffffff;*/
 }
 table.notes tr.type-invite td,
 table.notes tr.type-invite a:link,
 table.notes tr.type-invite a:hover,
 table.notes tr.type-invite a:visited,
 table.notes tr.type-invite a:active {
-    color: #ff50ff;
+    color: #ff50ff; /*rgb(245,91,27); /*#ff50ff;*/
 }
 table.notes tr.type-tier td,
 table.notes tr.type-tier a:link,
@@ -237,12 +245,19 @@ $(document).ready(function() {
 <div class="nav"><a href="<%=Util.html(success_target) %>"><%= back_link_name %></a></div>
 
 <div style="margin-left:auto;margin-right:auto;text-align:center;white-space:nowrap;">
-<div style="text-align:left;display:inline-block;">
+  <div style="text-align:left;display:inline-block;">
   <input type="radio" name="displaytime" onclick="showAfter(0, '<%= dateString(0) %>');" checked>Show all activity.<br>
   <input type="radio" name="displaytime" onclick="showAfter(<%= timestamp_login %>, '<%= dateString(timestamp_login) %>');">Show activity since last log in.<br>
-  <input type="radio" name="displaytime" onclick="showAfter(<%= timestamp_24 %>, '<%= dateString(timestamp_login) %>');">Show activity in last 24 hours.<br>
-  <input type="radio" name="displaytime" onclick="showAfter(<%= timestamp_action %>, '<%= dateString(timestamp_login) %>');">Show activity since your last action.<br>
+  <input type="radio" name="displaytime" onclick="showAfter(<%= timestamp_24 %>, '<%= dateString(timestamp_24) %>');">Show activity in last 24 hours.<br>
+  <input type="radio" name="displaytime" onclick="showAfter(<%= timestamp_action %>, '<%= dateString(timestamp_action) %>');">Show activity since your last action.<br>
   </div>
+  <!-- maybe later, need to make it not conflict with displaytime
+  <div style="text-align:left;display:inline-block;">
+  <% for (Note.Type t : Note.Type.values()) { %>
+  <input class="dcheckbox viewcheck" type="checkbox" onclick="updateView()" data-what="type-<%= t.getName() %>" checked><%= Util.html(getTypeString(t)) %><br>
+  <% } %>
+  </div>  
+  -->
 </div>
 
 <table class="form notes">
@@ -263,6 +278,10 @@ $(document).ready(function() {
     String text = note.getText();
     String typestr = getTypeString(note.getType()); 
     long timestamp = note.getTime().getMillis();
+    // hack cause i like to keep "by who" admins only, i think it's cleaner looking, so blank
+    // out the column for edit activity where a user edited themself.
+    if (note.getType() == Note.Type.DATA_EDIT && note.getAuthor().getUserId() == note.getTargetUser().getUserId())
+        authorName = "";
     %>
 <tr class="noterow type-<%= note.getType().getName() %>" data-timestamp="<%= timestamp %>">
   <td class="time"><%= Util.html(ddc.asString(note.getTime())) %>

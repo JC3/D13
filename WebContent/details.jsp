@@ -79,6 +79,7 @@ table.form td.cell { border: 0; text-indent: 4ex; vertical-align: top; border-to
 table.form td.log { border: 0; text-indent: 2ex; vertical-align: top; font-size: smaller; }
 table.form td.log2 { border: 0; padding-left: 4ex; vertical-align: top; font-size: smaller; }
 table.form td.log-comment { color: #80ffff; }
+table.form td.log-edit { color: #ff80ff; }
 table.form td.log-activity { color: #d4d4d4; }
 table.form td.title { text-align: center; font-weight: bold; color: #ff8080; }
 table.form td.status { text-align: center; color: #ff8000; }
@@ -168,6 +169,7 @@ here.</div>
            String typecls;
            switch (n.getType()) {
            case COMMENT: typecls = "log-comment"; break;
+           case DATA_EDIT: typecls = "log-edit"; break;
            default: typecls = "log-activity"; break;
            }
            %>

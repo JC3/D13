@@ -1,3 +1,9 @@
+2016-07-24 jasonc
+
+  1.20
+  - For users already reviewed, activity log now shows changes to registration forms.
+  - Fixed incorrect "activity since" date/time on activity log. 
+
 2016-07-21  jasonc
 
   1.19d
