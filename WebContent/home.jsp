@@ -193,6 +193,9 @@ here periodically for status updates! <strong>If your application is approved, y
 <%   if (user.getRole().canEditAnnouncements()) { %>
 <li><a href="editannounce.jsp">Edit Announcement Message</a>
 <%   } %>
+<%   if (user.getRole().canEditTerms()) { %>
+<li><a href="editterms.jsp">Edit Registration Terms</a>
+<%   } %>
 <%   if (user.getRole().canViewAdminData()) { %>
 <li>System Info
 <ul>

@@ -20,7 +20,7 @@ public class RuntimeOptions {
             if (SECURE_WHITELIST.contains(name))
                 return false;
             else
-                return name.startsWith("notify.smtp") || name.startsWith("dues.paypal");
+                return name.startsWith("notify.smtp") || name.startsWith("dues.paypal") || name.equals("terms.text");
         }
         public String getName () {
             return name;
@@ -122,11 +122,29 @@ public class RuntimeOptions {
         public static String getLoggedInAnnouncementStyleOverride () {
             return nullOrElse("announcement.login.style");
         }
+
+        /** Returns null, or returns terms title. Never returns empty string. */
+        public static String getTermsTitle () {
+            return nullOrElse("terms.title");
+        }
+
+        /** Returns null, or returns terms text (markdown). Never returns empty string. */
+        public static String getTermsText () {
+            return nullOrElse("terms.text");
+        }
         
         /** Set log in announcement, null to clear. */
         public static void setLoggedInAnnouncement (String announce) {
             announce = StringUtils.trimToNull(announce);
             RuntimeOptions.setOption("announcement.login", announce);
+        }
+
+        public static void setTermsTitle (String title) {
+            RuntimeOptions.setOption("terms.title", title);
+        }
+        
+        public static void setTermsText (String text) {
+            RuntimeOptions.setOption("terms.text", text);
         }
 
     }

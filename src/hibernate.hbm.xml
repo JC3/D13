@@ -41,6 +41,9 @@
   - delete from user_cells
   - rebuild cells from csv
    
+   2017:
+   ALTER TABLE `roles` ADD `editTerms` TINYINT(1) NOT NULL DEFAULT '0' ;
+   ALTER TABLE `options` CHANGE `value` `value` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 	    
      -->
     
@@ -117,6 +120,7 @@
         <property name="viewAdminData" not-null="true"/>
         <property name="editCells" not-null="true"/>
         <property name="editAnnouncements" not-null="true"/>
+        <property name="editTerms" not-null="true"/>
     </class>
 
     <class name="d13.dao.RuntimeOptions$RuntimeOption" table="options">

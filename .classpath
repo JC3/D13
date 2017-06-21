@@ -143,5 +143,10 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Jason/Packages/Java/markdown4j-2.2.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

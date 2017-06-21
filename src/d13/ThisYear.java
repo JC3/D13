@@ -10,9 +10,9 @@ import d13.dao.DueCalculator.Tier;
 
 public class ThisYear {
 
-    public static final int CAMP_YEAR = 2016;
-    public static final String SYSTEM_VERSION = "v1.20";
-    public static final DateTime PLAYA_MONDAY = new DateTime(2016, 8, 29, 12, 0);
+    public static final int CAMP_YEAR = 2017;
+    public static final String SYSTEM_VERSION = "v1.21";
+    public static final DateTime PLAYA_MONDAY = new DateTime(2017, 8, 28, 12, 0);
     
     /*
      * 2016
@@ -33,8 +33,8 @@ RV Fee Tier 3: $1550 if paid by 11:59 PM (Eastern Time) on August 16th
         DateTimeZone tz = DateTimeZone.forID("America/New_York");
 
         personalTiers.clear();        
-        personalTiers.add(new Tier(new DateTime(2016, 7, 16, 0, 0, 0, tz), 39500, "Tier 1"));
-        personalTiers.add(new Tier(new DateTime(2016, 7, 26, 0, 0, 0, tz), 54500, "Tier 2"));
+        personalTiers.add(new Tier(new DateTime(2017, 7, 16, 0, 0, 0, tz), 39500, "Tier 1"));
+        personalTiers.add(new Tier(new DateTime(2017, 7, 26, 0, 0, 0, tz), 54500, "Tier 2"));
         personalTiers.add(new Tier(null, 66500, "Tier 3"));
         
     }
@@ -44,8 +44,8 @@ RV Fee Tier 3: $1550 if paid by 11:59 PM (Eastern Time) on August 16th
         DateTimeZone tz = DateTimeZone.forID("America/New_York");
 
         rvTiers.clear();
-        rvTiers.add(new Tier(new DateTime(2016, 7, 16, 0, 0, 0, tz), 105000, "R.V. Tier 1"));
-        rvTiers.add(new Tier(new DateTime(2016, 7, 26, 0, 0, 0, tz), 125000, "R.V. Tier 2"));
+        rvTiers.add(new Tier(new DateTime(2017, 7, 16, 0, 0, 0, tz), 105000, "R.V. Tier 1"));
+        rvTiers.add(new Tier(new DateTime(2017, 7, 26, 0, 0, 0, tz), 125000, "R.V. Tier 2"));
         rvTiers.add(new Tier(null, 155000, "R.V. Tier 3"));
         
     }
