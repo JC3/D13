@@ -109,8 +109,10 @@ $(document).ready(function () {
 <table class="form">
 
 <tr>
-    <td colspan="2">Here you can edit the registration terms, which you must format as <a href="http://commonmark.org/help/">Markdown</a>.
-        Please be very careful with this, as editing the terms after registration has opened can lead to many unhappy campers.</td>
+    <td colspan="2">Here you can edit the registration terms, which you must format as <a href="http://commonmark.org/help/">Markdown</a> 
+        (if you don't like the preview here you can also test your skills live on <a href="http://stackedit.io">stackedit.io</a>, but
+        note the formatting looks a bit different than it does here). Please be very careful with this, as editing the terms after
+        registration has opened can lead to many unhappy campers.</td>
 <tr>
     <td style="white-space:nowrap;vertical-align:top;">Title:
     <td><input type="text" class="dtext" name="terms_title" value="<%=Util.html(terms_title)%>">
