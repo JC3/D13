@@ -196,6 +196,7 @@ public class DataViewer {
         
     }
     
+    @SafeVarargs
     private static List<String> getDataViewColumns (List<ViewDescriptor> ... lists) {
         
         List<String> columns = new ArrayList<String>();
@@ -209,6 +210,7 @@ public class DataViewer {
         
     }
     
+    @SafeVarargs
     private static List<String> getDataViewColumnClasses (List<ViewDescriptor> ... lists) {
         
         List<String> columns = new ArrayList<String>();
@@ -365,7 +367,6 @@ public class DataViewer {
     public static final int FLAG_SINGLE_USER = 1<<0;
     public static final int FLAG_NO_CELLS = 1<<1;
     
-    @SuppressWarnings("unchecked")
     public DataViewer (PageContext context, SessionData session, int flags) {
         
         User current = session.getUser();

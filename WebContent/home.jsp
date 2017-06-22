@@ -34,9 +34,10 @@ if (!sess.isLoggedIn()) {
 }
 
 User user = sess.getUser();
+Role role = user.getRole();
 String email_html = Util.html(user.getEmail());
 String realname_html = Util.html(user.getRealName());
-//String role_html = null; // = user.isAdmin() ? "Administrator" : null; //(user.isSpecialRole() ? Util.html(user.getRole().getName()) : null);
+//String role_html = null; // = user.isAdmin() ? "Administrator" : null; //(user.isSpecialRole() ? Util.html(role.getName()) : null);
 //if (user.isAdmin() && user.isAdmissions()) // this is getting hacky
 //    role_html = "Administrator";
 //else if (user.isAdmin())
@@ -156,13 +157,13 @@ here periodically for status updates! <strong>If your application is approved, y
   <% if (!user.isPaid()) { %>
     <li><b>NEXT STEP: <a href="dues.jsp">Pay dues!</a></b>
   <% } else { %>
-    <li><a href="dues.jsp">Due Payments</a>
+    <li><a href="dues.jsp">Dues Payments</a>
   <% } %>
 <% } %>
 </ul>
 <% } %>
 
-<% if (user.getRole().isSpecial()) { %>
+<% if (role.isSpecial()) { %>
 <strong>For Administrators:</strong><br><ul>
 <!-- <li><a href="admin_users.jsp">Manage Users</a> -->
 <li><form action="view_data.jsp" method="get">Search for user: <input type="text" name="search" class="dtext" style="width:20ex;"> <input type="submit" value="Search" class="dbutton" style="width:10ex;"></form>
@@ -179,28 +180,33 @@ here periodically for status updates! <strong>If your application is approved, y
   <li><a href="view_data.jsp?qf=9">Only not-yet-approved users that need to sign up for work cells.</a>
   <li><a href="view_data.jsp?qf=10">Only approved users that need to sign up for work cells.</a>  
 </ul>
-<li><a href="view_cells2.jsp">View<%= user.getRole().canEditCells() ? " / Edit" : "" %> Cells</a>
+<li><a href="view_cells2.jsp">View<%= role.canEditCells() ? " / Edit" : "" %> Cells</a>
 <!-- <li><a href="view_groups.jsp">View Camper Groups</a> (removed for 2016 when group leader went away) -->
 <li><a href="view_finance.jsp">View Dues Report</a>
 <%   if (RuntimeOptions.Global.isInviteOnly()) { %>
-<%     if (user.getRole().canInviteUsers()) { %>
+<%     if (role.canInviteUsers()) { %>
 <li><a href="view_invites.jsp">View / Manage Invites</a>
-<%     } else if (user.getRole().canViewInvites()) { %>
+<%     } else if (role.canViewInvites()) { %>
 <li><a href="view_invites.jsp">View Invites</a>
 <%     } %>
 <%   } %>
 <li><a href="activity.jsp">View Site Activity</a>
-<%   if (user.getRole().canEditAnnouncements()) { %>
-<li><a href="editannounce.jsp">Edit Announcement Message</a>
-<%   } %>
-<%   if (user.getRole().canViewAdminData()) { %>
-<li>System Info
+<%   if (role.canViewAdminData() || role.canEditTerms() || role.canEditAnnouncements()) { %>
+<li>System Info / Settings
 <ul>
+<%     if (role.canEditAnnouncements()) { %>
+<li><a href="editannounce.jsp">Edit Announcement Message</a>
+<%     } %>
+<%     if (role.canEditTerms()) { %>
+  <li><a href="editterms.jsp">Edit Registration Terms</a>
+<%     } %>
+<%     if (role.canViewAdminData()) { %>
   <li><a href="view_roles.jsp">View Special Users / Privileges / Roles</a>
   <li><a href="view_options.jsp">View Site Configuration</a>
+<%     } %>
 </ul>
 <%   } %>
-<li><a href="adminhelp.jsp">Help</a>
+<li><a href="adminhelp.jsp">Help (way out of date, but mostly valid)</a>
 </ul>
 <% } %>
 

@@ -41,7 +41,41 @@
   - delete from user_cells
   - rebuild cells from csv
    
-	    
+   2017:
+    ALTER TABLE `roles` ADD `editTerms` TINYINT(1) NOT NULL DEFAULT '0' ;
+    ALTER TABLE `options` CHANGE `value` `value` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+	CREATE TABLE IF NOT EXISTS `general_log` (
+	  `entryId` bigint(20) NOT NULL AUTO_INCREMENT,
+	  `time` bigint(20) NOT NULL,
+	  `byWho` bigint(20) DEFAULT NULL,
+	  `type` int(11) NOT NULL,
+      `summary` text DEFAULT NULL,
+      `detail` text DEFAULT NULL,
+      `index` int(11) DEFAULT NULL,
+	  PRIMARY KEY (`entryId`),
+	  KEY `byWho` (`byWho`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+	  
+	ALTER TABLE `registration_forms` DROP `helpedOffPlaya`;
+		
+	ALTER TABLE `registration_forms`
+	  DROP `helpedAlphaCamp`,
+	  DROP `helpedCampBuild`,
+	  DROP `helpedDisengage`,
+	  DROP `helpedLeadRoles`,
+	  DROP `helpedLoveMinistry`,
+	  DROP `helpedLNT`,
+	  DROP `helpedOther`,
+	  DROP `helpedOtherOther`;
+	  
+	ALTER TABLE `registration_forms` ADD `shirtSize` INT NOT NULL;
+	
+  	update users 
+      set locationOther = 'Dubai', location = 0
+      where location = 8
+	update users
+      set location=10, locationother = null
+      where location=0 and lower(locationother) like '%reno%'
      -->
     
 <hibernate-mapping default-access="field">
@@ -117,6 +151,7 @@
         <property name="viewAdminData" not-null="true"/>
         <property name="editCells" not-null="true"/>
         <property name="editAnnouncements" not-null="true"/>
+        <property name="editTerms" not-null="true"/>
     </class>
 
     <class name="d13.dao.RuntimeOptions$RuntimeOption" table="options">
@@ -150,15 +185,6 @@
         <id name="rformId"><generator class="foreign"><param name="property">user</param></generator></id>
         <one-to-one name="user" class="d13.dao.User" constrained="true"/>
         <property name="completionTime" type="d13.dao.types.DateTimeType"/>
-		<property name="helpedOffPlaya" type="text"/>
-		<property name="helpedAlphaCamp"/>
-		<property name="helpedCampBuild"/>
-		<property name="helpedDisengage"/>
-		<property name="helpedLeadRoles"/>
-		<property name="helpedLoveMinistry"/>
-		<property name="helpedLNT"/>
-		<property name="helpedOther"/>
-		<property name="helpedOtherOther" type="text"/>
 		<property name="disorientVirgin"/>
 		<property name="bmVirgin"/>
 		<property name="sponsor" type="text"/>
@@ -188,6 +214,7 @@
 		<property name="comments" type="text"/>
         <property name="haveVehiclePass" not-null="true"/>
         <property name="tixSource" not-null="true" type="d13.dao.types.TicketSourceType"/>
+        <property name="shirtSize" not-null="true" type="d13.dao.types.TeeShirtSizeType"/>
     </class>
     
     <class name="d13.dao.ActivityLogEntry" table="activity_log">
@@ -197,6 +224,15 @@
         <many-to-one name="byWho" class="d13.dao.User"/>
         <property name="type" not-null="true"/>
         <property name="description"/>
+    </class>
+    
+    <class name="d13.dao.GeneralLogEntry" table="general_log">
+        <id name="entryId"><generator class="native"/></id>
+        <property name="time" not-null="true" type="d13.dao.types.DateTimeType"/>
+        <many-to-one name="byWho" class="d13.dao.User"/>
+        <property name="type" not-null="true"/>
+        <property name="summary"/>
+        <property name="detail"/>
     </class>
     
     <class name="d13.dao.Comment" table="comments">
@@ -250,7 +286,7 @@
         <property name="locationOther" length="128"/>
         <property name="phone" length="24"/>
         <property name="emergencyContact" type="text" not-null="true"/>
-        <one-to-one name="registration" class="d13.dao.RegistrationForm" cascade="save-update"/>
+        <one-to-one name="registration" class="d13.dao.RegistrationForm" cascade="save-update,merge"/>
         <one-to-one name="approval" class="d13.dao.ApprovalSurvey" cascade="save-update"/>
         <property name="state" type="d13.dao.types.UserStateType" not-null="true"/>
         <property name="approvedOn" type="d13.dao.types.DateTimeType"/>
@@ -263,6 +299,11 @@
             <key column="toWho"/>
             <index column="`index`"/>
             <one-to-many class="d13.dao.ActivityLogEntry"/>
+        </list>
+        <list name="generalLog" cascade="all">
+            <key column="byWho"/>
+            <index column="`index`"/>
+            <one-to-many class="d13.dao.GeneralLogEntry"/>
         </list>
         <many-to-one name="personalDue" class="d13.dao.DueItem" cascade="all"/>
         <many-to-one name="rvDue" class="d13.dao.DueItem" cascade="all"/>

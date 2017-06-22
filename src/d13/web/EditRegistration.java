@@ -48,11 +48,14 @@ public class EditRegistration {
             
             RegistrationForm form = editee.getRegistration();
             boolean sendmail = false;
-                    
+
+            HibernateUtil.getCurrentSession().saveOrUpdate(editee);
+            form = editee.getRegistration();
+            
             Tracker tracker = new Tracker(form);
 
             // validate all before updating
-            editee.hibernateInitActivityLogHack();
+            editee.hibernateInitLogHacks();
             Hibernate.initialize(editee.getRvDueItemNoInit()); // hack forces init of rv due item which may be updated by registration form changes
             HibernateUtil.getCurrentSession().evict(form);
             HibernateUtil.getCurrentSession().evict(editee);
@@ -81,8 +84,8 @@ public class EditRegistration {
                 */
             }
             editee.addTrackerActivityLogEntry(editor, "Registration", tracker.compare(form), true);
-            HibernateUtil.getCurrentSession().merge(editee);
-            HibernateUtil.getCurrentSession().merge(form);
+            editee = (User)HibernateUtil.getCurrentSession().merge(editee);
+            //form = (RegistrationForm)HibernateUtil.getCurrentSession().merge(form);
 
             if (sendmail)
                 QueuedEmail.queueNotification(QueuedEmail.TYPE_REVIEW, editee);

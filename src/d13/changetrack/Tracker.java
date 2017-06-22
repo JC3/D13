@@ -44,9 +44,9 @@ public class Tracker {
                 changes.put(e.getKey(), new Change(e.getKey(), null, e.getValue()));
         }
         
-        for (Change c : changes.values()) {
-            System.out.println(c);
-        }
+        //for (Change c : changes.values()) {
+        //    System.out.println(c);
+        //}
         
         return changes;
         

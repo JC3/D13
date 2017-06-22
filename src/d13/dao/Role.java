@@ -30,6 +30,7 @@ public class Role implements Comparable<Role> {
     public static String VIEW_COMMENTS = "viewcomments";
     public static String VIEW_ADMIN_DATA = "viewadmindata";
     public static String EDIT_ANNOUNCEMENTS = "editannounce";
+    public static String EDIT_TERMS = "editterms";
     
     private long roleId;
     private String name = "";
@@ -51,6 +52,7 @@ public class Role implements Comparable<Role> {
     private boolean viewComments;
     private boolean viewAdminData;
     private boolean editAnnouncements;
+    private boolean editTerms;
     private Set<String> rights; 
     
     Role () {
@@ -140,6 +142,10 @@ public class Role implements Comparable<Role> {
         return editAnnouncements;
     }
     
+    @Privilege public boolean canEditTerms () {
+        return editTerms;
+    }
+    
     public Set<String> getRights () {
         if (rights == null) {
             rights = new HashSet<String>();
@@ -160,6 +166,7 @@ public class Role implements Comparable<Role> {
             if (viewComments) rights.add(VIEW_COMMENTS);
             if (viewAdminData) rights.add(VIEW_ADMIN_DATA);
             if (editAnnouncements) rights.add(EDIT_ANNOUNCEMENTS);
+            if (editTerms) rights.add(EDIT_TERMS);
             rights = Collections.unmodifiableSet(rights);
         }
         return rights;

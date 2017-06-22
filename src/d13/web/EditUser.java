@@ -95,7 +95,7 @@ public class EditUser {
                 Tracker tracker = new Tracker(editee);
                 
                 // validate all before updating
-                editee.hibernateInitActivityLogHack();
+                editee.hibernateInitLogHacks();
                 HibernateUtil.getCurrentSession().evict(editee);
                 if (loginEdit) {
                     editee.setEmail(bean.getEmail());

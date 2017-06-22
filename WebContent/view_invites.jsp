@@ -32,7 +32,7 @@ String warning = (String)sess.getAndClearAttribute(SessionData.SA_MANAGE_INVITES
 String warning_html = warning; //(warning == null ? null : Util.html(warning)); // it's already html
 String comment = (String)sess.getAndClearAttribute(SessionData.SA_MANAGE_INVITES_COMMENT);
 String comment_html = Util.html(comment);
-boolean show_actions = sess.getUser().getRole().canInviteUsers();
+boolean show_actions = sess.getUser().getRole().canInviteUsers() && !RuntimeOptions.Global.isRegistrationClosed();
 %>
 <!DOCTYPE html>
 <html>

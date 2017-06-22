@@ -1,8 +1,11 @@
 package d13.notify;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.Address;
@@ -11,6 +14,8 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
+import org.markdown4j.Markdown4jProcessor;
 
 import d13.dao.RuntimeOptions;
 import d13.dao.User;
@@ -29,22 +34,31 @@ public abstract class Email {
     RuntimeOptions.setOption("notify.base_url", "http://camp.disorient.info");
 */
     
-    public static String RT_SMTP_AUTH = "notify.smtp_auth";
-    public static String RT_SMTP_TLS = "notify.smtp_tls";
-    public static String RT_SMTP_SSL = "notify.smtp_ssl";
-    public static String RT_SMTP_HOST = "notify.smtp_host";
-    public static String RT_SMTP_PORT = "notify.smtp_port";
-    public static String RT_SMTP_USER = "notify.smtp_user";
-    public static String RT_SMTP_PASSWORD ="notify.smtp_password";
-    public static String RT_MAIL_FROM = "notify.mail_from";
-    public static String RT_MAIL_REPLY_TO = "notify.reply_to";
-    public static String RT_MAIL_DEBUG = "notify.debug";
-    public static String RT_BASE_URL = "notify.base_url";
+    public static final String RT_SMTP_AUTH = "notify.smtp_auth";
+    public static final String RT_SMTP_TLS = "notify.smtp_tls";
+    public static final String RT_SMTP_SSL = "notify.smtp_ssl";
+    public static final String RT_SMTP_HOST = "notify.smtp_host";
+    public static final String RT_SMTP_PORT = "notify.smtp_port";
+    public static final String RT_SMTP_USER = "notify.smtp_user";
+    public static final String RT_SMTP_PASSWORD ="notify.smtp_password";
+    public static final String RT_MAIL_FROM = "notify.mail_from";
+    public static final String RT_MAIL_REPLY_TO = "notify.reply_to";
+    public static final String RT_MAIL_DEBUG = "notify.debug";
+    public static final String RT_BASE_URL = "notify.base_url";
+    public static final String RT_APPROVAL_CONTENT = "approval";
+    public static final String RT_REJECTION_CONTENT = "rejection";
+    public static final String RT_INVITE_CONTENT = "invite";
     
     private final Configuration config;
     
     public static class Configuration implements Cloneable {
     
+        public static class EmailContents {
+            public final String title;
+            public final String body;
+            EmailContents (String title, String body) { this.title = title; this.body = body; }
+        }
+        
         public boolean auth     = false;
         public boolean tls      = false;
         public boolean ssl      = false;
@@ -58,6 +72,7 @@ public abstract class Email {
         public boolean single   = false; // for mailer apps; if single then TO:recipient + CC:camp@, otherwise BCC recipients and no CC.
         public String  pwExpire = User.RT_PWRESET_EXPIRE_MINUTES_DEFAULT;
         public boolean debug    = false;
+        private Map<String,EmailContents> contents = new HashMap<String,EmailContents>();
         // TODO: pwExpire is a bit of a hack; if we have to start referring to lots of other config
         //       options in email, it would be cleaner to pass the hibernate session to Email 
         //       constructors and query relevant options there. for now this is fine, there is only
@@ -81,6 +96,7 @@ public abstract class Email {
             c.single = single;
             c.pwExpire = pwExpire;
             c.debug = debug;
+            c.contents = new HashMap<String,EmailContents>(contents);
             return c;
         }
         
@@ -98,6 +114,9 @@ public abstract class Email {
             c.baseUrl = RuntimeOptions.getOption(RT_BASE_URL, c.baseUrl, session);
             c.pwExpire = RuntimeOptions.getOption(User.RT_PWRESET_EXPIRE_MINUTES, User.RT_PWRESET_EXPIRE_MINUTES_DEFAULT, session);
             c.debug = "1".equals(RuntimeOptions.getOption(RT_MAIL_DEBUG, c.debug ? "1" : "0", session));
+            c.loadContents(RT_APPROVAL_CONTENT, session);
+            c.loadContents(RT_REJECTION_CONTENT, session);
+            c.loadContents(RT_INVITE_CONTENT, session);
             return c;
         }
         
@@ -105,8 +124,32 @@ public abstract class Email {
             return pwExpire;
         }
         
+        private void loadContents (String key, org.hibernate.Session session) {
+            String title = RuntimeOptions.getOption("notify.email." + key + ".title", session); 
+            String body = RuntimeOptions.getOption("notify.email." + key + ".body", session);
+            contents.put(key, new EmailContents(title, body));
+        }
+        
+        public String getContentTitle (String key) {
+            EmailContents content = contents.get(key);
+            String title = (content == null ? null : content.title);
+            return (title == null ? "" : title);
+        }
+        
+        public String getContentBody (String key) {
+            EmailContents content = contents.get(key);
+            String body = (content == null ? null : content.body);
+            return (body == null ? "" : body);
+        }
+        
     }
     
+    private static final ThreadLocal<Markdown4jProcessor> mdparser = new ThreadLocal<Markdown4jProcessor>() {
+        @Override protected Markdown4jProcessor initialValue () {
+            return new Markdown4jProcessor();
+        }
+    };
+
     public Email (Configuration c) {
         this.config = c;
     }
@@ -140,6 +183,33 @@ public abstract class Email {
     protected final String getContactEmail () {
         
         return config.replyTo;
+        
+    }
+    
+    protected final String replaceFields (String text, Map<String,String> replacements, boolean forMarkdown) {
+        
+        if (replacements != null)
+            for (Map.Entry<String,String> r : replacements.entrySet())
+                text = text.replace("{" + r.getKey() + "}", r.getValue());
+        
+        return text;
+
+    }
+    
+    protected final String replaceFields (String text, Map<String,String> replacements) {
+        return replaceFields(text, replacements, false);
+    }
+    
+    protected final String convertMarkdown (String markdown, Map<String,String> replacements) {
+
+        markdown = replaceFields(markdown, replacements, true);
+        
+        try {
+            return "<html><body>" + mdparser.get().process(markdown) + "</body></html>";
+        } catch (IOException x) {
+            // won't happen
+            return "";
+        }
         
     }
     

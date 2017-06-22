@@ -240,22 +240,25 @@ here.</div>
 <table class="form" style="margin-top: 1ex;">
 <tr><td colspan="2" class="title">Confirm Approve / Reject User
 <tr><td colspan="2" class="status">This user is: <%
-boolean selectApprove = false, selectReject = false;
+boolean selectApprove = false, selectReject = false, silentReject = false;
 String labelApprove = "Confirm Approve", labelReject = "Confirm Reject";
 switch (editee.getState()) {
 case APPROVE_PENDING: 
     out.println("<span class=\"approved\">Pending Approval</span>");
     selectApprove = true;
+    silentReject = true;
     break;
 case REJECT_PENDING: 
     out.println("<span class=\"rejected\">Pending Rejection</span>");
     selectReject = true;
+    silentReject = true;
     break;
 case APPROVED: 
     out.println("<span class=\"approved\">Approved (Finalized)</span>");
     selectApprove = true;
     labelApprove = "Approved";
     labelReject = "Change to Rejected";
+    silentReject = true;
     break;
 case REJECTED: 
     out.println("<span class=\"rejected\">Rejected (Finalized)</span>");
@@ -273,6 +276,9 @@ default:
     <option value="">--- Select Action ---</option>
     <option value="final_approve"<%= selectApprove ? " selected" : "" %>><%=labelApprove %></option>
     <option value="final_reject"<%= selectReject ? " selected" : "" %>><%=labelReject %></option>
+    <% if (silentReject) { %>
+    <option value="final_reject_silent"><%=labelReject %> (No Email)</option>
+    <% } %>
 </select>
 <tr><td class="wide" colspan="2"><input class="dbutton" type="submit" value="Apply" onclick="return checkc();">
 </table>

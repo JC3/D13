@@ -48,7 +48,7 @@ public class EditSurvey {
             Tracker tracker = new Tracker(form);
 
             // validate all before updating
-            editee.hibernateInitActivityLogHack();
+            editee.hibernateInitLogHacks();
             HibernateUtil.getCurrentSession().evict(form);
             HibernateUtil.getCurrentSession().evict(editee);
             BeanUtils.copyProperties(form, bean);

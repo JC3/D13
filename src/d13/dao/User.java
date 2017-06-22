@@ -56,6 +56,7 @@ public class User implements Trackable {
     private Invite currentInvite;
     private Set<Cell> cells = new HashSet<Cell>(0);
     private List<ActivityLogEntry> activityLog = new ArrayList<ActivityLogEntry>();
+    private List<GeneralLogEntry> generalLog = new ArrayList<GeneralLogEntry>();
     private DueItem personalDue;
     private DueItem rvDue;
     private String customDueComments;
@@ -442,7 +443,7 @@ public class User implements Trackable {
     }
     
     public void setState(UserState state) {
-        this.state = (state == null ? UserState.NEW_USER : state);       
+        this.state = (state == null ? UserState.NEW_USER : state);
     }
     
     public void setApprovedOnNow () {
@@ -474,8 +475,26 @@ public class User implements Trackable {
         return Collections.unmodifiableList(activityLog);
     }
     
-    public void hibernateInitActivityLogHack () {
+    public List<GeneralLogEntry> getGeneralLog () {
+        return Collections.unmodifiableList(generalLog);
+    }
+    
+    public void hibernateInitLogHacks () {
         Hibernate.initialize(activityLog);
+        //Hibernate.initialize(generalLog); // Unnecessary
+    }
+
+    public void addGeneralLogEntry (GeneralLogEntry entry) {
+        if (entry != null)
+            generalLog.add(entry);
+    }
+    
+    public void addGeneralLogEntry (String summary, int type) {
+        addGeneralLogEntry(new GeneralLogEntry(summary, null, type, this));
+    }
+
+    public void addGeneralLogEntry (String summary, String detail, int type) {
+        addGeneralLogEntry(new GeneralLogEntry(summary, detail, type, this));
     }
 
     public void addActivityLogEntry (ActivityLogEntry entry) {
@@ -491,8 +510,8 @@ public class User implements Trackable {
         addActivityLogEntry(new ActivityLogEntry(this, description, type, who));
     }
 
-    public void addStateActivityLogEntry (User editor, UserState old) {
-        String description = String.format("Changed from %s to %s.", old.toString(), state.toString());
+    public void addStateActivityLogEntry (User editor, UserState old, boolean silent) {
+        String description = String.format("Changed from %s to %s%s.", old.toString(), state.toString(), silent ? " (no email)" : "");
         addActivityLogEntry(new ActivityLogEntry(this, description, ActivityLogEntry.TYPE_REVIEW, editor));
     }
     

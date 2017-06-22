@@ -13,15 +13,6 @@ public class RegistrationForm implements Trackable {
     private User user;
     private DateTime completionTime;
     
-    private String helpedOffPlaya;
-    private boolean helpedAlphaCamp;
-    private boolean helpedCampBuild;
-    private boolean helpedDisengage;
-    private boolean helpedLeadRoles;
-    private boolean helpedLoveMinistry;
-    private boolean helpedLNT;
-    private boolean helpedOther;
-    private String helpedOtherOther;
     private boolean disorientVirgin = true;
     private boolean bmVirgin = true;
     private String sponsor = "";
@@ -52,6 +43,7 @@ public class RegistrationForm implements Trackable {
     private String comments;
     private boolean haveVehiclePass;
     private TicketSource tixSource = TicketSource.NONE; 
+    private TeeShirtSize shirtSize;
     
     RegistrationForm () {
     }
@@ -78,60 +70,6 @@ public class RegistrationForm implements Trackable {
     
     public DateTime getCompletionTime () {
         return completionTime;
-    }
-
-    @Track
-    @DataView(i=10, n="Helped Off Playa", longtext=true)
-    public String getHelpedOffPlaya() {
-        return helpedOffPlaya;
-    }
-
-    @Track
-    @DataView(i=20, n="Helped Alpha?")
-    public boolean isHelpedAlphaCamp() {
-        return helpedAlphaCamp;
-    }
-
-    @Track
-    @DataView(i=30, n="Helped DPW?")
-    public boolean isHelpedCampBuild() {
-        return helpedCampBuild;
-    }
-
-    @Track
-    @DataView(i=40, n="Helped Disengage?")
-    public boolean isHelpedDisengage() {
-        return helpedDisengage;
-    }
-
-    @Track
-    @DataView(i=50, n="Helped Lead?")
-    public boolean isHelpedLeadRoles() {
-        return helpedLeadRoles;
-    }
-
-    @Track
-    @DataView(i=60, n="Helped Love Ministry?")
-    public boolean isHelpedLoveMinistry() {
-        return helpedLoveMinistry;
-    }
-
-    @Track
-    @DataView(i=70, n="Helped LNT?")
-    public boolean isHelpedLNT() {
-        return helpedLNT;
-    }
-
-    @Track
-    @DataView(i=80, n="Helped Other?")
-    public boolean isHelpedOther() {
-        return helpedOther;
-    }
-
-    @Track
-    @DataView(i=90, n="Helped Other", longtext=true)
-    public String getHelpedOtherOther() {
-        return helpedOtherOther;
     }
 
     @Track
@@ -187,6 +125,14 @@ public class RegistrationForm implements Trackable {
     
     public Long getDrivingFromToId () {
         return drivingFromTo == null ? null : (long)drivingFromTo.toDBId();
+    }
+    
+    public TeeShirtSize getShirtSize () {
+        return shirtSize;
+    }
+    
+    public Long getShirtSizeId () {
+        return shirtSize == null ? null : (long)shirtSize.toDBId();
     }
     
     public String getDrivingFromToOther () {
@@ -312,6 +258,15 @@ public class RegistrationForm implements Trackable {
     }
 
     @Track
+    @DataView(i=2285, n="Shirt Size")
+    public String getShirtSizeDisplay () {
+        if (shirtSize == null)
+            return "";
+        else
+            return shirtSize.toDisplayString();
+    }
+
+    @Track
     @DataView(i=2290, n="User's Comments", longtext=true)
     public String getComments() {
         return comments;
@@ -341,42 +296,6 @@ public class RegistrationForm implements Trackable {
     @DataView(i=102, n="Ticket Source")
     public TicketSource getTixSource() {
         return tixSource;
-    }
-
-    public void setHelpedOffPlaya(String helpedOffPlaya) {
-        this.helpedOffPlaya = helpedOffPlaya;
-    }
-
-    public void setHelpedAlphaCamp(boolean helpedAlphaCamp) {
-        this.helpedAlphaCamp = helpedAlphaCamp;
-    }
-
-    public void setHelpedCampBuild(boolean helpedCampBuild) {
-        this.helpedCampBuild = helpedCampBuild;
-    }
-
-    public void setHelpedDisengage(boolean helpedDisengage) {
-        this.helpedDisengage = helpedDisengage;
-    }
-
-    public void setHelpedLeadRoles(boolean helpedLeadRoles) {
-        this.helpedLeadRoles = helpedLeadRoles;
-    }
-
-    public void setHelpedLoveMinistry(boolean helpedLoveMinistry) {
-        this.helpedLoveMinistry = helpedLoveMinistry;
-    }
-
-    public void setHelpedLNT(boolean helpedLNT) {
-        this.helpedLNT = helpedLNT;
-    }
-
-    public void setHelpedOther(boolean helpedOther) {
-        this.helpedOther = helpedOther;
-    }
-
-    public void setHelpedOtherOther(String helpedOtherOther) {
-        this.helpedOtherOther = helpedOtherOther;
     }
 
     public void setDisorientVirgin(boolean disorientVirgin) {
@@ -409,6 +328,21 @@ public class RegistrationForm implements Trackable {
 
     public void setDepartureTime(String departureTime) {
         this.departureTime = Util.require(departureTime, "Departure time");
+    }
+    
+    public void setShirtSize (TeeShirtSize shirtSize) {
+        if (shirtSize == null)
+            throw new IllegalArgumentException("Tee-shirt size must be specified.");
+        this.shirtSize = shirtSize;
+    }
+    
+    public void setShirtSizeId (Long shirtSizeId) {
+        if (shirtSizeId == null)
+            throw new IllegalArgumentException("Tee-shirt size must be specified.");
+        TeeShirtSize size = TeeShirtSize.fromDBId((int)(long)shirtSizeId);
+        if (size == null)
+            throw new IllegalArgumentException("Invalid tee-shirt size ID.");
+        this.shirtSize = size;
     }
 
     public void setDrivingFromTo(Location drivingFromTo) {
@@ -562,8 +496,6 @@ public class RegistrationForm implements Trackable {
     }
 
     public void validateMisc () throws IllegalArgumentException {
-        if (helpedOther)
-            Util.require(helpedOtherOther, "Other on-playa event");
         if (drivingFromTo == Location.OTHER)
             Util.require(drivingFromToOther, "Other driving location");
         if (bmVirgin && !disorientVirgin)
@@ -580,6 +512,10 @@ public class RegistrationForm implements Trackable {
     
     public void setCompletionTimeNow () {
         completionTime = DateTime.now();
+    }
+    
+    @Override public String toString () {
+        return String.format("%s[user=%s]", rformId, user);
     }
     
 }

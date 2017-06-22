@@ -1,3 +1,32 @@
+2017-06-22 jasonc
+
+  1.21c
+  - Rejection email content type was plain text instead of HTML.
+  - Invites can no longer be sent when registration is closed.
+  - Hide invite send UI when registration is closed.
+  - Fix infuriating new bug on reg form (added merge cascade to user -> regform).
+
+2017-06-10 jasonc
+
+  1.21
+  - Registration terms can now be edited online. Supports Markdown.
+  - Email templates now use Markdown and are stored in DB. No editor UI yet.
+  - Slight rearrangment of links on home page, and fixed some typos.
+  - Admin cell details page now shows cell descriptions. 
+  - Removed "Dubai" pre-defined location, added "Reno".
+  - Profile page "Location" changed to "Home" and description added.
+  - "Driving to/from" clarified, "flying to BRC" added.
+  - Ability to reject applicants without sending a notification email.
+  - Removed off-playa help question.
+  - Removed on-playa help question.
+  - Added tee-shirt size question.
+  - Updated dates for 2017.
+  - Prep database for 2017.
+  - New internal log table for tracking admin-related activity events.
+  - Finally "upgraded" to JDK 7...
+  - Misc. code cleanups.
+  - Migrated all source from SVN to Github.
+
 2016-07-24 jasonc
 
   1.20

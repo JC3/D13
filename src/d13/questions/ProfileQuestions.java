@@ -24,9 +24,9 @@ public class ProfileQuestions {
         q.addChoice(Gender.OTHER.toDisplayString(), Gender.OTHER.toDBString());
         qs.add(q);
         qs.add(Question.newShortText("phone", "Cell Phone", null));
-        q = Question.newSingleChoice("location", "Location", null);
+        q = Question.newSingleChoice("location", "Home", "Where do you live?");
         for (Location l:Location.values())
-            if (l != Location.OTHER)
+            if (l != Location.OTHER && !l.isHiddenInProfile())
                 q.addChoice(l.toDisplayString(), l.toDBId());
         q.addOtherChoice(Location.OTHER.toDisplayString(), Location.OTHER.toDBId());
         qs.add(q);
