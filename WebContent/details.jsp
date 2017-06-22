@@ -66,9 +66,7 @@ if (notes != null) {
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="disorient.css">
-<link rel="icon" href="favicon.ico">
+<dis:common/>
 <style type="text/css">
 table.form td.key { white-space: nowrap; font-weight: bold; color: #ff8000; vertical-align: top; border-top: 1px solid #202020; }
 table.form td.value { vertical-align: top; border-top: 1px solid #202020; }
@@ -101,7 +99,6 @@ function checkc () {
     return true;
 }
 </script>
-<title>Disorient</title>
 </head>
 <body>
 

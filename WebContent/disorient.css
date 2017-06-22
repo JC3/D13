@@ -129,6 +129,10 @@ textarea {
     height: 8ex;
 }
 
+textarea.markdown {
+	font-family: monospace;
+}
+
 input.dradio {
     height: 3ex;
     vertical-align: text-bottom;
