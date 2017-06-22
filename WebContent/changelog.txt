@@ -1,5 +1,14 @@
 2017-06-22 jasonc
 
+  1.22 (https://github.com/JC3/D13/compare/810f063c7c84e3e65efb4d2f0fda7becca43d0ef...b8df5cc035090d4cc29f3ab5c57c66dfcf69d5d0)
+  - Invite/approve/reject email template editor and supporting code and privileges.
+  - IP address logging for security.
+  - Big reorganization of tags and headers on JSP pages.
+  - Same jQuery version on all pages.
+  - Misc. style and code tweaks.
+
+2017-06-22 jasonc
+
   1.21c (https://github.com/JC3/D13/commit/a393a50ee16ab475b3dc79652f09f730c5a8e45c)
   - Rejection email content type was plain text instead of HTML.
   - Invites can no longer be sent when registration is closed.
