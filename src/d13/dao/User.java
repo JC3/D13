@@ -3,10 +3,13 @@ package d13.dao;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -63,6 +66,7 @@ public class User implements Trackable {
     private List<Invoice> invoices = new ArrayList<Invoice>();
     private boolean receiveNotifications = true;
     private List<Comment> comments = new ArrayList<Comment>();
+    private Map<String,IPLogEntry> ipHistory = new HashMap<String,IPLogEntry>();
     
     User () {
     }
@@ -374,6 +378,28 @@ public class User implements Trackable {
         if (currentInvite != null && currentInvite.getStatus() == Invite.STATUS_ACCEPTED)
             return false;
         return true;
+    }
+    
+    public Map<String,IPLogEntry> getIpHistory () {
+        return Collections.unmodifiableMap(ipHistory);
+    }
+    
+    public void hitIpHistory (String ip, DateTime now) {
+        IPLogEntry e = ipHistory.get(ip);
+        if (e == null) {
+            e = new IPLogEntry(this, ip);
+            ipHistory.put(ip, e);
+        } else {
+            e.see();
+        }
+    }
+    
+    public void hitIpHistory (String ip) {
+        hitIpHistory(ip, DateTime.now());
+    }
+    
+    public void hitIpHistory (HttpServletRequest request) {
+        hitIpHistory(Util.ip(request), DateTime.now());
     }
     
     public void setCurrentInvite (Invite invite) {

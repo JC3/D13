@@ -66,7 +66,7 @@ public class EditUser {
                 
                 // then login as that user
                 if (!nologin)
-                    session.login(user.getEmail(), bean.getPassword());
+                    session.login(user.getEmail(), bean.getPassword(), context.getRequest());
                 
             } else if (update) {
                 
