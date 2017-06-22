@@ -1,3 +1,11 @@
+2017-06-22 jasonc
+
+  1.21c
+  - Rejection email content type was plain text instead of HTML.
+  - Invites can no longer be sent when registration is closed.
+  - Hide invite send UI when registration is closed.
+  - Fix infuriating new bug on reg form (added merge cascade to user -> regform).
+
 2017-06-10 jasonc
 
   1.21

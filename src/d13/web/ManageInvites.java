@@ -82,6 +82,12 @@ public class ManageInvites {
                 errorMessage = "Permission denied.";
                 return; // permission denied
             }
+            // don't let people send invites when registration is closed
+            if (RuntimeOptions.Global.isRegistrationClosed()) {
+                failed = true;
+                errorMessage = "Registration is not open, can't send invites.";
+                return; // registration closed
+            }
             // parse emails
             List<InternetAddress> emails;
             try {

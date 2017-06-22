@@ -286,7 +286,7 @@
         <property name="locationOther" length="128"/>
         <property name="phone" length="24"/>
         <property name="emergencyContact" type="text" not-null="true"/>
-        <one-to-one name="registration" class="d13.dao.RegistrationForm" cascade="save-update"/>
+        <one-to-one name="registration" class="d13.dao.RegistrationForm" cascade="save-update,merge"/>
         <one-to-one name="approval" class="d13.dao.ApprovalSurvey" cascade="save-update"/>
         <property name="state" type="d13.dao.types.UserStateType" not-null="true"/>
         <property name="approvedOn" type="d13.dao.types.DateTimeType"/>

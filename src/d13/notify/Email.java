@@ -114,9 +114,9 @@ public abstract class Email {
             c.baseUrl = RuntimeOptions.getOption(RT_BASE_URL, c.baseUrl, session);
             c.pwExpire = RuntimeOptions.getOption(User.RT_PWRESET_EXPIRE_MINUTES, User.RT_PWRESET_EXPIRE_MINUTES_DEFAULT, session);
             c.debug = "1".equals(RuntimeOptions.getOption(RT_MAIL_DEBUG, c.debug ? "1" : "0", session));
-            c.loadContents(RT_APPROVAL_CONTENT);
-            c.loadContents(RT_REJECTION_CONTENT);
-            c.loadContents(RT_INVITE_CONTENT);
+            c.loadContents(RT_APPROVAL_CONTENT, session);
+            c.loadContents(RT_REJECTION_CONTENT, session);
+            c.loadContents(RT_INVITE_CONTENT, session);
             return c;
         }
         
@@ -124,9 +124,9 @@ public abstract class Email {
             return pwExpire;
         }
         
-        private void loadContents (String key) {
-            String title = RuntimeOptions.getOption("notify.email." + key + ".title"); 
-            String body = RuntimeOptions.getOption("notify.email." + key + ".body");
+        private void loadContents (String key, org.hibernate.Session session) {
+            String title = RuntimeOptions.getOption("notify.email." + key + ".title", session); 
+            String body = RuntimeOptions.getOption("notify.email." + key + ".body", session);
             contents.put(key, new EmailContents(title, body));
         }
         

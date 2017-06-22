@@ -479,8 +479,9 @@ public class User implements Trackable {
         return Collections.unmodifiableList(generalLog);
     }
     
-    public void hibernateInitActivityLogHack () {
+    public void hibernateInitLogHacks () {
         Hibernate.initialize(activityLog);
+        //Hibernate.initialize(generalLog); // Unnecessary
     }
 
     public void addGeneralLogEntry (GeneralLogEntry entry) {

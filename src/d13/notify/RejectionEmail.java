@@ -31,6 +31,10 @@ public class RejectionEmail extends Email {
         return body;
     }
 
+    @Override protected boolean isHtml () {
+        return true;
+    }
+    
     public static final void sendNow (User user, Configuration c) throws Exception {
         RejectionEmail email = new RejectionEmail(user, c);
         email.send(user);

@@ -95,6 +95,7 @@ public class BackgroundNotificationManager implements ServletContextListener {
                     session.close();
                     session = null;
                 } catch (Throwable t) {
+                    t.printStackTrace(System.err);
                     System.err.println("MAIL: When loading configuration options: " + t.getMessage());
                     enabled = false;
                 }
@@ -153,8 +154,8 @@ public class BackgroundNotificationManager implements ServletContextListener {
                         try {
                             sendMail(q, config);
                         } catch (Throwable t) {
+                            //t.printStackTrace(System.err);
                             System.err.println("MAIL: When sending email [#" + q.getQnId() + "]: " + t.getMessage());
-                            //t.printStackTrace();
                             error = t.getMessage();
                             if (error == null) error = "";
                         }

@@ -514,4 +514,8 @@ public class RegistrationForm implements Trackable {
         completionTime = DateTime.now();
     }
     
+    @Override public String toString () {
+        return String.format("%s[user=%s]", rformId, user);
+    }
+    
 }
