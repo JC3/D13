@@ -87,6 +87,8 @@ CREATE TABLE IF NOT EXISTS `ip_log` (
   KEY `user` (`user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+ALTER TABLE `roles` ADD `editMailTemplates` TINYINT NOT NULL DEFAULT '0' ;
+
      -->
     
 <hibernate-mapping default-access="field">
@@ -163,6 +165,7 @@ CREATE TABLE IF NOT EXISTS `ip_log` (
         <property name="editCells" not-null="true"/>
         <property name="editAnnouncements" not-null="true"/>
         <property name="editTerms" not-null="true"/>
+        <property name="editMailTemplates" not-null="true"/>
     </class>
 
     <class name="d13.dao.RuntimeOptions$RuntimeOption" table="options">

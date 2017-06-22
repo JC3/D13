@@ -130,6 +130,27 @@ public abstract class Email {
             contents.put(key, new EmailContents(title, body));
         }
         
+        public static void setContents (String key, String subj, String body) {
+            
+            key = (key == null ? "" : key.trim().toLowerCase());
+            subj = (subj == null ? "" : subj.trim());
+            body = (body == null ? "" : body.trim());
+            
+            if ("".equals(key))
+                throw new IllegalArgumentException("Missing template name.");
+            else if ("".equals(subj))
+                throw new IllegalArgumentException("Email subject must be specified.");
+            else if ("".equals(body))
+                throw new IllegalArgumentException("Email body must be specified.");
+            
+            if (!key.equals(RT_APPROVAL_CONTENT) && !key.equals(RT_REJECTION_CONTENT) && !key.equals(RT_INVITE_CONTENT))
+                throw new IllegalArgumentException("Invalid template name.");
+            
+            RuntimeOptions.setOption("notify.email." + key + ".title", subj); 
+            RuntimeOptions.setOption("notify.email." + key + ".body", body);
+
+        }
+        
         public String getContentTitle (String key) {
             EmailContents content = contents.get(key);
             String title = (content == null ? null : content.title);
