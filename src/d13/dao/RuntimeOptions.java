@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 
 import d13.util.HibernateUtil;
 
@@ -13,22 +14,24 @@ public class RuntimeOptions {
     public static class RuntimeOption {
         String name;
         String value;
+        Integer listOrder;
         RuntimeOption () { }
         RuntimeOption (String name) { this.name = name; }
         public RuntimeOption (String name, String value) { this.name = name; this.value = value; }
         public boolean isSecure () {
             if (SECURE_WHITELIST.contains(name))
                 return false;
-            else if (name.startsWith("notify.email.") && !name.endsWith(".title"))
-                return true;
             else
-                return name.startsWith("notify.smtp") || name.startsWith("dues.paypal") || name.equals("terms.text");
+                return name.startsWith("notify.smtp") || name.startsWith("dues.paypal");
         }
         public String getName () {
             return name;
         }
         public String getValue () {
             return value;
+        }
+        public int getListOrder () {
+            return listOrder == null ? 0 : listOrder;
         }
         private static final List<String> SECURE_WHITELIST = Arrays.asList(
             "notify.smtp_host",
@@ -74,7 +77,10 @@ public class RuntimeOptions {
     
     @SuppressWarnings("unchecked")
     public static List<RuntimeOption> getOptions () {
-        return HibernateUtil.getCurrentSession().createCriteria(RuntimeOption.class).list();
+        return HibernateUtil.getCurrentSession()
+                .createCriteria(RuntimeOption.class)
+                .addOrder(Order.asc("listOrder"))
+                .list();
     }
     
     public static class Global {

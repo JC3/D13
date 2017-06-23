@@ -48,7 +48,7 @@ ThisYear.setupRVTiers(rdues);
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<dis:common/>
+<dis:common require="jquery"/>
 <style type="text/css">
 .summary {
     background: #101010;
@@ -82,9 +82,99 @@ ThisYear.setupRVTiers(rdues);
     color: #505050; /*#bfb2a5;*/
     /*font-style: italic;*/
 }
+.long div {
+    display: none;
+}
+#mask {
+    position: fixed;
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    background: rgba(0,0,0,0.7);
+}
+#overlay {
+    position: fixed;
+    z-index: 1000;
+    width: 100ex;
+    height: 90vh;
+    top: 5vh;
+    left: calc((100vw - 100ex) / 2);
+    padding: 0;
+    margin: 0;
+    border: 1px solid #909090;
+    background: #101010;
+    display: flex;
+    flex-direction: column;
+    font-family: monospace;
+}
+#overlay div {
+    margin: 0;
+    padding: 1ex;
+}
+#overlay-header {
+    padding-top: 0.5ex !important;
+    padding-bottom: 0.5ex !important;
+    border-bottom: 1px dotted #909090;
+    background: #505050;
+    font-weight: bold;
+}
+#overlay-content {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    flex-grow: 1;
+}
+#overlay-name {
+    float: left;
+}
+#overlay-close {
+    float: right;
+}
 </style>
+<script type="text/javascript">
+function showOption (name, link) {
+	
+	let parent = $(link).closest('span');
+	let content = parent && parent.children('div');
+
+	if (!content)
+		return false;
+	
+	$('#overlay-name').text(name);
+	$('#overlay-content').html(content.html());
+	$('#mask').toggle(true);
+	
+	return false;
+	
+}
+
+function hideOption () {
+	
+	$('#mask').toggle(false);
+	return false;
+	
+}
+
+$(window).click(function (e) {
+
+	let t = $(e.target);
+	if (t.closest('#overlay').length === 0 && !t.hasClass('no-close-option'))
+		hideOption();
+	
+});
+</script>
 </head>
 <body>
+<div id="mask" style="display:none">
+	<div id="overlay">
+	    <div id="overlay-header"><span id="overlay-name">name</span><a id="overlay-close" href="#" onclick="return hideOption()">CLOSE</a></div>
+	    <div id="overlay-content"></div>
+	</div>
+</div>
 <dis:header/>
 
 <div class="nav">
@@ -96,7 +186,16 @@ ThisYear.setupRVTiers(rdues);
   <th>Name
   <th>Value
 <% for (RuntimeOptions.RuntimeOption o : options) { 
-     String value_html = o.isSecure() ? "<span class=\"secure\">Hidden</span>" : Util.html(o.getValue());
+     String value_html;
+     if (o.isSecure())
+         value_html = "<span class=\"secure\">Hidden</span>";
+     else if (o.getValue() != null && o.getValue().length() >= 100)
+         value_html = String.format("<span class=\"long\">"
+            + "<a class=\"no-close-option\" href=\"#\" onclick=\"return showOption('%s', this)\">Click to view...</a>"
+            + "<div>%s</div></span>",
+            o.getName(), Util.html(o.getValue()));
+     else
+         value_html = Util.html(o.getValue());
 %>
 <tr>
   <td><%= Util.html(o.getName()) %>

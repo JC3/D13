@@ -89,6 +89,16 @@ CREATE TABLE IF NOT EXISTS `ip_log` (
 
 ALTER TABLE `roles` ADD `editMailTemplates` TINYINT NOT NULL DEFAULT '0' ;
 
+ALTER TABLE  `options` ADD  `listOrder` INT NULL DEFAULT NULL FIRST;
+set @rn := 0;
+update options o
+set listOrder := @rn := @rn + 1
+order by 
+  length(o.name) - length(replace(o.name, ".", "")),
+  o.name;
+update options
+set listOrder = listOrder + 2
+where listOrder >= 6 and listOrder <= 26;
      -->
     
 <hibernate-mapping default-access="field">
@@ -171,6 +181,7 @@ ALTER TABLE `roles` ADD `editMailTemplates` TINYINT NOT NULL DEFAULT '0' ;
     <class name="d13.dao.RuntimeOptions$RuntimeOption" table="options">
         <id name="name"><generator class="assigned"/></id>
         <property name="value"/>
+        <property name="listOrder"/>
     </class>
 
     <class name="d13.dao.QueuedEmail" table="notifications">
