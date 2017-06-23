@@ -49,8 +49,11 @@ public class SessionData {
     public static final String SA_EDIT_TERMS_TEXT = "jsp.editterms.text";
     public static final String SA_GLOBAL_PREVIOUS_LOGIN = "global.prevlogin";
     
-    //private static final String SA_EMAIL = "info.disorient.SessionData.email";
-    private static final String SA_USERID = "info.disorient.SessionData.userid";
+    private static final String SA_USER_ID = "info.disorient.SessionData.userid";    
+    // These three aren't used by app but are useful when inspecting sessions in Tomcat manager:
+    private static final String SA_USER_EMAIL = "info.disorient.SessionData.email";
+    private static final String SA_USER_NAME = "info.disorient.SessionData.realname";
+    private static final String SA_USER_IP = "info.disorient.SessionData.ip";
     
     private HttpSession session;
     
@@ -162,7 +165,7 @@ public class SessionData {
     public Long getUserId () {
         
         try {
-            return (Long)session.getAttribute(SA_USERID);
+            return (Long)session.getAttribute(SA_USER_ID);
         } catch (Throwable t) {
             return null;
         }
@@ -220,11 +223,15 @@ public class SessionData {
         
         session.setAttribute(SA_GLOBAL_PREVIOUS_LOGIN, user.getLastLogin() == null ? 0 : user.getLastLogin().getMillis());
 
+        String ip = null;
         if (request != null && request instanceof HttpServletRequest)
-            user.hitIpHistory((HttpServletRequest)request);
+            ip = user.hitIpHistory((HttpServletRequest)request);
         
         user.setLastLoginNow();
-        session.setAttribute(SA_USERID, user.getUserId());
+        session.setAttribute(SA_USER_ID, user.getUserId());
+        session.setAttribute(SA_USER_EMAIL, user.getEmail());
+        session.setAttribute(SA_USER_NAME, user.getRealName());
+        session.setAttribute(SA_USER_IP, ip);
     
     }
 

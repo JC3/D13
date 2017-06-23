@@ -384,7 +384,7 @@ public class User implements Trackable {
         return Collections.unmodifiableMap(ipHistory);
     }
     
-    public void hitIpHistory (String ip, DateTime now) {
+    public String hitIpHistory (String ip, DateTime now) {
         IPLogEntry e = ipHistory.get(ip);
         if (e == null) {
             e = new IPLogEntry(this, ip);
@@ -392,14 +392,15 @@ public class User implements Trackable {
         } else {
             e.see();
         }
+        return ip;
     }
     
-    public void hitIpHistory (String ip) {
-        hitIpHistory(ip, DateTime.now());
+    public String hitIpHistory (String ip) {
+        return hitIpHistory(ip, DateTime.now());
     }
     
-    public void hitIpHistory (HttpServletRequest request) {
-        hitIpHistory(Util.ip(request), DateTime.now());
+    public String hitIpHistory (HttpServletRequest request) {
+        return hitIpHistory(Util.ip(request), DateTime.now());
     }
     
     public void setCurrentInvite (Invite invite) {
