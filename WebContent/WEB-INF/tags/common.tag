@@ -30,4 +30,13 @@
 <% if (tooltipster) { %>
 <script type="text/javascript" src="${pageContext.request.contextPath}/ext/jquery.tooltipster.min.js"></script>
 <% } %>
+<!-- browser style hacks -->
+<script type="text/javascript">
+if (window.chrome) {
+	let s = document.createElement('style');
+	s.type = 'text/css';
+	s.textContent = 'input[type="checkbox"] { margin: 3px 3px 0px 5px; }';
+	document.head.appendChild(s);
+}
+</script>
 <title><%= Util.html(title) %></title>

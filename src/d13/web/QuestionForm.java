@@ -34,8 +34,17 @@ public class QuestionForm {
     }
     
     public static void writeQuestion (JspWriter out, Question q, Object defaults, boolean script, boolean readOnlyLogin) throws IOException {
-       
+
+        String topclass = "";
+        switch (q.getType()) {
+        case Question.TYPE_SINGLE_CHOICE: topclass = " qtop-choices"; break;
+        case Question.TYPE_MULTI_CHOICE: topclass = " qtop-choices"; break;
+        case Question.TYPE_LONG_TEXT: topclass = " qtop-longtext"; break;
+        case Question.TYPE_DROPLIST: topclass = " qtop-droplist"; break;
+        }
+        
         out.println("<div class=\"question\" id=\"" + q.getField() + "\">");
+        out.println("<div class=\"qtop" + topclass + "\">");
         out.println("<div class=\"qname\">" + Util.html(q.getBrief()) + "</div>");
         out.println("<div class=\"qinput\">");
         
@@ -60,6 +69,7 @@ public class QuestionForm {
         case Question.TYPE_USER_DROPLIST: writeUserDropList(out, q, defaults); break;
         }
      
+        out.println("</div>");
         out.println("</div>");
         out.println("<div class=\"qdesc\">" + (q.getDetail() == null ? "" : q.getDetail()) + "</div>");
         out.println("</div>");
@@ -144,10 +154,15 @@ public class QuestionForm {
             
             boolean checked = c.getValue().equalsIgnoreCase(defaultvaluestr);
             
-            out.print(String.format("<input class=\"dradio\" id=\"%s_%s\"%s type=\"radio\" name=\"%s\" value=\"%s\"%s>%s",
+            out.print("<span>");
+            out.print(String.format("<label><input class=\"dradio\" id=\"%s_%s\"%s type=\"radio\" name=\"%s\" value=\"%s\"%s>%s%s</label>",
                     Util.html(c.getField()), Util.html(c.getValue()),
                     script ? " onclick=\"updateVisibility()\"" : "",
-                    Util.html(c.getField()), Util.html(c.getValue()), checked ? " checked" : "", Util.html(c.getText())));
+                    Util.html(c.getField()), 
+                    Util.html(c.getValue()), 
+                    checked ? " checked" : "",
+                    Util.html(c.getText()),
+                    c.isOther() ? ":" : ""));
             if (c.isOther()) {
                 String othervaluestr = null;
                 if (defaults != null) {
@@ -157,9 +172,9 @@ public class QuestionForm {
                         x.printStackTrace();
                     }
                 }
-                out.print(String.format(": <input class=\"dtext\" type=\"text\" name=\"%sOther\" value=\"%s\">", Util.html(c.getField()), Util.html(othervaluestr)));
+                out.print(String.format("&nbsp;<input class=\"dtext\" type=\"text\" name=\"%sOther\" value=\"%s\">", Util.html(c.getField()), Util.html(othervaluestr)));
             }
-            out.println("<br>");
+            out.println("</span>");
         }
         
     }
@@ -184,18 +199,7 @@ public class QuestionForm {
             boolean checked = c.getValue().equalsIgnoreCase(defaultvaluestr);
             
             out.println(String.format("<option value=\"%s\"%s>%s</option>", Util.html(c.getValue()), checked ? " selected" : "", Util.html(c.getText())));
-/*            if (c.isOther()) {
-                String othervaluestr = null;
-                if (defaults != null) {
-                    try {
-                        othervaluestr = BeanUtils.getProperty(defaults, c.getField() + "Other");
-                    } catch (Exception x) {
-                        x.printStackTrace();
-                    }
-                }
-                out.print(String.format(": <input type=\"text\" name=\"%sOther\" value=\"%s\">", Util.html(c.getField()), Util.html(othervaluestr)));
-            }
-            out.println("<br>");*/
+
         }
         
         out.println("</select>");
@@ -239,7 +243,13 @@ public class QuestionForm {
                 }
             }
             
-            out.print(String.format("<input class=\"dcheckbox\" type=\"checkbox\" name=\"%s\" value=\"%s\"%s>%s", Util.html(c.getField()), Util.html(c.getValue()), checked ? " checked" : "", Util.html(c.getText())));
+            out.print("<span>");
+            out.print(String.format("<label><input class=\"dcheckbox\" type=\"checkbox\" name=\"%s\" value=\"%s\"%s>%s%s</label>", 
+                    Util.html(c.getField()), 
+                    Util.html(c.getValue()), 
+                    checked ? " checked" : "", 
+                    Util.html(c.getText()),
+                    c.isOther() ? ": " : ""));
             if (c.isOther()) {
                 String othervaluestr = null;
                 if (defaults != null) {
@@ -249,9 +259,9 @@ public class QuestionForm {
                         x.printStackTrace();
                     }
                 }
-                out.print(String.format(": <input class=\"dtext\" type=\"text\" name=\"%sOther\" value=\"%s\">", Util.html(c.getField()), Util.html(othervaluestr)));
+                out.print(String.format("&nbsp;<input class=\"dtext\" type=\"text\" name=\"%sOther\" value=\"%s\">", Util.html(c.getField()), Util.html(othervaluestr)));
             }
-            out.println("<br>");
+            out.println("</span>");
             
         }
 

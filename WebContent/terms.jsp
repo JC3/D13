@@ -76,7 +76,7 @@ String message_html = (message == null ? null : Util.html(message));
 <div style="margin-top:2ex;text-align:center;" class="content">
 <br>
 <input type="hidden" name="continue" value="1">
-<input class="dcheckbox" type="checkbox" name="accept" value="1">I have read and understood the rules above!<br><br>
+<input type="checkbox" name="accept" value="1">I have read and understood the rules above!<br><br>
 <input class="dbutton" type="submit" value="Continue">
 </div>
 </form>

@@ -66,6 +66,7 @@ table.form td.bottom { border: 0; padding-top: 1ex; }
 .celldesc { display: none; }
 .error { color: red; }
 td.cellcheck { white-space: nowrap; }
+td.cellcheck label { display: inline-flex; align-items: center; }
 table.form a:link { color: #00a0ff; }
 table.form a:visited { color: #00a0ff; }
 table.form a:active { color: #00a0ff; }

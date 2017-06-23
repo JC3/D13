@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
 import d13.util.HibernateUtil;
@@ -282,6 +283,23 @@ public class Cell {
                 .createCriteria(Cell.class)
                 .add(Restrictions.ne("mandatory", false))
                 .list();
+        
+        return cells;
+        
+    }
+    
+    
+    public static List<Cell> findCategories (boolean withRoot) {
+       
+        Criteria crit = HibernateUtil.getCurrentSession()
+                .createCriteria(Cell.class)
+                .add(Restrictions.ne("category", false));
+        
+        if (!withRoot)
+            crit.add(Restrictions.isNotNull("parent"));
+        
+        @SuppressWarnings("unchecked")
+        List<Cell> cells = (List<Cell>)crit.list();
         
         return cells;
         
