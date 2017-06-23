@@ -1,3 +1,9 @@
+2017-06-23 05:09 ET jasonc
+
+  1.22b
+  - Quick fix for activity log related crashes.
+  - Some formatting tweaks.
+
 2017-06-22 jasonc
 
   1.22 (https://github.com/JC3/D13/compare/810f063c7c84e3e65efb4d2f0fda7becca43d0ef...b8df5cc035090d4cc29f3ab5c57c66dfcf69d5d0)

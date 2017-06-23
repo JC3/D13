@@ -83,9 +83,9 @@ public class EditRegistration {
                 }
                 */
             }
-            editee.addTrackerActivityLogEntry(editor, "Registration", tracker.compare(form), true);
             editee = (User)HibernateUtil.getCurrentSession().merge(editee);
             //form = (RegistrationForm)HibernateUtil.getCurrentSession().merge(form);
+            editee.addTrackerActivityLogEntry(editor, "Registration", tracker.compare(editee.getRegistration()), true);
 
             if (sendmail)
                 QueuedEmail.queueNotification(QueuedEmail.TYPE_REVIEW, editee);

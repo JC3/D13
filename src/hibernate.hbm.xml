@@ -322,7 +322,7 @@ ALTER TABLE `roles` ADD `editMailTemplates` TINYINT NOT NULL DEFAULT '0' ;
             <key column="userId"/>
             <many-to-many column="cellId" class="d13.dao.Cell"/>
         </set>
-        <list name="activityLog" cascade="all">
+        <list name="activityLog" cascade="all,merge">
             <key column="toWho"/>
             <index column="`index`"/>
             <one-to-many class="d13.dao.ActivityLogEntry"/>
