@@ -10,6 +10,11 @@ public class RejectionEmail extends Email {
     private final String subject;
     private final String body;
     
+    public static final String[][] FIELD_INFO = {
+        { "campemail", "Camp email address" },
+        { "realname", "User real name" }
+    };
+    
     public RejectionEmail (User user, Configuration c) {
 
         super(c);

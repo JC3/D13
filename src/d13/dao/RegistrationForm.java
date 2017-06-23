@@ -337,7 +337,7 @@ public class RegistrationForm implements Trackable {
     }
     
     public void setShirtSizeId (Long shirtSizeId) {
-        if (shirtSizeId == null)
+        if (shirtSizeId == null || shirtSizeId == 0)
             throw new IllegalArgumentException("Tee-shirt size must be specified.");
         TeeShirtSize size = TeeShirtSize.fromDBId((int)(long)shirtSizeId);
         if (size == null)

@@ -2,6 +2,8 @@ package d13.web;
 
 import java.util.Enumeration;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import d13.InvalidLoginException;
@@ -185,11 +187,12 @@ public class SessionData {
      * is thrown from this function.
      * @param username Username.
      * @param password Password.
+     * @param request Optional servlet request for IP tracking.
      * @throws Exception If username or password are empty or null,
      *         or if a general error occurs.
      * @throws SecurityException If the login is incorrect.
      */
-    public void login (String username, String password)
+    public void login (String username, String password, ServletRequest request)
         throws Exception
     {
         
@@ -216,6 +219,9 @@ public class SessionData {
             throw new SecurityException("Sorry, the system is temporarily down for maintenance.");
         
         session.setAttribute(SA_GLOBAL_PREVIOUS_LOGIN, user.getLastLogin() == null ? 0 : user.getLastLogin().getMillis());
+
+        if (request != null && request instanceof HttpServletRequest)
+            user.hitIpHistory((HttpServletRequest)request);
         
         user.setLastLoginNow();
         session.setAttribute(SA_USERID, user.getUserId());

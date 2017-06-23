@@ -114,15 +114,13 @@ for (Note n : notes) {
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="disorient.css">
-<link rel="icon" href="favicon.ico">
-<title>Disorient</title>
+<dis:common require="jquery"/>
 <style type="text/css">
 table.notes {
     /*border-collapse: collapse;*/
     border-spacing: 0;
     width: 90% !important; 
+    max-width: 90% !important;
 }
 table.notes th {
     white-space: nowrap;
@@ -158,6 +156,7 @@ table.notes .target-user {
     white-space: nowrap;
 }
 table.notes .target-cell {
+    white-space: nowrap;
 }
 table.notes .text {
     border-right: 0;
@@ -233,7 +232,6 @@ table.notes tr.type-adminedit a:active {
     background: #000080;
 }
 </style>
-<dis:jquery/>
 <script type="text/javascript">
 function showAfter (timestamp, datestr) {
     $('tr.noterow').filter(function() { 

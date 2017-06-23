@@ -44,7 +44,7 @@ public class Login {
         } else if (bean.isExisting()) {
             // if it's an existing user, log in
             try {
-                session.login(bean.getEmail(), bean.getPassword()); // <- checks maintenance mode
+                session.login(bean.getEmail(), bean.getPassword(), context.getRequest()); // <- checks maintenance mode
             } catch (InvalidLoginException lx) { // special case to enhance error message
                 failed = true;
                 errorMessage = lx.getMessage() + " If you are a new user select 'new user' below and you can set a password on the next page.";

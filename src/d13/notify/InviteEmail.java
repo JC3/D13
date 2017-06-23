@@ -15,6 +15,16 @@ public class InviteEmail extends Email {
     private final String subject;
     private final String body;
     
+    public static final String[][] FIELD_INFO = {
+        { "invitecode", "Invite code" },
+        { "campemail", "Camp email address" },
+        { "rsvpurl", "RSVP URL" },
+        { "loginurl", "Login URL" },
+        { "realname", "User real name" },
+        { "expires1", "Description coming soon (maybe), or ask Jason." },
+        { "expires2", "Description coming soon (maybe), or ask Jason." }
+    };
+    
     public InviteEmail (Invite invite, Configuration c) {
 
         super(c);

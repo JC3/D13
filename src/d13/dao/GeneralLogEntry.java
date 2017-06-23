@@ -10,6 +10,7 @@ public class GeneralLogEntry {
     
     public static final int TYPE_TERMS_TITLE = 0;
     public static final int TYPE_TERMS_TEXT = 1;
+    public static final int TYPE_EMAIL_TEMPLATE = 2;
     
     private long entryId;
     private DateTime time;

@@ -11,6 +11,14 @@ public class ApprovalEmail extends Email {
     private final String subject;
     private final String body;
     
+    public static final String[][] FIELD_INFO = {
+        { "campemail", "Camp email address" },
+        { "duesurl", "Due pay URL" },
+        { "regurl", "Reg form URL" },
+        { "graceperiod", "Grace period days" },
+        { "realname", "User real name" }
+    };
+    
     public ApprovalEmail (User user, Configuration c) {
     
         super(c);

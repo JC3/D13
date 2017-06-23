@@ -1,5 +1,6 @@
 package d13;
 
+import java.net.URLEncoder;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -11,8 +12,19 @@ import d13.dao.DueCalculator.Tier;
 public class ThisYear {
 
     public static final int CAMP_YEAR = 2017;
-    public static final String SYSTEM_VERSION = "v1.21c";
+    public static final String SYSTEM_VERSION = "v1.22";
+    public static final String CSS_VERSION;
     public static final DateTime PLAYA_MONDAY = new DateTime(2017, 8, 28, 12, 0);
+    
+    static {
+        String css_version = "";
+        try {
+            css_version = URLEncoder.encode(SYSTEM_VERSION, "us-ascii");
+        } catch (Exception x) {
+            // won't happen.
+        }
+        CSS_VERSION = css_version;
+    }
     
     /*
      * 2017

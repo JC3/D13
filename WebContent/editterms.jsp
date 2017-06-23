@@ -39,17 +39,13 @@ terms_text = terms_text == null ? RuntimeOptions.Global.getTermsText() : terms_t
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Disorient</title>
-<link rel="stylesheet" type="text/css" href="disorient.css">
-<link rel="icon" href="favicon.ico">
+<dis:common require="jquery"/>
 <style type="text/css">
 .edit-key {
     white-space: nowrap;
     vertical-align: top;
 }
 </style>
-<dis:jquery/>
 <script type="text/javascript">
 $(document).ready(function () {
 	if (<%=initial_modified%>) {
@@ -109,13 +105,14 @@ $(document).ready(function () {
 <table class="form">
 
 <tr>
-    <td colspan="2">Here you can edit the registration terms, which you must format as <a href="http://commonmark.org/help/">Markdown</a>.
-        Please be very careful with this, as editing the terms after registration has opened can lead to many unhappy campers.</td>
+    <td colspan="2" style="padding-bottom:1ex">Here you can edit the registration terms, which you must format as <a href="http://commonmark.org/help/">Markdown</a> 
+        (if you don't like the preview here you can also test your skills live <a href="http://spec.commonmark.org/dingus/">here</a>. Please be very careful with this, as editing the terms after
+        registration has opened can lead to many unhappy campers.</td>
 <tr>
-    <td style="white-space:nowrap;vertical-align:top;">Title:
+    <td style="white-space:nowrap;width:1ex;">Title:
     <td><input type="text" class="dtext" name="terms_title" value="<%=Util.html(terms_title)%>">
 <tr>
-    <td colspan="2"><textarea name="terms_text" class="dtextarea" style="width:100%;height:40ex;"><%=Util.html(terms_text)%></textarea>
+    <td colspan="2"><textarea name="terms_text" class="dtextarea markdown" style="width:calc(100% - 4px);height:40ex;"><%=Util.html(terms_text)%></textarea>
 <tr>
     <td colspan="2" style="text-align:center;padding-top:2ex;"><button id="preview" class="dbutton">Preview</button>&nbsp;<input class="dbutton" type="submit" value="Save">
 <tr>

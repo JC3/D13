@@ -37,13 +37,7 @@ boolean show_actions = sess.getUser().getRole().canInviteUsers() && !RuntimeOpti
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Disorient</title>
-<link rel="stylesheet" type="text/css" href="<%=root %>/ext/tooltipster.css" />
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.0.min.js"></script>
-<script type="text/javascript" src="<%=root %>/ext/jquery.tooltipster.min.js"></script>
-<link rel="stylesheet" type="text/css" href="disorient.css">
-<link rel="icon" href="favicon.ico">
+<dis:common require="jquery tooltipster"/>
 <style type="text/css">
 #emailtext {
     width: 40ex;

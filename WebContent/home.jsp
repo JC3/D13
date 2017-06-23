@@ -71,10 +71,7 @@ WorkStatistics stats = new WorkStatistics(user);
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Disorient</title>
-<link rel="stylesheet" type="text/css" href="disorient.css"/>
-<link rel="icon" href="favicon.ico">
+<dis:common/>
 <style type="text/css">
 table.stats {
     font-size: 80%;
@@ -191,7 +188,7 @@ here periodically for status updates! <strong>If your application is approved, y
 <%     } %>
 <%   } %>
 <li><a href="activity.jsp">View Site Activity</a>
-<%   if (role.canViewAdminData() || role.canEditTerms() || role.canEditAnnouncements()) { %>
+<%   if (role.canViewAdminData() || role.canEditTerms() || role.canEditAnnouncements() || role.canEditMailTemplates()) { %>
 <li>System Info / Settings
 <ul>
 <%     if (role.canEditAnnouncements()) { %>
@@ -199,6 +196,9 @@ here periodically for status updates! <strong>If your application is approved, y
 <%     } %>
 <%     if (role.canEditTerms()) { %>
   <li><a href="editterms.jsp">Edit Registration Terms</a>
+<%     } %>
+<%     if (role.canEditMailTemplates()) { %>
+  <li><a href="editmails.jsp">Edit Email Templates</a>
 <%     } %>
 <%     if (role.canViewAdminData()) { %>
   <li><a href="view_roles.jsp">View Special Users / Privileges / Roles</a>
