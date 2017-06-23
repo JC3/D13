@@ -163,11 +163,13 @@ public class Util {
         
     }
     
-    // Source: https://stackoverflow.com/a/15323776
+    // Source: https://stackoverflow.com/a/15323776, modified slightly.
     public static String ip (HttpServletRequest request) {
         
-        String ip = request.getHeader("X-Forwarded-For");  
+        String ip = request.getHeader("X-Forwarded-For"); // set by nginx on server  
         
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+            ip = request.getHeader("X-Real-IP");  // set by nginx on server
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
             ip = request.getHeader("Proxy-Client-IP");  
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
@@ -178,6 +180,8 @@ public class Util {
             ip = request.getHeader("HTTP_X_FORWARDED_FOR");  
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
             ip = request.getRemoteAddr();  
+        if (ip == null || "unknown".equalsIgnoreCase(ip))
+            ip = "";
         
         return ip;
         

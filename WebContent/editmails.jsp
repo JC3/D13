@@ -210,8 +210,7 @@ $(document).ready(function () {
 <table class="form">
 <tr>
   <td colspan="3" class="m-instructions"><div><p>Here you can edit the email templates, which you must format as <a href="http://commonmark.org/help/">Markdown</a> 
-        (if you don't like the preview here you can also test your skills live on <a href="http://stackedit.io">stackedit.io</a>, but
-        note the formatting looks a bit different than it does here). Make your edits below and use the buttons under each section.
+        (if you don't like the preview here you can also test your skills live <a href="http://spec.commonmark.org/dingus/">here</a>. Make your edits below and use the buttons under each section.
         Each section is its own thing so be sure to save all three separately if you edit all three. Use the back button to leave
         this page when you're done.</p>
         <p>Also, each template can contain template fields (inside { and }). Available fields for each email type are listed on the

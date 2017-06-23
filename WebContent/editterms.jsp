@@ -106,8 +106,7 @@ $(document).ready(function () {
 
 <tr>
     <td colspan="2" style="padding-bottom:1ex">Here you can edit the registration terms, which you must format as <a href="http://commonmark.org/help/">Markdown</a> 
-        (if you don't like the preview here you can also test your skills live on <a href="http://stackedit.io">stackedit.io</a>, but
-        note the formatting looks a bit different than it does here). Please be very careful with this, as editing the terms after
+        (if you don't like the preview here you can also test your skills live <a href="http://spec.commonmark.org/dingus/">here</a>. Please be very careful with this, as editing the terms after
         registration has opened can lead to many unhappy campers.</td>
 <tr>
     <td style="white-space:nowrap;width:1ex;">Title:

@@ -120,6 +120,7 @@ table.notes {
     /*border-collapse: collapse;*/
     border-spacing: 0;
     width: 90% !important; 
+    max-width: 90% !important;
 }
 table.notes th {
     white-space: nowrap;
@@ -155,6 +156,7 @@ table.notes .target-user {
     white-space: nowrap;
 }
 table.notes .target-cell {
+    white-space: nowrap;
 }
 table.notes .text {
     border-right: 0;

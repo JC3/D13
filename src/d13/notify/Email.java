@@ -207,7 +207,7 @@ public abstract class Email {
         
     }
     
-    protected final String replaceFields (String text, Map<String,String> replacements, boolean forMarkdown) {
+    protected final static String replaceFields (String text, Map<String,String> replacements, boolean forMarkdown) {
         
         if (replacements != null)
             for (Map.Entry<String,String> r : replacements.entrySet())
@@ -217,11 +217,11 @@ public abstract class Email {
 
     }
     
-    protected final String replaceFields (String text, Map<String,String> replacements) {
+    protected final static String replaceFields (String text, Map<String,String> replacements) {
         return replaceFields(text, replacements, false);
     }
     
-    protected final String convertMarkdown (String markdown, Map<String,String> replacements) {
+    protected final static String convertMarkdown (String markdown, Map<String,String> replacements) {
 
         markdown = replaceFields(markdown, replacements, true);
         
