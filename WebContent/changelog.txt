@@ -1,3 +1,9 @@
+2017-06-23 18:06 ET jasonc
+
+  1.23
+  - Big data view page hides table until it's loaded; page should load more quickly and smoothly.
+  - Tons of style fixes; better styling and form alignment all around.
+
 2017-06-23 11:48 ET jasonc
 
   1.22c

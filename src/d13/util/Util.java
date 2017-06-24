@@ -55,7 +55,7 @@ public class Util {
         if (str == null)
             return def;
         try {
-            return Integer.parseInt(str);
+            return Integer.parseInt(str.trim());
         } catch (Throwable t) {
             return def;
         }
