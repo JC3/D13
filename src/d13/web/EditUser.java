@@ -117,8 +117,8 @@ public class EditUser {
                 }
                 editee.setLocationOther(bean.getLocationOther());
                 editee.setEmergencyContact(bean.getEmergencyContact());
+                editee = (User)HibernateUtil.getCurrentSession().merge(editee);                
                 editee.addTrackerActivityLogEntry(editor, "Profile", tracker.compare(editee), true);
-                HibernateUtil.getCurrentSession().merge(editee);                
                 
             } else {
                 
