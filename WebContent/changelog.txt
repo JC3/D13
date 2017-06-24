@@ -1,6 +1,7 @@
-2017-06-23 18:06 ET jasonc
+2017-06-24 03:35 ET jasonc
 
-  1.23
+  1.22d
+  - Quick fix for more activity log related crashes, argh...
   - Big data view page hides table until it's loaded; page should load more quickly and smoothly.
   - Tons of style fixes; better styling and form alignment all around.
 
