@@ -96,9 +96,8 @@ set listOrder := @rn := @rn + 1
 order by 
   length(o.name) - length(replace(o.name, ".", "")),
   o.name;
-update options
-set listOrder = listOrder + 2
-where listOrder >= 6 and listOrder <= 26;
+
+ALTER TABLE `roles` ADD `createCells` TINYINT NOT NULL DEFAULT '0' AFTER `editCells`;
      -->
     
 <hibernate-mapping default-access="field">
@@ -173,6 +172,7 @@ where listOrder >= 6 and listOrder <= 26;
         <property name="viewComments" not-null="true"/>
         <property name="viewAdminData" not-null="true"/>
         <property name="editCells" not-null="true"/>
+        <property name="createCells" not-null="true"/>
         <property name="editAnnouncements" not-null="true"/>
         <property name="editTerms" not-null="true"/>
         <property name="editMailTemplates" not-null="true"/>

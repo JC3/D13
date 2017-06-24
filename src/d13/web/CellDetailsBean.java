@@ -9,6 +9,9 @@ public class CellDetailsBean {
     private String hideFull;
     private String mandatory;
     private String hidden;
+    private String parent;
+    private String newcatName;
+    private String newcatParent;
     
     public String getName() {
         return name;
@@ -45,6 +48,24 @@ public class CellDetailsBean {
     }
     public void setHidden(String hidden) {
         this.hidden = hidden;
+    }
+    public String getParent() {
+        return parent;
+    }
+    public String getNewcatName() {
+        return newcatName;
+    }
+    public String getNewcatParent() {
+        return newcatParent;
+    }
+    public void setParent(String parent) {
+        this.parent = parent;
+    }
+    public void setNewcatName(String newcatName) {
+        this.newcatName = newcatName;
+    }
+    public void setNewcatParent(String newcatParent) {
+        this.newcatParent = newcatParent;
     }
     
 }

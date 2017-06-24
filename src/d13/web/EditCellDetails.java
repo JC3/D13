@@ -8,6 +8,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 
 import d13.dao.Cell;
+import d13.dao.Role;
 import d13.util.Util;
 
 public class EditCellDetails {
@@ -27,12 +28,13 @@ public class EditCellDetails {
         try {
            
             BeanUtils.populate(bean, context.getRequest().getParameterMap());
-
+            Role role;
+            
             if (!session.isLoggedIn())
                 throw new SecurityException("Permission denied.");
             if (cell_id == null)
                 throw new IllegalArgumentException("No cell ID specified.");
-            if (!session.getUser().getRole().canEditCells())
+            if (!(role = session.getUser().getRole()).canEditCells())
                 throw new SecurityException("Permission denied.");
 
             Cell cell = Cell.findById(cell_id);
@@ -43,6 +45,10 @@ public class EditCellDetails {
             String name = StringUtils.trimToEmpty(bean.getName());
             String desc = StringUtils.trimToEmpty(bean.getDesc());
             int people = -1;
+            int parentId = Util.parseIntDefault(bean.getParent(), (int)cell.getParent().getCellId());
+            String newcatName = StringUtils.trimToEmpty(bean.getNewcatName());
+            int newcatParentId = Util.parseIntDefault(bean.getNewcatParent(), 0);
+            Cell parent = null, newcatParent = null;
             
             if (name.isEmpty())
                 throw new IllegalArgumentException("Cell name must be specified.");
@@ -59,7 +65,22 @@ public class EditCellDetails {
             if (people < 0)
                 throw new IllegalArgumentException("Invalid volunteer count specified.");
             
+            if (role.canCreateCells()) {
+                if (parentId < 0) {
+                    if (newcatName.isEmpty())
+                        throw new IllegalArgumentException("New category name must be specified.");
+                    if (newcatParentId <= 0)
+                        throw new IllegalArgumentException("New category parent must be specified.");
+                    newcatParent = Cell.findById((long)parentId);
+                } else {            
+                    parent = Cell.findById((long)parentId);
+                }
+            }
+            
             // --- all params parsed and validated ---
+            // if (parent) then change parent
+            // else if (newcatParent) then create new cat under newcatParent, set as parent.
+            // else do nothing (perhaps e.g. we don't have privs).
             
             int flags = 0;
             if (!name.equals(cell.getName())) flags |= Cell.CHANGED_NAME;
@@ -76,7 +97,13 @@ public class EditCellDetails {
             cell.setMandatory(mandatory);
             cell.setHidden(hidden);
             cell.addEditedActivityLogEntry(session.getUser(), flags);
- 
+
+            if (parent != null) {
+                cell.changeParent(parent);
+            } else if (newcatParent != null) {
+                
+            }
+            
         } catch (InvocationTargetException x) {
             
             failed = true;

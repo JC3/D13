@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
 
 import d13.util.HibernateUtil;
@@ -56,16 +57,54 @@ public class Cell {
     
     public Cell addCategory (String name) {
         Cell c = newCategory(name);
-        c.parent = this;
-        children.add(c);
+        addChild(c);
         return c;
     }
     
     public Cell addCell (String name) {
         Cell c = newCell(name);
-        c.parent = this;
-        children.add(c);
+        addChild(c);
         return c;
+    }
+    
+    private boolean removeChild (Cell child) {
+        System.out.printf("%s: %s children=%s\n", getName(), getCellId(), children.size());
+        System.out.println(children);
+        System.out.println(getChildren());
+        Hibernate.initialize(this);
+        System.out.println(children);
+        for (int n = 0; n < children.size(); ++ n) {
+            System.out.printf("%s: n=%s nid=%s child=%s\n", getCellId(), n, children.get(n).getCellId(), child.getCellId());
+            if (children.get(n).getCellId() == child.getCellId()) {
+                children.remove(n);
+                child.parent = null;
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private void addChild (Cell child) {
+        children.add(child);
+        child.parent = this;
+    }
+    
+    public void changeParent (Cell newParent) {
+        // Lots of validation here.
+        if (newParent == null)
+            throw new IllegalArgumentException("Cell parent must be specified.");
+        if (this.getParent() == null)
+            throw new IllegalArgumentException("Can't change parent of root cell.");
+        if (!newParent.isCategory())
+            throw new IllegalArgumentException("Cell parent must be a category.");
+        if (newParent.getCellId() == this.getParent().getCellId())
+            return; // Nothing to do.
+        for (Cell check = newParent; check != null; check = check.getParent())
+            if (check.getCellId() == this.getCellId())
+                throw new IllegalArgumentException("Can't change cell parent, would create a loop.");
+        // OK we're good...
+        System.out.println("removed " + parent.removeChild(this));
+        newParent.addChild(this);
     }
 
     public Set<User> getUsers () {
