@@ -1,0 +1,2 @@
+# disorient db backups every 2 hours
+0 */2   * * *   root    /usr/local/sbin/backupdb.sh
