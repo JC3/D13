@@ -1,14 +1,20 @@
 package d13.web;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Hibernate;
 
+import d13.dao.ActivityLogEntry;
 import d13.dao.Cell;
 import d13.dao.Role;
+import d13.dao.User;
+import d13.util.HibernateUtil;
 import d13.util.Util;
 
 public class EditCellDetails {
@@ -16,28 +22,64 @@ public class EditCellDetails {
     private CellDetailsBean bean = new CellDetailsBean();
     private boolean failed;
     private String errorMessage;
+    private String successMessage; // only set on delete right now since that's all that's interesting
     private String failTarget;
     private String successTarget;
 
     public EditCellDetails (PageContext context, SessionData session) {
         
-        Long cell_id = Util.getParameterLong(context.getRequest(), "cell_id");    
+        boolean is_new = false;
+        Long cell_id = null;
+        if ("new".equals(context.getRequest().getParameter("cell_id")))
+            is_new = true;
+        else 
+            cell_id = Util.getParameterLong(context.getRequest(), "cell_id");
+        boolean delete = "1".equals(context.getRequest().getParameter("delete_cell"));
         failTarget = context.getRequest().getParameter("fail_target");
         successTarget = context.getRequest().getParameter("success_target");
 
         try {
            
             BeanUtils.populate(bean, context.getRequest().getParameterMap());
+            User editor;
             Role role;
             
             if (!session.isLoggedIn())
                 throw new SecurityException("Permission denied.");
-            if (cell_id == null)
-                throw new IllegalArgumentException("No cell ID specified.");
-            if (!(role = session.getUser().getRole()).canEditCells())
+
+            editor = session.getUser();
+            role = editor.getRole();
+            if (!role.canEditCells())
                 throw new SecurityException("Permission denied.");
 
-            Cell cell = Cell.findById(cell_id);
+            if (is_new) {
+                if (!role.canCreateCells())
+                    throw new SecurityException("Permission denied.");
+            } else if (cell_id == null) {
+                throw new IllegalArgumentException("No cell ID specified.");
+            }
+            
+            if (delete) {
+                if (is_new)
+                    throw new IllegalArgumentException("Your request made no sense.");
+                if (!role.canCreateCells())
+                    throw new SecurityException("Permission denied.");
+            }
+
+            Cell cell = null;
+            if (!is_new) {
+                cell = Cell.findById(cell_id);
+                if (cell.getParent() == null)
+                    throw new SecurityException("Permission denied."); // can't edit root cell
+            }
+            
+            if (delete && cell.isCategory() && cell.getNonCategoryChildCount() != 0)
+                throw new IllegalArgumentException("You must remove all cells from this category before you can delete it.");
+            
+            if (delete) {
+                doDeleteCell(cell, editor);
+                return;
+            }
             
             boolean hideFull = "1".equals(bean.getHideFull());
             boolean mandatory = "1".equals(bean.getMandatory());
@@ -45,7 +87,7 @@ public class EditCellDetails {
             String name = StringUtils.trimToEmpty(bean.getName());
             String desc = StringUtils.trimToEmpty(bean.getDesc());
             int people = -1;
-            int parentId = Util.parseIntDefault(bean.getParent(), (int)cell.getParent().getCellId());
+            int parentId = Util.parseIntDefault(bean.getParent(), is_new ? (int)Cell.findRoot().getCellId() : (int)cell.getParent().getCellId());
             String newcatName = StringUtils.trimToEmpty(bean.getNewcatName());
             int newcatParentId = Util.parseIntDefault(bean.getNewcatParent(), 0);
             Cell parent = null, newcatParent = null;
@@ -71,39 +113,68 @@ public class EditCellDetails {
                         throw new IllegalArgumentException("New category name must be specified.");
                     if (newcatParentId <= 0)
                         throw new IllegalArgumentException("New category parent must be specified.");
-                    newcatParent = Cell.findById((long)parentId);
+                    newcatParent = Cell.findById((long)newcatParentId);
                 } else {            
                     parent = Cell.findById((long)parentId);
                 }
             }
             
-            // --- all params parsed and validated ---
+            // --- all params parsed and validated except some parent details ---
             // if (parent) then change parent
             // else if (newcatParent) then create new cat under newcatParent, set as parent.
             // else do nothing (perhaps e.g. we don't have privs).
             
             int flags = 0;
-            if (!name.equals(cell.getName())) flags |= Cell.CHANGED_NAME;
-            if (!desc.equals(StringUtils.trimToEmpty(cell.getDescription()))) flags |= Cell.CHANGED_DESCRIPTION;
-            if (people != cell.getPeople()) flags |= Cell.CHANGED_PEOPLE;
-            if (hideFull != cell.isHideWhenFull()) flags |= Cell.CHANGED_HIDEWHENFULL;
-            if (mandatory != cell.isMandatory()) flags |= Cell.CHANGED_MANDATORY;
-            if (hidden != cell.isHidden()) flags |= Cell.CHANGED_HIDDEN;
             
-            cell.setName(name);
+            if (is_new) {
+                
+                // Do this first so if it fails we don't modify the rest. TODO: Re-evaluate *all* the dao
+                // stuff and use transactions properly.
+                Cell myparent = null;
+                if (parent != null) {
+                    myparent = parent;
+                } else if (newcatParent != null) {
+                    myparent = newcatParent.addCategory(newcatName, editor);
+                } else {
+                    throw new IllegalArgumentException("Parent must be specified.");
+                }
+
+                cell = myparent.addCell(name, editor);
+                
+            } else {
+            
+                if (!name.equals(cell.getName())) flags |= Cell.CHANGED_NAME;
+                if (!desc.equals(StringUtils.trimToEmpty(cell.getDescription()))) flags |= Cell.CHANGED_DESCRIPTION;
+                if (people != cell.getPeople()) flags |= Cell.CHANGED_PEOPLE;
+                if (hideFull != cell.isHideWhenFull()) flags |= Cell.CHANGED_HIDEWHENFULL;
+                if (mandatory != cell.isMandatory()) flags |= Cell.CHANGED_MANDATORY;
+                if (hidden != cell.isHidden()) flags |= Cell.CHANGED_HIDDEN;
+                boolean parentChanged = false;
+                
+                // Do this first so if it fails we don't modify the rest. TODO: Re-evaluate *all* the dao
+                // stuff and use transactions properly.
+                if (parent != null) {
+                    parentChanged = cell.changeParent(parent);
+                } else if (newcatParent != null) {
+                    Cell newParent = newcatParent.addCategory(newcatName, editor);
+                    parentChanged = cell.changeParent(newParent);
+                }
+                
+                if (parentChanged) flags |= Cell.CHANGED_CATEGORY;
+                
+                cell.setName(name);
+                
+            }
+            
             cell.setDescription(desc);
             cell.setPeople(people);
             cell.setHideWhenFull(hideFull);
             cell.setMandatory(mandatory);
             cell.setHidden(hidden);
-            cell.addEditedActivityLogEntry(session.getUser(), flags);
-
-            if (parent != null) {
-                cell.changeParent(parent);
-            } else if (newcatParent != null) {
-                
-            }
             
+            if (!is_new)
+                cell.addEditedActivityLogEntry(session.getUser(), flags);
+
         } catch (InvocationTargetException x) {
             
             failed = true;
@@ -120,8 +191,40 @@ public class EditCellDetails {
         
     }
     
+    public void doDeleteCell (Cell cell, User editor) {
+        
+        // Add a log entry to the editor's log, since the cell log is about to be deleted.
+        String message;
+        if (cell.isCategory()) {
+            editor.addBasicActivityLogEntry(String.format("Deleted category '%s'.", cell.getFullName()), ActivityLogEntry.TYPE_DELETE_CELL);
+            message = String.format("Deleted category '%s'.", cell.getFullName());
+        } else {
+            editor.addBasicActivityLogEntry(String.format("Deleted cell '%s' with %d user(s).", cell.getFullName(), cell.getUsers().size()), ActivityLogEntry.TYPE_DELETE_CELL);
+            message = String.format("Deleted cell '%s'.", cell.getFullName());
+        }
+
+        // First remove all users.
+        List<Cell> alist = new ArrayList<Cell>();
+        alist.add(cell);
+        for (User user : new ArrayList<User>(cell.getUsers())) {
+            Hibernate.initialize(user);
+            user.removeFromCell(cell);
+            user.addCellActivityLogEntry(editor, null, alist, false);
+        }
+        
+        // Then remove the cell.
+        cell.removeFromParent();
+        HibernateUtil.getCurrentSession().delete(cell);
+        successMessage = message;
+        
+    }
+    
     public String getErrorMessage () {
         return errorMessage;
+    }
+    
+    public String getSuccessMessage () {
+        return successMessage;
     }
     
     public String getFailTarget () {

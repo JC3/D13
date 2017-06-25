@@ -10,6 +10,7 @@ public class ActivityLogEntry {
     
     public static final int TYPE_REVIEW = 0;
     public static final int TYPE_EDIT = 1;
+    public static final int TYPE_DELETE_CELL = 2;
     
     private long entryId;
     private DateTime time;

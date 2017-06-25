@@ -181,7 +181,8 @@ public abstract class Note implements Comparable<Note> {
         INVITE("invite"),
         TIER_END("tier"),
         DATA_EDIT("edit"),
-        ADMIN_EDIT("adminedit");
+        ADMIN_EDIT("adminedit"),
+        DELETE("delete");
         private final String name;
         private Type (String name) { this.name = name; }
         public String getName () { return name; }
@@ -197,6 +198,8 @@ public abstract class Note implements Comparable<Note> {
         private static Type logtonote (ActivityLogEntry e) {
             if (e.getType() == ActivityLogEntry.TYPE_EDIT)
                 return Type.DATA_EDIT;
+            else if (e.getType() == ActivityLogEntry.TYPE_DELETE_CELL)
+                return Type.DELETE;
             else
                 return Type.ACTIVITY;
         }

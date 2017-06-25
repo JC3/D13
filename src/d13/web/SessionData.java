@@ -35,6 +35,7 @@ public class SessionData {
     public static final String SA_EDIT_DUES_ERROR = "jsp.editdues.error";
     public static final String SA_EDIT_DUES_DEFAULTS = "jsp.editdues.defaults";
     public static final String SA_EDIT_CELL_ERROR = "jsp.editcell.error";
+    public static final String SA_EDIT_CELL_MESSAGE = "jsp.editcell.message";
     public static final String SA_PWRESET_ERROR = "jsp.pwreset.error";
     public static final String SA_MANAGE_INVITES_ERROR = "jsp.invites.error";
     public static final String SA_MANAGE_INVITES_WARNING = "jsp.invites.warning";

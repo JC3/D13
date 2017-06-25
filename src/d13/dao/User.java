@@ -575,13 +575,13 @@ public class User implements Trackable {
         
         String message = "";
         
-        if (!added.isEmpty()) {
+        if (added != null && !added.isEmpty()) {
             message += "Joined cells:\n";
             for (Cell c : added)
                 message += " - " + c.getFullName() + "\n";
         }
         
-        if (!removed.isEmpty()) {
+        if (removed != null && !removed.isEmpty()) {
             message += "Left cells:\n";
             for (Cell c : removed)
                 message += " - " + c.getFullName() + "\n";

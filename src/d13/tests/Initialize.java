@@ -81,7 +81,7 @@ public class Initialize {
                 
                 Cell cat = categories.get(category);
                 if (cat == null) {
-                    cat = root.addCategory(category);
+                    cat = root.addCategory(category, null);
                     categories.put(category, cat);
                 }
                 
@@ -89,13 +89,13 @@ public class Initialize {
                     String key = category + ":" + subcategory;
                     Cell subcat = categories.get(key);
                     if (subcat == null) {
-                        subcat = cat.addCategory(subcategory);
+                        subcat = cat.addCategory(subcategory, null);
                         categories.put(key, subcat);
                     }
                     cat = subcat;
                 }
                 
-                Cell cell = cat.addCell(name);
+                Cell cell = cat.addCell(name, null);
                 cell.setPeople(people);
                 cell.setDescription(desc);
                 cell.setHideWhenFull(hide);

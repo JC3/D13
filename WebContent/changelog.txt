@@ -1,3 +1,8 @@
+2017-06-25 09:21 ET jasonc
+
+  1.23
+  - Full cell create/delete/edit capabilities, finally. Only took 4 years.
+
 2017-06-24 03:35 ET jasonc
 
   1.22d

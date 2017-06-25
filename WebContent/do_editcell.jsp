@@ -5,11 +5,13 @@ SessionData sess = new SessionData(session);
 EditCellDetails edit = new EditCellDetails(pageContext, sess);
 
 sess.clearAttribute(SessionData.SA_EDIT_CELL_ERROR);
+sess.clearAttribute(SessionData.SA_EDIT_CELL_MESSAGE);
 
 if (edit.isFailed()) {
     sess.setAttribute(SessionData.SA_EDIT_CELL_ERROR, edit.getErrorMessage());
     response.sendRedirect(edit.getFailTarget());
 } else {
+    sess.setAttribute(SessionData.SA_EDIT_CELL_MESSAGE, edit.getSuccessMessage());
     response.sendRedirect(edit.getSuccessTarget());
 }
 %>

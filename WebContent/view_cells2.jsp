@@ -33,21 +33,30 @@ if (!sess.isLoggedIn()) {
 if (!sess.getUser().getRole().canViewUsers())
     return;
 
-boolean canEdit = sess.getUser().getRole().canEditCells();
+Role role = sess.getUser().getRole();
+boolean canEdit = role.canEditCells();
+boolean canCreate = role.canCreateCells();
 
 List<Cell> cells = new ArrayList<Cell>();
 buildCellList(cells, Cell.findRoot());
+
+List<Cell> cats = null;
+if (canEdit)
+    cats = Cell.findCategories(false);
 
 String this_url = Util.html(java.net.URLEncoder.encode(Util.getCompleteUrl(request), "us-ascii"));
 
 String back_url = request.getParameter("next");
 if (back_url == null)
     back_url = "home.jsp";
+
+String message = (String)sess.getAndClearAttribute(SessionData.SA_EDIT_CELL_MESSAGE);
+String message_html = (message == null ? null : Util.html(message));
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<dis:common/>
+<dis:common require="jquery"/>
 <style type="text/css">
 #maindiv { 
     width:75%;
@@ -65,6 +74,11 @@ if (back_url == null)
     vertical-align:top;
     width:100%;
     padding-left: 1ex;
+}
+#slide {
+    padding: 0;
+    margin: 0;
+    position: relative;
 }
 .celldetails {
     display:none;
@@ -122,7 +136,7 @@ td.indicator {
     color:#00ff00 !important;
 }
 .cell-mandatory {
-    background:#800000;
+    background:#800000 !important;
 }
 .cell-hidden {
     color: #bb6000;
@@ -136,6 +150,26 @@ td.cell-hidden a:visited {
 td.cell-hidden a:active {
     color: #bb6000;
 }
+.cell-link {
+    padding-left: 4px;
+}
+.cell-link-td {
+/*
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    */
+}
+.cell-hidden.current-cell a {
+    color:#bbbbbb !important;
+}
+.current-cell a {
+    color:white !important;
+/*
+    border-left: 2px solid #ffff00 !important;
+    border-right: 2px solid #ffff00 !important;
+    background: #202020;
+    */
+}
 .history {
 }
 .history h1 {
@@ -145,49 +179,106 @@ td.cell-hidden a:active {
 .history .who {
     font-size: small;
     color: #ffeedd;
+    margin-bottom: 0;
 }
 .history .desc {
     font-size: small;
     color: #ffeedd;
     padding-left: 4ex;
+    margin-top: 0.25ex;
+}
+.catheader {
+    padding-top: 1ex;
 }
 </style>
 <script language="JavaScript" type="text/javascript">
 function showDetails (id) {
-	var divid = 'details_' + id;
-	var divs = document.getElementsByTagName('div');
-	var gotone = false;
-	for (var i = 0; i < divs.length; ++ i) {
-		var obj = divs[i];
-		if (obj.className != 'celldetails')
-			continue;
-		if (obj.id == divid) {
-			obj.style.display = 'block';
-			gotone = true;
-		} else {
-			obj.style.display = 'none';
-	    }
-	}
+    var divid = 'details_' + id;
+    var linkid = 'link_' + id;
+    var divs = document.getElementsByTagName('div');
+    var gotone = false;
+    for (let i = 0; i < divs.length; ++ i) {
+        let obj = divs[i];
+        if (!obj.classList.contains('celldetails'))
+            continue;
+        if (obj.id == divid) {
+            obj.style.display = 'block';
+            obj.classList.add('active-pane');
+            gotone = true;
+        } else {
+            obj.style.display = 'none';
+            obj.classList.remove('active-pane');
+        }
+    }
+    var links = document.getElementsByClassName('cell-link');
+    for (let i = 0; i < links.length; ++ i) {
+        let obj = links[i];
+        if (obj.id == linkid) {
+            obj.parentElement.classList.add('current-cell');
+        } else {
+            obj.parentElement.classList.remove('current-cell');
+        }
+    }
     window.location.hash = '#' + id;
-	if (gotone) {
-	    document.getElementById('instructions').style.display = 'none';
-	} else {
+    if (gotone) {
+        document.getElementById('instructions').style.display = 'none';
+        document.getElementById('instructions').classList.remove('active-pane');
+    } else {
         document.getElementById('instructions').style.display = 'block';
-	}
+        document.getElementById('instructions').classList.add('active-pane');
+    }
+    $(window).trigger('scroll');
 }
+
 function displayAnchor () {
-	var anchor = window.location.hash.substring(1);
-	if (anchor.length > 0)
-		showDetails(anchor);
+    var anchor = window.location.hash.substring(1);
+    if (anchor.length > 0)
+        showDetails(anchor);
+    else
+    	showDetails('help');
 }
+
+$(window).scroll(function () {
+    var s = $('#slide');
+    if (s.height() < window.innerHeight) {
+        var y = $(document).scrollTop() - s.parent().offset().top;
+        var b = s.parent().height() - s.outerHeight();
+        if (y < 0)
+            y = 0;
+        else if (y > b)
+            y = b;
+        s.css('top', y);
+    } else {
+        s.css('top', 0);
+    }
+});
+
+<% if (canEdit) { %>
+function moveCell (id, dir) {
+    $.post('ajax/move_cell.jsp', {
+        c: id,
+        d: dir
+    }, 'json').then(function (r) {
+        if (r.ok)
+            window.location.reload();
+        else
+            alert(`Could not move cell: \${r.e}`);
+    }).fail(function (e) {
+        alert(`A server error occurred: \${e.status} \${e.statusText}`);        
+    });
+}
+<% } %>
 </script>
 </head>
 <body onLoad="displayAnchor();">
 <dis:header/>
 <div class="nav">
-  <a href="<%= Util.html(back_url) %>">Go Back</a> | <a href="javascript:showDetails('help');">Help</a>
+     <a href="<%= Util.html(back_url) %>">Go Back</a> | <a href="javascript:showDetails('help');">Help</a>
 </div>
 <!-- ----------------------------------------------------------------- -->
+<% if (message != null) { %>
+<div class="message" style="margin-top:1em"><%=message_html%></div>
+<% } %>
 
 <div id="maindiv">
 
@@ -196,6 +287,10 @@ function displayAnchor () {
 <tr><td id="leftside">
 
   <table border="0" cellspacing="0" cellpadding="0">
+<% if (cats != null && canEdit) { %>
+    <tr>
+      <td colspan="3">Cells:
+<% } %>
 <% for (Cell cell:cells) { 
     int max = cell.getPeople();
     int tot = cell.getUsers().size();
@@ -212,12 +307,31 @@ function displayAnchor () {
     <tr>
       <td class="indicator indicator-letter"><%= cell.isHidden() ? "H" : (cell.isHideWhenFull() ? "A" : "") %>
       <td class="indicator<%= excls %>"><%= ((max > 0) ? String.format("%2d/%2d", tot, max) : String.format("%2d   ", tot)).replaceAll(" ", "&nbsp;") %>
-      <td class="<%= nexcls %>" style="padding-left:4px"><a href="javascript:showDetails('<%=cell.getCellId() %>');"><%=Util.html(cell.getFullName()) %></a><br>
+      <td class="cell-link-td<%= nexcls %>"><a class="cell-link" id="link_<%=cell.getCellId() %>" href="javascript:showDetails('<%=cell.getCellId() %>');"><%=Util.html(cell.getFullName()) %></a>
+<% } %>
+<% if (cats != null && canEdit) { %>
+    <tr>
+      <td class="catheader" colspan="3">Categories:
+<%  for (Cell cat : cats) { 
+     String excls = "";
+     if (cat.getNonCategoryChildCount() == 0)
+         excls += " indicator-empty"; 
+    %>
+    <tr>
+      <td class="indicator indicator-letter">
+      <td class="indicator<%= excls %>"><%= String.format("%2d   ", cat.getChildren().size()).replaceAll(" ", "&nbsp;") %>
+      <td class="cell-link-td"><a class="cell-link" id="link_<%=cat.getCellId() %>" href="javascript:showDetails('<%=cat.getCellId() %>');"><%=Util.html(cat.getFullName()) %></a>
+<%  }
+   } 
+   if (canCreate) { %>
+    <tr>
+      <td class="catheader" colspan="3"><a href="editcell.jsp?c=new&next=<%= this_url %>">New Cell...</a>
 <% } %>
   </table>
 
 <td id="rightside">
-<div id="instructions">
+<div id="slide">
+<div id="instructions" style="display:none">
 <p>Click a cell on the left to view details. The numbers and letters to the left of the cell names mean:</p>
 <ul>
 <li>An <span class="indicator indicator-letter">H</span> means the cell is set to always be hidden.
@@ -233,23 +347,32 @@ function displayAnchor () {
 They won't cause problems for users but do take up space adding warnings to the server logs and are probably a general sign that the cell's rules and
 purpose should be reconsidered.</p>
 <% if (canEdit) { %>
-<p>You can edit cell descriptions and such by clicking a cell name then clicking the edit link in the details.</p>
+<p>You can edit cell descriptions and such by clicking a cell name then clicking the edit link in the details. Categories appear at
+the bottom of the list (the numbers on the left are the number of cells/subcategories in that category) and you can edit them in a similar way.</p>
 <% } %>
 </div>
-<% for (Cell cell:cells) { 
-List<User> approved = new ArrayList<User>();
-List<User> pending = new ArrayList<User>();
-buildUserList(approved, cell.getUsers(), UserState.APPROVED);
-java.util.Collections.sort(approved, new User.RealNameComparator());
-buildUserList(approved, cell.getUsers(), UserState.APPROVE_PENDING);
-buildUserList(pending, cell.getUsers(), UserState.REGISTERED);
-java.util.Collections.sort(pending, new User.RealNameComparator());
-
-
+<% 
+List<Cell> allthings = new ArrayList<Cell>(cells);
+if (cats != null && canEdit)
+    allthings.addAll(cats);
+for (Cell cell:allthings) { 
+    boolean cat = cell.isCategory();
+    List<User> approved = new ArrayList<User>();
+    List<User> pending = new ArrayList<User>();
+    if (!cat) {
+        buildUserList(approved, cell.getUsers(), UserState.APPROVED);
+        java.util.Collections.sort(approved, new User.RealNameComparator());
+        buildUserList(approved, cell.getUsers(), UserState.APPROVE_PENDING);
+        buildUserList(pending, cell.getUsers(), UserState.REGISTERED);
+        java.util.Collections.sort(pending, new User.RealNameComparator());
+    }
 %>
 <div id="details_<%=cell.getCellId()%>" class="celldetails">
 
-<b>Cell:</b> <%= Util.html(cell.getFullName()) %><br>
+<b><%= cat ? "Category" : "Cell" %>:</b> <%= Util.html(cell.getFullName()) %><br>
+<% if (cat) { %>
+<b>Items:</b> <%= cell.getChildren().size() %><br>
+<% } else { %>
 <b>Volunteers:</b> <%= cell.getUsers().size() + (cell.getPeople() > 0 ? " of " + cell.getPeople() : "") %><br>
 <b>Description:</b> <%= Util.html(cell.getDescription()) %><br>
 <hr>
@@ -260,22 +383,24 @@ java.util.Collections.sort(pending, new User.RealNameComparator());
 <tr><td class="leftdetail">
 <b>Email Addresses:</b><br>
   <textarea style="dtextarea">
-  <% {
-  boolean first = true;
-  for (User u:approved) {
-      if (first)
-          first = false;
-      else
-          out.print(",");
-      out.print(Util.html(u.getEmail())); 
-  }
-  } %>
+  <% 
+    {
+    boolean first = true;
+    for (User u:approved) {
+        if (first)
+            first = false;
+        else
+            out.print(",");
+        out.print(Util.html(u.getEmail())); 
+    }
+} %>
   </textarea><br><br>
 <td class="rightdetail">
 
 <table width="100%" class="volunteers">
 <tr><th>Name<th>Email<th>Arrival<th>Departure
-<% for (User u:approved) { %>
+<% 
+for (User u:approved) { %>
 <tr><td><a href="details.jsp?u=<%=u.getUserId()%>&next=<%=this_url%>%23<%=cell.getCellId()%>"><%=Util.html(u.getRealName()) %></a>
     <td><a href="mailto:<%=Util.html(u.getEmail())%>"><%=Util.html(u.getEmail()) %></a>
     <% if (u.isRegistrationComplete()) { %>
@@ -283,10 +408,9 @@ java.util.Collections.sort(pending, new User.RealNameComparator());
       <td><%=Util.html(u.getRegistration().getDepartureDate() + " " + u.getRegistration().getDepartureTime()) %>
     <% } else { %>
       <td><td>
-    <% } %>
-<% } %>
+    <% }
+} %>
 </table>
-
 
 </table>
 
@@ -297,16 +421,18 @@ java.util.Collections.sort(pending, new User.RealNameComparator());
 <tr><td class="leftdetail">
 <b>Email Addresses:</b><br>
   <textarea style="dtextarea">
-  <% {
-  boolean first = true;
-  for (User u:pending) {
-      if (first)
-          first = false;
-      else
-          out.print(",");
-      out.print(Util.html(u.getEmail())); 
-  }
-  } %>
+  <% 
+    {
+        boolean first = true;
+        for (User u:pending) {
+            if (first)
+                first = false;
+            else
+                out.print(",");
+            out.print(Util.html(u.getEmail())); 
+        }
+    } 
+  %>
   </textarea><br><br>
   
 <td class="rightdetail">
@@ -324,14 +450,20 @@ java.util.Collections.sort(pending, new User.RealNameComparator());
 <% } %>
 </table>
 
-
 </table>
+<% } // if (!cat) %>
 
 <% if (canEdit) {
     List<CellActivityLogEntry> logs = cell.getActivityLog();
     %>
 <hr>
-<p><a href="editcell.jsp?c=<%= cell.getCellId() %>&next=<%= this_url %>%23<%= cell.getCellId() %>">Edit Cell Details</a></p>
+<p>
+  <a href="editcell.jsp?c=<%= cell.getCellId() %>&next=<%= this_url %>%23<%= cell.getCellId() %>">Edit <%= cat ? "Category" : "Cell" %> Details</a>
+<% if (!cat) { %>
+  | <a href="javascript:moveCell(<%=cell.getCellId()%>,'u')">Move Up</a>
+  | <a href="javascript:moveCell(<%=cell.getCellId()%>,'d')">Move Down</a>
+<% } %>
+</p>
   <% if (logs != null && !logs.isEmpty()) { %>
   <div class="history">
   <h1>Edit History:</h1>
@@ -351,6 +483,7 @@ java.util.Collections.sort(pending, new User.RealNameComparator());
 
 </div>
 <% } /* end loop over each cell */ %>
+</div>
 </table>
 
 </div>
@@ -358,7 +491,7 @@ java.util.Collections.sort(pending, new User.RealNameComparator());
 <!-- ----------------------------------------------------------------- -->
 <br>
 <div class="nav">
-  <a href="<%= Util.html(back_url) %>">Go Back</a> | <a href="javascript:showDetails('help');">Help</a>
+     <a href="<%= Util.html(back_url) %>">Go Back</a> | <a href="javascript:showDetails('help');">Help</a>
 </div>
 <dis:footer/>
 </body>
