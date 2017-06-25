@@ -61,8 +61,14 @@ public abstract class Note implements Comparable<Note> {
         return (e == null) ? null : new CellActivityLogNote(e);
     }
     
-    public static Note from (Invite i) {
-        return (i == null) ? null : new InviteNote(i);
+    public static List<Note> from (Invite i) {
+        List<Note> notes = new ArrayList<Note>();
+        if (i != null) {
+            notes.add(new InviteNote(i));
+            if (i.getStatus() == Invite.STATUS_CANCELLED)
+                notes.add(new InviteCancelNote(i));
+        }
+        return notes;
     }
     
     public static Note from (Tier t) {
@@ -141,7 +147,7 @@ public abstract class Note implements Comparable<Note> {
         List<Note> notes = new ArrayList<Note>();
         if (viewer != null && viewer.getRole().canViewInvites())
             for (Invite i : invites)
-                notes.add(from(i));
+                notes.addAll(from(i));
         return notes;
     }
     
@@ -179,6 +185,7 @@ public abstract class Note implements Comparable<Note> {
         RV_DUE("rvdue"),
         REGISTRATION("registration"),
         INVITE("invite"),
+        INVITE_CANCEL("invitecancel"),
         TIER_END("tier"),
         DATA_EDIT("edit"),
         ADMIN_EDIT("adminedit"),
@@ -268,6 +275,22 @@ public abstract class Note implements Comparable<Note> {
         @Override public User getTargetUser () { return i.getResolvedBy(); }
         @Override public String getText () { 
             return String.format("%s <%s> (%s)%s%s",
+                    naIfNull(i.getInviteeName()),
+                    naIfNull(i.getInviteeEmail()),
+                    naIfNull(i.getInviteCode()),
+                    i.getExpiresOn() == null ? "" : (", Expires: " + i.getExpiresOn().toString(DateTimeFormat.shortDateTime())),
+                    StringUtils.trimToNull(i.getComment()) == null ? "" : (" -- "  + i.getComment()));
+        }
+        private static String naIfNull (String s) { return s == null ? "n/a" : s; }
+    }
+    
+    private static class InviteCancelNote extends Note {
+        private final Invite i;
+        InviteCancelNote (Invite i) { super(Type.INVITE_CANCEL); this.i = i; }
+        @Override public DateTime getTime () { return i.getCancelledOn(); }
+        @Override public User getAuthor () { return i.getCancelledBy(); }
+        @Override public String getText () { 
+            return String.format("Cancelled: %s <%s> (%s)%s%s",
                     naIfNull(i.getInviteeName()),
                     naIfNull(i.getInviteeEmail()),
                     naIfNull(i.getInviteCode()),

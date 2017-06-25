@@ -7,6 +7,7 @@
   - Cell categories listed on cell view page.
   - Camp name added to site config (ThisYear.CAMP_NAME).
   - RSVP page updated with correct camp name.
+  - Invite cancellations shown in activity log.
 
 2017-06-24 03:35 ET jasonc
 

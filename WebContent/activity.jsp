@@ -18,6 +18,7 @@ static String getTypeString (Note.Type t) {
     case RV_DUE: return "Dues";
     case REGISTRATION: return "Registered";
     case INVITE: return "Invite";
+    case INVITE_CANCEL: return "Invite";
     case TIER_END: return "Tier End";
     case DATA_EDIT: return "Edited";
     case ADMIN_EDIT: return "Admin";
@@ -215,6 +216,17 @@ table.notes tr.type-invite a:hover,
 table.notes tr.type-invite a:visited,
 table.notes tr.type-invite a:active {
     color: #ff50ff; /*rgb(245,91,27); /*#ff50ff;*/
+}
+table.notes tr.type-invitecancel td,
+table.notes tr.type-invitecancel a:link,
+table.notes tr.type-invitecancel a:hover,
+table.notes tr.type-invitecancel a:visited,
+table.notes tr.type-invitecancel a:active {
+    color: #ff50ff; 
+    opacity: 0.9;
+}
+table.notes tr.type-invitecancel .type {
+    text-decoration: line-through;
 }
 table.notes tr.type-tier td,
 table.notes tr.type-tier a:link,
