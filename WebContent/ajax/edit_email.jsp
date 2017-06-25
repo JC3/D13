@@ -32,7 +32,7 @@ try {
         what = Email.RT_INVITE_CONTENT;
     // End kludge.
     Email.Configuration.setContents(what, subj, body);
-    editor.addGeneralLogEntry("Edited email template \"" + what + "\".", GeneralLogEntry.TYPE_EMAIL_TEMPLATE);
+    editor.addGeneralLogEntry("Edited email template \"" + what + "\".", "Subject: " + subj + "\n\n" + body, GeneralLogEntry.TYPE_EMAIL_TEMPLATE);
     success = true;
 } catch (Exception x) {    
     success = false;

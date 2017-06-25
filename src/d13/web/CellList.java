@@ -81,7 +81,7 @@ public class CellList {
             out.println(String.format("<div class=\"celldesc\" id=\"celldesc_%s\">%s</div>", cell.getCellId(), addLineBreaks(Util.html(desc))));
         }
         
-        out.println(String.format("<td class=\"cellcheck\"><div><input type=\"hidden\" name=\"xc\" value=\"%s\"><input type=\"checkbox\" name=\"c\" value=\"%s\"%s>Volunteer!</div>", cell.getCellId(), cell.getCellId(), isInCell ? " checked" : ""));
+        out.println(String.format("<td class=\"cellcheck\"><div><input type=\"hidden\" name=\"xc\" value=\"%s\"><label><input type=\"checkbox\" name=\"c\" value=\"%s\"%s>Volunteer!</label></div>", cell.getCellId(), cell.getCellId(), isInCell ? " checked" : ""));
         
     }
      

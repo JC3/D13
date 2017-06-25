@@ -48,6 +48,7 @@ public class EditSurvey {
             Tracker tracker = new Tracker(form);
 
             // validate all before updating
+            boolean dolog = false;
             editee.hibernateInitLogHacks();
             HibernateUtil.getCurrentSession().evict(form);
             HibernateUtil.getCurrentSession().evict(editee);
@@ -56,9 +57,11 @@ public class EditSurvey {
             if (!form.isCompleted())
                 form.setCompletionTimeNow();
             else // don't log on first fill out
+                dolog = true;
+            editee = (User)HibernateUtil.getCurrentSession().merge(editee);
+            //HibernateUtil.getCurrentSession().merge(form);
+            if (dolog)
                 editee.addTrackerActivityLogEntry(editor, "Survey", tracker.compare(form), true);
-            HibernateUtil.getCurrentSession().merge(editee);
-            HibernateUtil.getCurrentSession().merge(form);
                         
         } catch (InvocationTargetException x) {
             

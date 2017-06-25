@@ -184,7 +184,7 @@ here.</div>
 <input type="hidden" name="subject" value="<%= editee.getUserId() %>">
 <table class="form" style="margin-top: 1ex;">
 <tr><td class="title">Post Comment
-<tr><td class="wide" style="padding-top: 1ex;"><textarea style="width:100%" class="dtextarea" name="comment" placeholder="You cannot edit or delete comments, so think before posting. Comments are not visible to users."></textarea>
+<tr><td class="wide" style="padding-top: 1ex;"><textarea style="width:calc(100% - 8px)" class="dtextarea" name="comment" placeholder="You cannot edit or delete comments, so think before posting. Comments are not visible to users."></textarea>
 <tr><td class="wide" style="padding-top: 1ex;"><input type="submit" class="dbutton" value="Post">
 </table>
 </form>

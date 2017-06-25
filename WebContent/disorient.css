@@ -79,20 +79,54 @@ div.question {
     border-bottom: 1px solid #202020;
 }
 
+div.qtop {
+	margin: 1ex 0 1ex 0;
+	display: flex;
+	align-items: center;
+}
+
+div.qtop-choices, div.qtop-longtext, div.qtop-droplist {
+	align-items: flex-start !important;
+}
+
 div.qname {
+	margin: 0;
+	margin-right: 1ex;
     font-weight: bold;
-    float: left;
-    width: 20ex;
+    flex-basis: 19ex;
 }
 
 div.qinput {
-    float: left;
-    width: 25ex;
+	margin: 0;
+    flex-grow: 1;
+    display: flex;
+}
+
+div.qinput textarea {
+	width: 100% !important;
+}
+
+div.qinput select {
+	width: 50% !important;
+}
+
+div.qtop-choices .qinput {
+	display: flex;
+	flex-direction: column;
+}
+
+div.qtop-choices .qinput span {
+	display: flex;
+	align-items: center;
+}
+
+div.qtop-choices .qinput label {
+	display: inline-flex;
+	align-items: center;
 }
 
 div.qdesc {
     font-size: 10pt;
-    clear: both;
 }
 
 td.instruct {
@@ -107,6 +141,7 @@ input.dtext {
     font-size: 12pt;
     /*margin-right: 1ex;*/
     width: 100%;
+    padding-left: 4px;
 }
 
 input.dselect {
@@ -127,19 +162,28 @@ textarea {
     font-size: 12pt;
     width: 25ex;
     height: 8ex;
+    padding-left: 4px;
 }
 
 textarea.markdown {
 	font-family: monospace;
 }
 
+select.dselect {
+    border: 1px solid #bb7700;
+    background: #402000;
+    color: #ffddaa;
+    font-family: Tahoma,Verdana,sans-serif; 
+    font-size: 12pt;
+}
+
 input.dradio {
     height: 3ex;
-    vertical-align: text-bottom;
 }
 
 input.dcheckbox {
-}    
+	height: 3ex;
+}
 
 input.dbutton, button.dbutton {
     border: 1px solid #aa5555;

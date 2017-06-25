@@ -88,7 +88,7 @@ String invite_fields = makeFields(InviteEmail.FIELD_INFO, "invite");
     white-space: nowrap;
 }
 .m-body-input textarea {
-    width: calc(100% - 4px);
+    width: calc(100% - 2px);
     height: 30ex;
 }
 .m-fields {

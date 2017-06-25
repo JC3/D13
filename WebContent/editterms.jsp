@@ -112,7 +112,7 @@ $(document).ready(function () {
     <td style="white-space:nowrap;width:1ex;">Title:
     <td><input type="text" class="dtext" name="terms_title" value="<%=Util.html(terms_title)%>">
 <tr>
-    <td colspan="2"><textarea name="terms_text" class="dtextarea markdown" style="width:calc(100% - 4px);height:40ex;"><%=Util.html(terms_text)%></textarea>
+    <td colspan="2"><textarea name="terms_text" class="dtextarea markdown" style="width:calc(100% - 2px);height:40ex;"><%=Util.html(terms_text)%></textarea>
 <tr>
     <td colspan="2" style="text-align:center;padding-top:2ex;"><button id="preview" class="dbutton">Preview</button>&nbsp;<input class="dbutton" type="submit" value="Save">
 <tr>

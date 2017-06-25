@@ -1,3 +1,36 @@
+2017-06-25 09:21 ET jasonc
+
+  1.23
+  - Full cell create/delete/edit capabilities, finally. Only took 4 years.
+  - createCells role to support this.
+  - Cell details scroll with page.
+  - Cell categories listed on cell view page.
+  - Camp name added to site config (ThisYear.CAMP_NAME).
+  - RSVP page updated with correct camp name.
+  - Invite cancellations shown in activity log.
+
+2017-06-24 03:35 ET jasonc
+
+  1.22d
+  - Quick fix for more activity log related crashes, argh...
+  - Big data view page hides table until it's loaded; page should load more quickly and smoothly.
+  - Tons of style fixes; better styling and form alignment all around.
+
+2017-06-23 11:48 ET jasonc
+
+  1.22c
+  - notify.quiet option to suppress "Processing 0 notification..." log messages.
+  - listOrder added to options table, used by view_options.jsp.
+  - Add viewer for long options to view_options.jsp. 
+  - Store user info in session to make sessions easier to identify in tomcat manager.
+  - Performance audit and some optimizations in db.
+
+2017-06-23 05:09 ET jasonc
+
+  1.22b
+  - Quick fix for activity log related crashes.
+  - Some formatting tweaks.
+
 2017-06-22 jasonc
 
   1.22 (https://github.com/JC3/D13/compare/810f063c7c84e3e65efb4d2f0fda7becca43d0ef...b8df5cc035090d4cc29f3ab5c57c66dfcf69d5d0)

@@ -102,7 +102,7 @@ public class RegistrationQuestions {
                 "Are you *responsible* for an R.V.?", 
                 "The person responsible for each R.V. will be responsible for paying the fee for that R.V. Please coordinate with the others in your R.V. to determine who will be responsible. <em>All R.V. fees must be paid or we will not place your R.V.!</em>");
         q.addChoice("No, and I am not staying in an R.V.", RVSelection.NOT_STAYING_IN.toDBId());
-        q.addChoice("No, but I am staying in somebody else's R.V.", RVSelection.STAYING_IN.toDBId());
+        q.addChoice("No, but I am staying in somebody else's.", RVSelection.STAYING_IN.toDBId());
         q.addChoice("Yes, I am responsible for one R.V.", RVSelection.RESPONSIBLE.toDBId());
         qs.add(q);
         

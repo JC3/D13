@@ -89,6 +89,16 @@ CREATE TABLE IF NOT EXISTS `ip_log` (
 
 ALTER TABLE `roles` ADD `editMailTemplates` TINYINT NOT NULL DEFAULT '0' ;
 
+ALTER TABLE  `options` ADD  `listOrder` INT NULL DEFAULT NULL FIRST;
+set @rn := 0;
+update options o
+set listOrder := @rn := @rn + 1
+order by 
+  length(o.name) - length(replace(o.name, ".", "")),
+  o.name;
+
+ALTER TABLE `roles` ADD `createCells` TINYINT NOT NULL DEFAULT '0' AFTER `editCells`;
+ALTER TABLE `cell_activity_log` CHANGE `toCell` `toCell` BIGINT(20) NULL DEFAULT NULL;
      -->
     
 <hibernate-mapping default-access="field">
@@ -163,6 +173,7 @@ ALTER TABLE `roles` ADD `editMailTemplates` TINYINT NOT NULL DEFAULT '0' ;
         <property name="viewComments" not-null="true"/>
         <property name="viewAdminData" not-null="true"/>
         <property name="editCells" not-null="true"/>
+        <property name="createCells" not-null="true"/>
         <property name="editAnnouncements" not-null="true"/>
         <property name="editTerms" not-null="true"/>
         <property name="editMailTemplates" not-null="true"/>
@@ -171,6 +182,7 @@ ALTER TABLE `roles` ADD `editMailTemplates` TINYINT NOT NULL DEFAULT '0' ;
     <class name="d13.dao.RuntimeOptions$RuntimeOption" table="options">
         <id name="name"><generator class="assigned"/></id>
         <property name="value"/>
+        <property name="listOrder"/>
     </class>
 
     <class name="d13.dao.QueuedEmail" table="notifications">
@@ -259,7 +271,7 @@ ALTER TABLE `roles` ADD `editMailTemplates` TINYINT NOT NULL DEFAULT '0' ;
     
     <class name="d13.dao.CellActivityLogEntry" table="cell_activity_log">
         <id name="entryId"><generator class="native"/></id>
-        <many-to-one name="toCell" class="d13.dao.Cell" not-null="true"/>
+        <many-to-one name="toCell" class="d13.dao.Cell"/>
         <many-to-one name="byWho" class="d13.dao.User" not-null="true"/>
         <property name="time" not-null="true" type="d13.dao.types.DateTimeType"/>
         <property name="description" not-null="true"/>
@@ -314,7 +326,7 @@ ALTER TABLE `roles` ADD `editMailTemplates` TINYINT NOT NULL DEFAULT '0' ;
         <property name="phone" length="24"/>
         <property name="emergencyContact" type="text" not-null="true"/>
         <one-to-one name="registration" class="d13.dao.RegistrationForm" cascade="save-update,merge"/>
-        <one-to-one name="approval" class="d13.dao.ApprovalSurvey" cascade="save-update"/>
+        <one-to-one name="approval" class="d13.dao.ApprovalSurvey" cascade="save-update,merge"/>
         <property name="state" type="d13.dao.types.UserStateType" not-null="true"/>
         <property name="approvedOn" type="d13.dao.types.DateTimeType"/>
         <property name="gracePeriodStart" type="d13.dao.types.DateTimeType"/>
@@ -322,7 +334,7 @@ ALTER TABLE `roles` ADD `editMailTemplates` TINYINT NOT NULL DEFAULT '0' ;
             <key column="userId"/>
             <many-to-many column="cellId" class="d13.dao.Cell"/>
         </set>
-        <list name="activityLog" cascade="all">
+        <list name="activityLog" cascade="all,merge">
             <key column="toWho"/>
             <index column="`index`"/>
             <one-to-many class="d13.dao.ActivityLogEntry"/>
@@ -350,7 +362,7 @@ ALTER TABLE `roles` ADD `editMailTemplates` TINYINT NOT NULL DEFAULT '0' ;
     
     <class name="d13.dao.Cell" table="cells">
         <id name="cellId"><generator class="native"/></id>
-        <many-to-one name="parent" class="d13.dao.Cell" insert="false" update="false"/>
+        <many-to-one name="parent" class="d13.dao.Cell" lazy="false"/>
         <property name="category" not-null="true"/>
         <property name="hideWhenFull" not-null="true"/>
         <property name="name" type="string" length="128" not-null="true"/>
@@ -364,12 +376,12 @@ ALTER TABLE `roles` ADD `editMailTemplates` TINYINT NOT NULL DEFAULT '0' ;
             <key column="cellId"/>
             <many-to-many column="userId" class="d13.dao.User"/>
         </set>
-        <list name="children" cascade="all">
+        <list name="children" cascade="all" lazy="false">
             <key column="parent"/>
             <index column="`index`"/>
             <one-to-many class="d13.dao.Cell"/>
         </list>
-        <list name="activityLog" cascade="all">
+        <list name="activityLog" cascade="all,delete-orphan">
             <key column="toCell"/>
             <index column="`index`"/>
             <one-to-many class="d13.dao.CellActivityLogEntry"/>

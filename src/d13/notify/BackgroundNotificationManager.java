@@ -21,6 +21,7 @@ import d13.util.HibernateUtil;
 public class BackgroundNotificationManager implements ServletContextListener {
 
     public static String RT_ENABLE_NOTIFY = "notify.enabled"; // "1" to enable, else disable
+    public static String RT_QUIET_LOGGING = "notify.quiet";   // "1" to suppress some log output, else don't
     
     public static final int POLL_INTERVAL = 60000; // public so we can view it on site config; TODO: make configurable in db, maybe?
 
@@ -76,13 +77,14 @@ public class BackgroundNotificationManager implements ServletContextListener {
     
                 // load configuration
                 
-                boolean enabled;
+                boolean enabled, quiet;
                 try {
                     session = HibernateUtil.openSession();
+                    quiet = "1".equals(RuntimeOptions.getOption(RT_QUIET_LOGGING, "0", session));
                     if (enableOverride != null)
                         enabled = enableOverride;
                     else
-                        enabled = "1".equals(RuntimeOptions.getOption(RT_ENABLE_NOTIFY, "1", session));
+                        enabled = "1".equals(RuntimeOptions.getOption(RT_ENABLE_NOTIFY, "0", session));
                     if (enabled && enablestate != 1) {
                         enablestate = 1;
                         System.out.println("MAIL: Notifications enabled.");
@@ -98,6 +100,7 @@ public class BackgroundNotificationManager implements ServletContextListener {
                     t.printStackTrace(System.err);
                     System.err.println("MAIL: When loading configuration options: " + t.getMessage());
                     enabled = false;
+                    quiet = false;
                 }
                     
                 if (!enabled)
@@ -127,7 +130,8 @@ public class BackgroundNotificationManager implements ServletContextListener {
                     return !terminate;
                 }
     
-                System.out.println("MAIL: Processing " + queued.size() + " notification(s)...");
+                if (!queued.isEmpty() || !quiet)
+                    System.out.println("MAIL: Processing " + queued.size() + " notification(s)...");
                 
                 for (QueuedEmail q:queued) {
                 

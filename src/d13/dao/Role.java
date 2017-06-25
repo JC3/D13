@@ -23,6 +23,7 @@ public class Role implements Comparable<Role> {
     public static String MAINTENANCE_LOGIN = "maintlogin";
     public static String VIEW_FULL_CELLS = "viewfullcells";
     public static String EDIT_CELLS = "editcells";
+    public static String CREATE_CELLS = "createcells";
     public static String INVITE_USERS = "inviteu";
     public static String ALWAYS_INVITED = "alwaysinvited";
     public static String VIEW_INVITES = "viewinvites";
@@ -46,6 +47,7 @@ public class Role implements Comparable<Role> {
     private boolean maintenanceLogin;
     private boolean viewFullCells;
     private boolean editCells;
+    private boolean createCells;
     private boolean inviteUsers;
     private boolean alwaysInvited;
     private boolean viewInvites;
@@ -116,6 +118,10 @@ public class Role implements Comparable<Role> {
         return editCells;
     }
    
+    @Privilege public boolean canCreateCells () {
+        return createCells;
+    }
+    
     @Privilege public boolean canInviteUsers () {
         return inviteUsers;
     }
@@ -165,6 +171,7 @@ public class Role implements Comparable<Role> {
             if (maintenanceLogin) rights.add(MAINTENANCE_LOGIN);
             if (viewFullCells) rights.add(VIEW_FULL_CELLS);
             if (editCells) rights.add(EDIT_CELLS);
+            if (createCells) rights.add(CREATE_CELLS);
             if (inviteUsers) rights.add(INVITE_USERS);
             if (alwaysInvited) rights.add(ALWAYS_INVITED);
             if (viewInvites) rights.add(VIEW_INVITES);

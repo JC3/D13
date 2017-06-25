@@ -119,9 +119,19 @@ hr.sub {
 #stats {
     font-size: smaller;
 }
+#summary-table, #summary-loading {
+    margin-top: 1ex;
+    margin-bottom: 1ex;
+}
+#summary-loading {
+    color: #ffeedd;
+    opacity: 0.8;
+}
 </style>
 <script>
 $(document).ready(function() {
+	$('#summary-loading').toggle(false);
+	$('#summary-table').attr('style', null);
     $('.tooltip').tooltipster({
         content: 'Loading...',
         contentAsHTML: true,
@@ -244,7 +254,9 @@ into your email client.</p>
 Find: <input type="text" name="search" class="dtext" style="width:20ex;" value="<%=Util.html(search)%>"> <input type="submit" value="Search" class="dbutton" style="width:10ex;">
 </form></div>
 
-<table cellspacing="0" class="summary">
+<span id="summary-loading">Loading...</span>
+
+<table cellspacing="0" class="summary" id="summary-table" style="display:none">
 <tr>
 
     <th class="standard" colspan="<%=show_comments?6:5%>">Actions

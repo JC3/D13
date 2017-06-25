@@ -139,10 +139,10 @@ $(document).ready(function() {
     <td><textarea class="dtextarea" id="emailtext" name="emails" placeholder="<%=Util.html("Please enter one or more email addresses, either separated by commas or one per line. Email addresses may have the form \"Full Name <emailaddress>\".") %>"><%= emails_html %></textarea>
 <tr>
     <td>Expires In (Days):
-    <td><input type="text" class="dtext" name="expires" placeholder="Leave blank for none." value="<%= expires_html %>">
+    <td><span style="display:flex"><input type="text" class="dtext" name="expires" placeholder="Leave blank for none." value="<%= expires_html %>"></span>
 <tr>
     <td>Comment:
-    <td><input type="text" class="dtext" name="comment" placeholder="Optional comment." value="<%= comment_html %>">
+    <td><span style="display:flex"><input type="text" class="dtext" name="comment" placeholder="Optional comment." value="<%= comment_html %>"></span>
 <tr>
     <td colspan="2" style="text-align:center;padding-top:2ex;"><input class="dbutton" type="submit" value="Send Invites">
 </table>
@@ -153,13 +153,13 @@ $(document).ready(function() {
 
 <table cellspacing="0" class="summary" style="margin-bottom:4ex;margin-left:auto;margin-right:auto;">
     <tr><th class="standard">View?</th><th class="standard">Status</th><th class="standard">Count</th></tr>
-    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vact" onclick="updateView()" checked></td><td class="standard">Active</td>   <td class="standard" id="nact"></td></tr>
-    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vacc" onclick="updateView()" checked></td><td class="standard">Accepted</td> <td class="standard" id="nacc"></td></tr>
-    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vrej" onclick="updateView()"></td><td class="standard">Rejected</td> <td class="standard" id="nrej"></td></tr>
-    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vexp" onclick="updateView()"></td><td class="standard">Expired</td>  <td class="standard" id="nexp"></td></tr>
-    <tr><td class="standard"><input class="dcheckbox" type="checkbox" id="vcan" onclick="updateView()"></td><td class="standard">Cancelled</td><td class="standard" id="ncan"></td></tr>
+    <tr><td class="standard"><input type="checkbox" id="vact" onclick="updateView()" checked></td><td class="standard">Active</td>   <td class="standard" id="nact"></td></tr>
+    <tr><td class="standard"><input type="checkbox" id="vacc" onclick="updateView()" checked></td><td class="standard">Accepted</td> <td class="standard" id="nacc"></td></tr>
+    <tr><td class="standard"><input type="checkbox" id="vrej" onclick="updateView()"></td><td class="standard">Rejected</td> <td class="standard" id="nrej"></td></tr>
+    <tr><td class="standard"><input type="checkbox" id="vexp" onclick="updateView()"></td><td class="standard">Expired</td>  <td class="standard" id="nexp"></td></tr>
+    <tr><td class="standard"><input type="checkbox" id="vcan" onclick="updateView()"></td><td class="standard">Cancelled</td><td class="standard" id="ncan"></td></tr>
     <tr><td class="standard"></td><td class="standard">Total</td><td class="standard" id="ninv"></td></tr>
-    <tr><td class="standard">Emails:</td><td class="standard" colspan="2"><textarea class="dtextarea" id="addrlist"></textarea></td></tr>
+    <tr><td class="standard" style="width:1ex">Emails:</td><td class="standard" colspan="2"><span style="display:flex"><textarea class="dtextarea" id="addrlist" style="width:100%"></textarea></span></td></tr>
 </table>
 
 <% if (show_actions) { %>

@@ -2,10 +2,12 @@ package d13.dao;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
 import d13.util.HibernateUtil;
@@ -40,31 +42,100 @@ public class Cell {
         return c;
     }
     
-    private static Cell newCategory (String name) {
+    private static Cell newCategory (String name, User creator) {
         Cell c = new Cell();
         c.setName(name);
         c.category = true;
+        c.addCreatedActivityLogEntry(creator);
         return c;
     }
     
-    private static Cell newCell (String name) {
+    private static Cell newCell (String name, User creator) {
         Cell c = new Cell();
         c.setName(name);
+        c.addCreatedActivityLogEntry(creator);
         return c;
     }
     
-    public Cell addCategory (String name) {
-        Cell c = newCategory(name);
-        c.parent = this;
-        children.add(c);
+    public Cell addCategory (String name, User creator) {
+        Cell c = newCategory(name, creator);
+        addChild(c);
         return c;
     }
     
-    public Cell addCell (String name) {
-        Cell c = newCell(name);
-        c.parent = this;
-        children.add(c);
+    public Cell addCell (String name, User creator) {
+        Cell c = newCell(name, creator);
+        addChild(c);
         return c;
+    }
+    
+    private boolean removeChild (Cell child) {
+        for (int n = 0; n < children.size(); ++ n) {
+            if (children.get(n).getCellId() == child.getCellId()) {
+                children.remove(n);
+                child.parent = null;
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private void addChild (Cell child) {
+        children.add(child);
+        child.parent = this;
+    }
+    
+    // TODO: Make this not public; move delete code here.
+    public void removeFromParent () {
+        if (getParent() != null)
+            getParent().removeChild(this);
+    }
+    
+    public boolean changeParent (Cell newParent) {
+        // Lots of validation here.
+        if (newParent == null)
+            throw new IllegalArgumentException("Cell parent must be specified.");
+        if (this.getParent() == null)
+            throw new IllegalArgumentException("Can't change parent of root cell.");
+        if (!newParent.isCategory())
+            throw new IllegalArgumentException("Cell parent must be a category.");
+        if (newParent.getCellId() == this.getParent().getCellId())
+            return false; // Nothing to do.
+        for (Cell check = newParent; check != null; check = check.getParent())
+            if (check.getCellId() == this.getCellId())
+                throw new IllegalArgumentException("Can't change cell parent, would create a loop.");
+        // OK we're good...
+        getParent().removeChild(this);
+        newParent.addChild(this);
+        return true;
+    }
+    
+    public void moveUp () {
+        if (parent == null)
+            throw new IllegalArgumentException("This cell can't move up any more.");
+        int pos = parent.children.indexOf(this);
+        if (pos == -1)
+            throw new IllegalStateException("Parent cell does not contain this cell?");
+        if (pos == 0) {
+            parent.moveUp();
+        } else {
+            parent.children.remove(pos);
+            parent.children.add(pos - 1, this);
+        }
+    }
+    
+    public void moveDown () {
+        if (parent == null)
+            throw new IllegalArgumentException("This cell can't move down any more.");
+        int pos = parent.children.indexOf(this);
+        if (pos == -1)
+            throw new IllegalStateException("Parent cell does not contain this cell?");
+        if (pos == parent.children.size() - 1) {
+            parent.moveDown();
+        } else {
+            parent.children.remove(pos);
+            parent.children.add(pos + 1, this);
+        }        
     }
 
     public Set<User> getUsers () {
@@ -115,6 +186,24 @@ public class Cell {
 
     public String getDescription() {
         return description;
+    }
+    
+    public int getNonCategoryChildCount () {
+        int total = 0;
+        for (Cell child : getChildren()) {
+            if (child.isCategory())
+                total += child.getNonCategoryChildCount();
+            else
+                total ++;
+        }
+        return total;
+    }
+    
+    public boolean isChildOf (Cell other) {
+        for (Cell p = getParent(); p != null; p = p.getParent())
+            if (p.getCellId() == other.getCellId())
+                return true;
+        return false;
     }
     
     public boolean isCategory () {
@@ -218,9 +307,12 @@ public class Cell {
     public static int CHANGED_HIDEWHENFULL = 1<<3;
     public static int CHANGED_MANDATORY = 1<<4;
     public static int CHANGED_HIDDEN = 1<<5;
+    public static int CHANGED_CATEGORY = 1<<6;
     
     public void addEditedActivityLogEntry (User who, int whatChanged) {
         String entry = "";
+        if ((whatChanged & CHANGED_CATEGORY) != 0)
+            entry += String.format(", Category: %s", parent.getParent() == null ? "<None>" : parent.getFullName());
         if ((whatChanged & CHANGED_PEOPLE) != 0)
             entry += String.format(", Volunteers: %d", people);
         if ((whatChanged & CHANGED_HIDEWHENFULL) != 0)
@@ -234,6 +326,10 @@ public class Cell {
         if ((whatChanged & CHANGED_DESCRIPTION) != 0)
             entry += String.format(", Text: \"%s\"", description);
         addActivityLogEntry(new CellActivityLogEntry(this, who, "Details edited" + entry));
+    }
+    
+    public void addCreatedActivityLogEntry (User who) {
+        addActivityLogEntry(new CellActivityLogEntry(this, who, (category ? "Category " : "Cell ") + "created."));
     }
     
     public static Cell findById (Long id) {
@@ -282,6 +378,36 @@ public class Cell {
                 .createCriteria(Cell.class)
                 .add(Restrictions.ne("mandatory", false))
                 .list();
+        
+        return cells;
+        
+    }
+    
+    
+    public static List<Cell> findCategories (boolean withRoot) {
+       
+        Criteria crit = HibernateUtil.getCurrentSession()
+                .createCriteria(Cell.class)
+                .add(Restrictions.ne("category", false));
+        
+        if (!withRoot)
+            crit.add(Restrictions.isNotNull("parent"));
+        
+        @SuppressWarnings("unchecked")
+        List<Cell> cells = (List<Cell>)crit.list();
+        
+        Collections.sort(cells, new Comparator<Cell> () {
+            @Override public int compare (Cell a, Cell b) {
+                if (a.getCellId() == b.getCellId())
+                    return 0;
+                else if (a.getParent() == null)
+                    return -1;
+                else if (b.getParent() == null)
+                    return 1;
+                else
+                    return a.getFullName().compareToIgnoreCase(b.getFullName());
+            }            
+        });
         
         return cells;
         
