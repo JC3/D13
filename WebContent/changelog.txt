@@ -5,6 +5,8 @@
   - createCells role to support this.
   - Cell details scroll with page.
   - Cell categories listed on cell view page.
+  - Camp name added to site config (ThisYear.CAMP_NAME).
+  - RSVP page updated with correct camp name.
 
 2017-06-24 03:35 ET jasonc
 

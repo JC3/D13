@@ -26,6 +26,7 @@ if (!sess.getUser().getRole().canViewAdminData()) {
 
 List<RuntimeOptions.RuntimeOption> options = new ArrayList<RuntimeOptions.RuntimeOption>(RuntimeOptions.getOptions());
 options.add(new RuntimeOptions.RuntimeOption("$CAMP_YEAR", Integer.toString(ThisYear.CAMP_YEAR)));
+options.add(new RuntimeOptions.RuntimeOption("$CAMP_NAME", ThisYear.CAMP_NAME));
 options.add(new RuntimeOptions.RuntimeOption("$SYSTEM_VERSION", ThisYear.SYSTEM_VERSION));
 options.add(new RuntimeOptions.RuntimeOption("$GRACE_PERIOD_DAYS", Integer.toString(ThisYear.GRACE_PERIOD_DAYS)));
 options.add(new RuntimeOptions.RuntimeOption("$BNM_POLL_INTERVAL", Integer.toString(BackgroundNotificationManager.POLL_INTERVAL)));
