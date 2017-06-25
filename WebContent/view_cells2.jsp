@@ -350,6 +350,17 @@ purpose should be reconsidered.</p>
 <p>You can edit cell descriptions and such by clicking a cell name then clicking the edit link in the details. Categories appear at
 the bottom of the list (the numbers on the left are the number of cells/subcategories in that category) and you can edit them in a similar way.</p>
 <% } %>
+<% if (canCreate) { %>
+<p>You can also create/delete/move cells:</p>
+<ul>
+<li>To create a new cell click "New Cell..." at the bottom of the list on the left.
+<li>New categories can be created from the cell detail edit page.
+<li>Cells and categories can be deleted from the cell detail edit page.
+<li>Categories can be renamed and moved to other categories, just like cells.
+<li>To move a cell in the list, select it and use "Move Up" and "Move Down" next to "Edit Cell Details".
+<li>To move an entire category, select the first/last cell in the category and move it up/down.
+</ul>
+<% } %>
 </div>
 <% 
 List<Cell> allthings = new ArrayList<Cell>(cells);
