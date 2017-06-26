@@ -105,6 +105,9 @@ h1 {
 .w {
     white-space: inherit !important;
 }
+th.w {
+    white-space: nowrap !important;
+}
 .w div {
     width: 30ex;
 }

@@ -43,16 +43,25 @@ String next_html = (next == null ? "" : StringEscapeUtils.escapeHtml(next));
 boolean pwResetDisabled = !"1".equals(RuntimeOptions.getOption(BackgroundNotificationManager.RT_ENABLE_NOTIFY, "1"));
 
 %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <dis:common/>
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 function doForgot () {
 	document.getElementById("forgot").value = "1";
     document.getElementById("loginForm").submit();
 }
 </script>
+<style type="text/css">
+.form label { display: flex; align-items: center; }
+.form span { display: flex; }
+::-webkit-input-placeholder { color: #7e4c00; }
+:-moz-placeholder { color: #7e4c00; opacity: 1; }
+::-moz-placeholder { color: #7e4c00; opacity: 1; }
+:-ms-input-placeholder { color: #7e4c00; }
+::-ms-input-placeholder { color: #7e4c00; }
+</style>
 </head>
 <body>
 <dis:header blank="true"/>
@@ -71,13 +80,13 @@ function doForgot () {
 <table class="form">
 <tr>
     <td>Email Address:
-    <td><input class="dtext" type="text" name="email" value="<%=email_html%>">
+    <td><span><input class="dtext" type="text" name="email" placeholder="enter email" value="<%=email_html%>"></span>
 <tr class="section">
-    <td><% if (!closed) { %><input class="dradio" type="radio" name="existing" value="0" <%=existing?"":"checked" %>>I am a new user.<% } %>
+    <td><% if (!closed) { %><label><input class="dradio" type="radio" name="existing" value="0" <%=existing?"":"checked" %>>I am a new user.</label><% } %>
     <td>
 <tr>
-    <td><input class="dradio" type="radio" id="existing" name="existing" value="1" <%=(existing||closed)?"checked":"" %>>I am an existing user. Password:
-    <td><input class="dtext" type="password" name="password" onKeyUp="document.getElementById('existing').checked=true;">
+    <td><label><input class="dradio" type="radio" id="existing" name="existing" value="1" <%=(existing||closed)?"checked":"" %>>I am an existing user. Password:</label>
+    <td><span><input class="dtext" type="password" name="password" placeholder="enter password" onKeyUp="document.getElementById('existing').checked=true;"></span>
 <tr>
     <td>
     <td>
