@@ -1,3 +1,8 @@
+2017-06-26 03:50 ET jasonc
+
+  1.23c
+  - Activity log now displayed on admin login if there was activity since last login.
+
 2017-06-25 13:39 ET jasonc
 
   1.23b

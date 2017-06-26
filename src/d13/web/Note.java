@@ -2,6 +2,7 @@ package d13.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -175,6 +176,32 @@ public abstract class Note implements Comparable<Note> {
         for (Tier t : r)
             addIfNotNull(notes, nullIfFuture(from(t)));
         return notes;
+    }
+    
+    public static List<Note> getFullLog (User viewer, Comparator<Note> sort) {
+
+        List<Note> notes = new ArrayList<Note>();
+        notes.addAll(Note.allUsers(viewer, User.findAll()));
+        notes.addAll(Note.allCells(viewer, Cell.findAll()));
+        notes.addAll(Note.allInvites(viewer, Invite.findAll()));
+        notes.addAll(Note.allTiers());
+        notes.addAll(Note.allGeneral(viewer, GeneralLogEntry.findAll()));
+        
+        if (sort != null)
+            Collections.sort(notes, sort);
+
+        return notes;
+        
+    }
+    
+    public static boolean anyNotesSince (User viewer, long since) {
+        
+        for (Note note : getFullLog(viewer, null))
+            if (note.getTime().isAfter(since))
+                return true;
+        
+        return false;
+        
     }
     
     public static enum Type {

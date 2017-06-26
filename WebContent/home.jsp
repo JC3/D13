@@ -37,13 +37,6 @@ User user = sess.getUser();
 Role role = user.getRole();
 String email_html = Util.html(user.getEmail());
 String realname_html = Util.html(user.getRealName());
-//String role_html = null; // = user.isAdmin() ? "Administrator" : null; //(user.isSpecialRole() ? Util.html(role.getName()) : null);
-//if (user.isAdmin() && user.isAdmissions()) // this is getting hacky
-//    role_html = "Administrator";
-//else if (user.isAdmin())
-//    role_html = "Registration";
-//else if (user.isAdmissions())
-//    role_html = "Admissions";
 String role_html = Util.html(user.getRoleDisplay());
 
 if (user.isInviteCodeNeeded()) {
@@ -63,6 +56,14 @@ if (cs != null) {
             c.setMaxAge(0);
             response.addCookie(c);
         }
+    }
+}
+
+if (sess.getAndClearAttributeBoolean(SessionData.SA_HOME_CHECK_ACTIVITY) && role.isSpecial()) {
+    long timestamp_login = sess.getAttributeLong(SessionData.SA_GLOBAL_PREVIOUS_LOGIN);
+    if (Note.anyNotesSince(user, timestamp_login)) {
+        response.sendRedirect("activity.jsp#login");
+        return;
     }
 }
 

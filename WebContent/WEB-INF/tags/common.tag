@@ -1,6 +1,7 @@
 <%@ tag language="java" pageEncoding="ISO-8859-1"%>
 <%@ attribute name="title" required="false" %>
 <%@ attribute name="require" required="false" %>
+<%@ tag trimDirectiveWhitespaces="true" %>
 <%@ tag import="d13.ThisYear" %>
 <%@ tag import="d13.util.Util" %>
 <% 
