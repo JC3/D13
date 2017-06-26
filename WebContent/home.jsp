@@ -177,17 +177,20 @@ here periodically for status updates! <strong>If your application is approved, y
   <li><a href="view_data.jsp?qf=9">Only not-yet-approved users that need to sign up for work cells.</a>
   <li><a href="view_data.jsp?qf=10">Only approved users that need to sign up for work cells.</a>  
 </ul>
-<li><a href="view_cells2.jsp">View<%= role.canEditCells() ? " / Edit" : "" %> Cells</a>
-<!-- <li><a href="view_groups.jsp">View Camper Groups</a> (removed for 2016 when group leader went away) -->
-<li><a href="view_finance.jsp">View Dues Report</a>
-<%   if (RuntimeOptions.Global.isInviteOnly()) { %>
-<%     if (role.canInviteUsers()) { %>
-<li><a href="view_invites.jsp">View / Manage Invites</a>
-<%     } else if (role.canViewInvites()) { %>
-<li><a href="view_invites.jsp">View Invites</a>
-<%     } %>
-<%   } %>
-<li><a href="activity.jsp">View Site Activity</a>
+<li>Camp Administration
+<ul>
+    <li><a href="activity.jsp">View Site Activity</a>
+	<!-- <li><a href="view_groups.jsp">View Camper Groups</a> (removed for 2016 when group leader went away) -->
+	<%   if (RuntimeOptions.Global.isInviteOnly()) { %>
+	<%     if (role.canInviteUsers()) { %>
+	<li><a href="view_invites.jsp">View / Manage Invites</a>
+	<%     } else if (role.canViewInvites()) { %>
+	<li><a href="view_invites.jsp">View Invites</a>
+	<%     } %>
+	<%   } %>
+    <li><a href="view_cells2.jsp">View<%= role.canEditCells() ? " / Edit" : "" %> Cells</a>
+	<li><a href="view_finance.jsp">View Dues Report</a>
+</ul>
 <%   if (role.canViewAdminData() || role.canEditTerms() || role.canEditAnnouncements() || role.canEditMailTemplates()) { %>
 <li>System Info / Settings
 <ul>

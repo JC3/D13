@@ -13,7 +13,7 @@ public class ThisYear {
 
     public static final int CAMP_YEAR = 2017;
     public static final String CAMP_NAME = "DISOR1E7T";
-    public static final String SYSTEM_VERSION = "v1.23";
+    public static final String SYSTEM_VERSION = "v1.23b";
     public static final String CSS_VERSION;
     public static final DateTime PLAYA_MONDAY = new DateTime(2017, 8, 28, 12, 0);
     

@@ -13,13 +13,13 @@ if (!sess.isLoggedIn()) {
     return;
 }
 
-DataViewer view = new DataViewer(pageContext, sess);
+DataViewer view = new DataViewer(pageContext, sess, DataViewer.FLAG_SHORT_CLASSES);
 if (view.isFailed())
     return; // user should not be here
 
 UserStatistics.Statistics stats = UserStatistics.calculateStatistics();
     
-String this_url = Util.html(java.net.URLEncoder.encode(Util.getCompleteUrl(request), "us-ascii"));
+String this_url = Util.html(java.net.URLEncoder.encode(Util.getCompleteUri(request), "us-ascii"));
 String root = pageContext.getServletContext().getContextPath();
 
 List<String> cols = view.getColumns();
@@ -95,23 +95,18 @@ h1 {
     padding: 2px 0.5ex 2px 0.5ex;
     border-right: 1px solid #202020;
     border-top: 1px solid #303030;
-}
-.standard {
     white-space: nowrap;
 }
-.standard div {
+.summary td div {
     border: 0;
     margin: 0;
     padding: 0;
 }
-.wide {
-    vertical-align: top;
+.w {
+    white-space: inherit !important;
 }
-.wide div {
+.w div {
     width: 30ex;
-    border: 0;
-    margin: 0;
-    padding: 0;
 }
 hr.sub {
     border-top: 1px solid #303030;
@@ -127,11 +122,14 @@ hr.sub {
     color: #ffeedd;
     opacity: 0.8;
 }
+#summary-table {
+    font-size: 90%;
+}
 </style>
 <script>
 $(document).ready(function() {
-	$('#summary-loading').toggle(false);
-	$('#summary-table').attr('style', null);
+    $('#summary-loading').toggle(false);
+    $('#summary-table').attr('style', null);
     $('.tooltip').tooltipster({
         content: 'Loading...',
         contentAsHTML: true,
@@ -173,14 +171,14 @@ $(document).ready(function() {
 <h1>Statistics:</h1>
 <table cellspacing="0" class="summary" id="stats">
 <tr>
-  <th class="standard">
-  <th class="standard">Total
-  <th class="standard">Return
-  <th class="standard">New
-  <th class="standard">Virgins
+  <th>
+  <th>Total
+  <th>Return
+  <th>New
+  <th>Virgins
 <%!
   void statsRow (JspWriter out, String name, UserStatistics.UserCount s) throws java.io.IOException {
-     out.print(String.format("<tr><td class=\"standard\">%s", Util.html(name)));
+     out.print(String.format("<tr><td>%s", Util.html(name)));
      out.print(String.format("<td>%d<td>%d<td>%d<td>%d", s.total, s.total - s.disorientVirgins, s.disorientVirgins, s.bmVirgins));
   }
 %>
@@ -259,11 +257,11 @@ Find: <input type="text" name="search" class="dtext" style="width:20ex;" value="
 <table cellspacing="0" class="summary" id="summary-table" style="display:none">
 <tr>
 
-    <th class="standard" colspan="<%=show_comments?6:5%>">Actions
-<% for (int n = 0; n < cols.size(); ++ n) { %>
-    <th class="<%=cls.get(n)%>"><a href="<%=sortLink(qf, n, search)%>"><%=Util.html(cols.get(n)) %></a>
-<% } %>
-    <th class="standard" colspan="5">Actions
+    <th colspan="<%=show_comments?6:5%>">Actions<%
+  for (int n = 0; n < cols.size(); ++ n) { 
+    %><th<% if (cls.get(n) != null) { %> class="<%=cls.get(n)%>"<%}%>><a href="<%=sortLink(qf, n, search)%>"><%=Util.html(cols.get(n)) %></a><%
+  } 
+    %><th colspan="5">Actions
 
 <% for (DataViewer.Row row:rows) { 
 
@@ -284,34 +282,29 @@ Find: <input type="text" name="search" class="dtext" style="width:20ex;" value="
         - details: in all other cases
      */
 %>
-<tr>
-
-    <td class="standard"><div><%if (personal) {%><a href="personal.jsp?<%=query%>">Profile</a><%}%></div>
-    <td class="standard"><div><%if (registration) {%><a href="registration.jsp?<%=query%>">Registration</a><%}%></div>
-    <td class="standard"><div><%if (cells) {%><a href="cells.jsp?<%=query%>">Cells</a><%}%></div>
-    <td class="standard"><div><%if (dues) {%><a href="editdues.jsp?<%=query%>">Dues</a><%}%></div>
-    <td class="standard"><div><a href="details.jsp?<%=query%>"><%=review?"Review":"Details"%></a></div>
-<% if (show_comments) { %>
-    <td class="standard"><div><%if (comments) {%><a href="details.jsp?<%=query%>#comments"><img src="<%=root %>/media/comment.png" class="tooltip" data-uid="<%=row.user.getUserId()%>"></a><%}%></div>
-<% } %>
-    
-    <% for (int n = 0; n < row.values.size(); ++ n) { String str=row.values.get(n); %>
-    <td class="<%=cls.get(n)%>"><div>
-        <% if (row.hrefs.get(n) != null) { %>
-            <a href="<%=Util.html(row.hrefs.get(n))%>"><%=Util.html(str) %></a>
-        <% } else { %>
-            <%=Util.html(str) %>
-        <% } %>
-    </div>
-    <% } %>
-    
-    <td class="standard"><div><%if (personal) {%><a href="personal.jsp?<%=query%>">Profile</a><%}%></div>
-    <td class="standard"><div><%if (registration) {%><a href="registration.jsp?<%=query%>">Registration</a><%}%></div>
-    <td class="standard"><div><%if (cells) {%><a href="cells.jsp?<%=query%>">Cells</a><%}%></div>
-    <td class="standard"><div><%if (dues) {%><a href="editdues.jsp?<%=query%>">Dues</a><%}%></div>
-    <td class="standard"><div><a href="details.jsp?<%=query%>"><%=review?"Review":"Details"%></a></div>
-
-<% } %>
+<tr><td><%if (personal) {%><div><a href="personal.jsp?<%=query%>">Profile</a></div><%}
+%><td><%if (registration) {%><div><a href="registration.jsp?<%=query%>">Registration</a></div><%}
+%><td><%if (cells) {%><div><a href="cells.jsp?<%=query%>">Cells</a></div><%}
+%><td><%if (dues) {%><div><a href="editdues.jsp?<%=query%>">Dues</a></div><%}
+%><td><div><a href="details.jsp?<%=query%>"><%=review?"Review":"Details"%></a></div><%
+   if (show_comments) { 
+%><td><div><%if (comments) {%><a href="details.jsp?<%=query%>#comments"><img src="<%=root %>/media/comment.png" class="tooltip" data-uid="<%=row.user.getUserId()%>"></a><%}%></div><%
+   }
+   for (int n = 0; n < row.values.size(); ++ n) { String str=row.values.get(n);
+     if (str.isEmpty()) {
+        %><td><%
+     } else if (row.hrefs.get(n) != null) {
+        %><td<% if (cls.get(n) != null) { %> class="<%=cls.get(n)%>"<%}%>><div><a href="<%=Util.html(row.hrefs.get(n))%>"><%=Util.html(str) %></a></div><%
+     } else {
+        %><td<% if (cls.get(n) != null) { %> class="<%=cls.get(n)%>"<%}%>><div><%=Util.html(str) %></div><%
+     }
+   } 
+%><td><%if (personal) {%><div><a href="personal.jsp?<%=query%>">Profile</a></div><%}
+%><td><%if (registration) {%><div><a href="registration.jsp?<%=query%>">Registration</a></div><%}
+%><td><%if (cells) {%><div><a href="cells.jsp?<%=query%>">Cells</a></div><%}
+%><td><%if (dues) {%><div><a href="editdues.jsp?<%=query%>">Dues</a></div><%}
+%><td><div><a href="details.jsp?<%=query%>"><%=review?"Review":"Details"%></a></div><%
+} %>
 
 </table>
 

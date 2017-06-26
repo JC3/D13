@@ -113,6 +113,8 @@ public class DataViewer {
     private final List<ViewDescriptor> cellProps;
     private final List<String> columns; // must be same order as getDataViewRow
     private final List<String> colclasses;
+    private String colclassWide = "wide";
+    private String colclassStandard = "standard";
     private final List<Row> rows = new ArrayList<Row>();
     private List<Note> notes;
     private boolean downloadCSV;
@@ -211,13 +213,13 @@ public class DataViewer {
     }
     
     @SafeVarargs
-    private static List<String> getDataViewColumnClasses (List<ViewDescriptor> ... lists) {
+    private final List<String> getDataViewColumnClasses (List<ViewDescriptor> ... lists) {
         
         List<String> columns = new ArrayList<String>();
        
         for (List<ViewDescriptor> vds:lists)
             for (ViewDescriptor vd:vds)
-                columns.add(vd.longtext ? "wide" : "standard");
+                columns.add(vd.longtext ? colclassWide : colclassStandard);
         
         return columns;
         
@@ -366,6 +368,7 @@ public class DataViewer {
     
     public static final int FLAG_SINGLE_USER = 1<<0;
     public static final int FLAG_NO_CELLS = 1<<1;
+    public static final int FLAG_SHORT_CLASSES = 1<<2;
     
     public DataViewer (PageContext context, SessionData session, int flags) {
         
@@ -376,6 +379,11 @@ public class DataViewer {
             colclasses = null;
             cellProps = null; // same
             return; // permission denied
+        }
+        
+        if ((flags & FLAG_SHORT_CLASSES) != 0) {
+            colclassStandard = null;
+            colclassWide = "w";
         }
 
         if ((flags & FLAG_NO_CELLS) == 0) {

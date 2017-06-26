@@ -1,3 +1,12 @@
+2017-06-25 13:39 ET jasonc
+
+  1.23b
+  - Reorganized some links on home.jsp.
+  - Smaller font and even/odd row coloring on view_invites.jsp.
+  - Smaller font on view_data.jsp.
+  - Better cache strategy for css, js, and images.
+  - Massively cut down size of view_data.jsp (3.1MB -> 871KB uncompressed!).
+
 2017-06-25 09:21 ET jasonc
 
   1.23
