@@ -89,13 +89,7 @@ if (success_target == null || success_target.trim().isEmpty()) {
     back_link_name = "Home";
 }
 
-List<Note> notes = new ArrayList<Note>();
-notes.addAll(Note.allUsers(viewer, User.findAll()));
-notes.addAll(Note.allCells(viewer, Cell.findAll()));
-notes.addAll(Note.allInvites(viewer, Invite.findAll()));
-notes.addAll(Note.allTiers());
-notes.addAll(Note.allGeneral(viewer, GeneralLogEntry.findAll()));
-Collections.sort(notes, Note.DESCENDING);
+List<Note> notes = Note.getFullLog(viewer, Note.DESCENDING);
 
 DefaultDataConverter ddc = new DefaultDataConverter(true);
 
@@ -252,9 +246,12 @@ table.notes tr.type-delete a:active {
     color: yellow;
     background: #800000;
 }
+.inithide {
+    display: none;
+}
 </style>
 <script type="text/javascript">
-function showAfter (timestamp, datestr) {
+function showAfter (link, timestamp, datestr) {
     $('tr.noterow').filter(function() { 
         return $(this).data('timestamp') >= timestamp; 
     }).toggle(true);
@@ -262,23 +259,32 @@ function showAfter (timestamp, datestr) {
         return $(this).data('timestamp') < timestamp; 
     }).toggle(false);
     $('#header').text(datestr);
+    window.location.hash = $(link).data('show');
 }
 $(document).ready(function() {
-	showAfter(0, '<%= dateString(0) %>');
-})
+	var attr = '[data-show="all"]';
+	if (window.location.hash.includes('login'))
+		attr = '[data-show="login"]';
+	else if (window.location.hash.includes('day'))
+		attr = '[data-show="day"]';
+	else if (window.location.hash.includes('last'))
+		attr = '[data-show="last"]';
+	$(attr).click();
+	$('.inithide').toggle(true);
+});
 </script>
 </head>
-<body>
+<body class="inithide">
 
 <dis:header/>
 <div class="nav"><a href="<%=Util.html(success_target) %>"><%= back_link_name %></a></div>
 
 <div style="margin-left:auto;margin-right:auto;text-align:center;white-space:nowrap;">
   <div style="text-align:left;display:inline-block;">
-  <input type="radio" name="displaytime" onclick="showAfter(0, '<%= dateString(0) %>');" checked>Show all activity.<br>
-  <input type="radio" name="displaytime" onclick="showAfter(<%= timestamp_login %>, '<%= dateString(timestamp_login) %>');">Show activity since last log in.<br>
-  <input type="radio" name="displaytime" onclick="showAfter(<%= timestamp_24 %>, '<%= dateString(timestamp_24) %>');">Show activity in last 24 hours.<br>
-  <input type="radio" name="displaytime" onclick="showAfter(<%= timestamp_action %>, '<%= dateString(timestamp_action) %>');">Show activity since your last action.<br>
+  <input type="radio" name="displaytime" data-show="all" onclick="showAfter(this, 0, '<%= dateString(0) %>');" checked>Show all activity.<br>
+  <input type="radio" name="displaytime" data-show="login" onclick="showAfter(this, <%= timestamp_login %>, '<%= dateString(timestamp_login) %>');">Show activity since last log in.<br>
+  <input type="radio" name="displaytime" data-show="day" onclick="showAfter(this, <%= timestamp_24 %>, '<%= dateString(timestamp_24) %>');">Show activity in last 24 hours.<br>
+  <input type="radio" name="displaytime" data-show="last" onclick="showAfter(this, <%= timestamp_action %>, '<%= dateString(timestamp_action) %>');">Show activity since your last action.<br>
   </div>
   <!-- maybe later, need to make it not conflict with displaytime
   <div style="text-align:left;display:inline-block;">

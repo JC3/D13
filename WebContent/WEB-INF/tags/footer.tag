@@ -1,4 +1,5 @@
 <%@ tag language="java" pageEncoding="ISO-8859-1"%>
+<%@ tag trimDirectiveWhitespaces="true" %>
 <%@ tag import="d13.ThisYear" %>
 <%@ tag import="d13.dao.*" %>
 <%@ tag import="d13.web.*" %>

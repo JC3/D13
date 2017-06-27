@@ -340,6 +340,7 @@ for (User u : users) {
      
     // --- disengage cells ---
     
+    /*
     final long CELL_DMON = 429;
     final long CELL_DTUE = 430;
     final long CELL_DWED = 431;
@@ -350,6 +351,7 @@ for (User u : users) {
                 
     if ((dtue && !dmon) || (dwed && !dtue))
         probadd(allprob, cprob, new Problem(u, "Seems to have skipped a day in disengage cell signups. Might want to ask them."));
+    */
     
     // --- approval survey disengage ---
 
@@ -357,10 +359,12 @@ for (User u : users) {
         boolean anyd = a.isDisengageSun() || a.isDisengageMon() || a.isDisengageTue() || a.isDisengageWed();
         if (anyd && a.isDisengageNone())
             probadd(allprob, cprob, new Problem(u, "Approval survey: Said no disengage but also selected disengage days."));
+        /*
         if (a.isDisengageMon() != dmon ||
             a.isDisengageTue() != dtue ||
             a.isDisengageWed() != dwed)
-            probadd(allprob, cprob, new Problem(u, "Approval survey disengage days do not match disengage cell signups."));       
+            probadd(allprob, cprob, new Problem(u, "Approval survey disengage days do not match disengage cell signups."));      
+        */
     }
     
 }

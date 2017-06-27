@@ -5,6 +5,16 @@
 <%@ page import="d13.util.Util" %>
 <%@ page import="java.util.List" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="dis" %>
+<%!
+static String invoiceIdString (boolean paid, long id) {
+    if (!paid)
+        return "";
+    else if (id < 0)
+        return "";
+    else
+        return Long.toString(id);
+}
+%>
 <%
 SessionData sess = new SessionData(session);
 if (!sess.isLoggedIn()) {
@@ -36,10 +46,17 @@ FinanceReport.Totals tot = fr.getTotals();
 .summary th {
     white-space: nowrap;
     text-align: left;
+    vertical-align: bottom;
     border: 0;
     margin: 0;
     padding: 2px 0.5ex 2px 0.5ex;
     background: #202020;
+}
+th.camp {
+    background: #302020;
+}
+th.rv {
+    background: #302820;
 }
 .summary td {
     vertical-align: top;
@@ -56,8 +73,14 @@ td.r {
 td.s {
     font-size: smaller;
 }
+td.s span {
+    opacity: 0.8;
+}
 #stats {
     font-size: smaller;
+} 
+#transactions, #dues {
+    font-size: 90%;
 }
 h1 {
     font-size: larger;
@@ -72,7 +95,7 @@ h1 {
 </div>
 
 <h1>Summary:</h1>
-<table class="summary">
+<table class="summary" id="stats">
 <tr>
   <th>
   <th class="r">Total
@@ -85,8 +108,8 @@ h1 {
   <td class="r"><%= Util.intAmountToString(tot.personalTotal - tot.personalPaid) %>
 <% for (String tier:tot.personalByTier.keySet()) { %>
 <tr>
-  <td class="s" style="padding-left:2ex;"><%= Util.html(tier) %>
-  <td class="r s"><%= Util.intAmountToString(tot.personalByTier.get(tier)) %>
+  <td class="s" style="padding-left:2ex;"><span><%= Util.html(tier) %></span>
+  <td class="r s"><span><%= Util.intAmountToString(tot.personalByTier.get(tier)) %></span>
   <td class="s">
   <td class="s">
 <% } %>
@@ -95,6 +118,13 @@ h1 {
   <td class="r"><%= Util.intAmountToString(tot.rvTotal) %>
   <td class="r"><%= Util.intAmountToString(tot.rvPaid) %>
   <td class="r"><%= Util.intAmountToString(tot.rvTotal - tot.rvPaid) %>
+<% for (String tier:tot.rvByTier.keySet()) { %>
+<tr>
+  <td class="s" style="padding-left:2ex;"><span><%= Util.html(tier) %></span>
+  <td class="r s"><span><%= Util.intAmountToString(tot.rvByTier.get(tier)) %></span>
+  <td class="s">
+  <td class="s">
+<% } %>
 <tr>
   <td>Total Fees
   <td class="r"><%= Util.intAmountToString(tot.personalTotal + tot.rvTotal) %>
@@ -117,20 +147,26 @@ h1 {
 <hr>
 
 <h1>Individual Dues:</h1>
-<table class="summary">
+<table class="summary" id="dues">
 <tr>
-  <th>ID
-  <th>Name
-  <th>Email
-  <th class="r">Tier
-  <th class="r">Camp Fee Owed
-  <th class="r">Camp Fee Paid
-  <th class="r">Camp Fee Paid On
-  <th class="r">Camp Fee Paid By
-  <th class="r">RV Fee Owed
-  <th class="r">RV Fee Paid
-  <th class="r">RV Fee Paid On
-  <th class="r">RV Fee Paid By
+  <th rowspan="2">ID
+  <th rowspan="2">Name
+  <th rowspan="2">Email
+  <th colspan="6" class="r camp">Camp Fee
+  <th colspan="6" class="r rv">RV Fee
+<tr>
+  <th class="r camp">Tier
+  <th class="r camp">Owed
+  <th class="r camp">Paid
+  <th class="r camp">Paid On
+  <th class="r camp">Paid By
+  <th class="r camp">Inv #
+  <th class="r rv">Tier
+  <th class="r rv">Owed
+  <th class="r rv">Paid
+  <th class="r rv">Paid On
+  <th class="r rv">Paid By
+  <th class="r rv">Inv #
 <% for (FinanceReport.DuesByUser d:dbu) { %>
 <tr>
   <td><%= d.user.getUserId() %>
@@ -141,12 +177,18 @@ h1 {
   <td class="r"><%= d.personalPaid ? Util.intAmountToString(d.personalPaidAmount) : "unpaid" %>
   <td class="r"><%= d.personalPaid ? dd.asString(d.personalPaidDate) : "" %>
   <td class="r"><%= (d.personalPaid && d.personalPaidBy != null) ? Util.html(d.personalPaidBy.getRealName()) : "" %>
-  <td class="r"><%= d.rvOwed ? Util.intAmountToString(d.rvOwedAmount) : "n/a" %>
+  <td class="r"><%= invoiceIdString(d.personalPaid, d.personalInvoiceId) %>
   <% if (d.rvOwed) { %>
+  <td class="r"><%= Util.html(d.rvTierName) %>
+  <td class="r"><%= Util.intAmountToString(d.rvOwedAmount) %>
   <td class="r"><%= d.rvPaid ? Util.intAmountToString(d.rvPaidAmount) : "unpaid" %>
   <td class="r"><%= d.rvPaid ? dd.asString(d.rvPaidDate) : "" %>
   <td class="r"><%= (d.rvPaid && d.rvPaidBy != null) ? Util.html(d.rvPaidBy.getRealName()) : "" %>
+  <td class="r"><%= invoiceIdString(d.rvPaid, d.rvInvoiceId) %>
   <% } else { %>
+  <td class="r">
+  <td class="r">
+  <td class="r">
   <td class="r">
   <td class="r">
   <td class="r">
@@ -158,8 +200,11 @@ h1 {
   <td class="r"><strong><%= Util.intAmountToString(tot.personalPaid) %></strong>
   <td>
   <td>
+  <td>
+  <td>
   <td class="r"><strong><%= Util.intAmountToString(tot.rvTotal) %></strong>
   <td class="r"><strong><%= Util.intAmountToString(tot.rvPaid) %></strong>
+  <td>
   <td>
   <td>
 
@@ -169,7 +214,7 @@ h1 {
 
 <h1>Completed Transactions:</h1>
 
-<table class="summary">
+<table class="summary" id="transactions">
 <tr>
     <th>Invoice ID
     <th>Invoice Date

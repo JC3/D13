@@ -1,6 +1,7 @@
 <%@ tag language="java" pageEncoding="ISO-8859-1"%>
 <%@ attribute name="title" required="false" %>
 <%@ attribute name="require" required="false" %>
+<%@ tag trimDirectiveWhitespaces="true" %>
 <%@ tag import="d13.ThisYear" %>
 <%@ tag import="d13.util.Util" %>
 <% 
@@ -19,8 +20,8 @@
     jquery = jquery || tooltipster; // tooltipster requires jquery
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="icon" href="favicon.ico">
-<link rel="stylesheet" type="text/css" href="disorient.css?v=<%=ThisYear.CSS_VERSION%>">
+<link rel="icon" href="${pageContext.request.contextPath}/favicon.ico">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/v/<%=ThisYear.CSS_VERSION%>/disorient.css">
 <% if (tooltipster) { %>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ext/tooltipster.css" />
 <% } %>

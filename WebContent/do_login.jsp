@@ -27,6 +27,8 @@ if (login.isFailed()) {
     sess.setAttribute(SessionData.SA_LOGIN_EXISTING, login.isExisting());
     response.sendRedirect("index.jsp");
 } else if (login.isLoggedIn()) {
+    if (next == null) // don't do activity redirect unless we're going straight home
+        sess.setAttribute(SessionData.SA_HOME_CHECK_ACTIVITY, true);
     response.sendRedirect(next == null ? "home.jsp" : next);
 } else {
     sess.setAttribute(SessionData.SA_LOGIN_EMAIL, login.getEmail());

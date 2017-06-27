@@ -51,6 +51,17 @@ public class Util {
         }
     }
 
+    public static String getCompleteUri (HttpServletRequest request) {
+        String requestURL = request.getRequestURI();
+        String queryString = request.getQueryString();
+
+        if (queryString == null) {
+            return requestURL;
+        } else {
+            return requestURL + "?" + queryString;
+        }
+    }
+
     public static int parseIntDefault (String str, int def) {
         if (str == null)
             return def;

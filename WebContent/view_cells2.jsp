@@ -86,10 +86,13 @@ String message_html = (message == null ? null : Util.html(message));
     margin:0;
     padding:0;
 }
+.celldetails > b, .celldetails > table {
+    font-size: 90%;
+}
 .leftdetail {
     white-space: nowrap; 
     vertical-align:top;
-    border-right:1px solid #402000;
+    border-right:1px dotted #402000;
     padding-right: 1ex;
     margin-right: 1ex;
 }
@@ -370,12 +373,15 @@ for (Cell cell:allthings) {
     boolean cat = cell.isCategory();
     List<User> approved = new ArrayList<User>();
     List<User> pending = new ArrayList<User>();
+    List<User> review = new ArrayList<User>();
     if (!cat) {
         buildUserList(approved, cell.getUsers(), UserState.APPROVED);
         java.util.Collections.sort(approved, new User.RealNameComparator());
         buildUserList(approved, cell.getUsers(), UserState.APPROVE_PENDING);
         buildUserList(pending, cell.getUsers(), UserState.REGISTERED);
         java.util.Collections.sort(pending, new User.RealNameComparator());
+        buildUserList(review, cell.getUsers(), UserState.NEEDS_REVIEW);
+        java.util.Collections.sort(review, new User.RealNameComparator());
     }
 %>
 <div id="details_<%=cell.getCellId()%>" class="celldetails">
@@ -388,24 +394,22 @@ for (Cell cell:allthings) {
 <b>Description:</b> <%= Util.html(cell.getDescription()) %><br>
 <hr>
 
-<b style="color: #ffddaa;">APPROVAL FINALIZED</b><br><br>
+<b style="color: #ffddaa;">APPROVAL FINALIZED:</b><br>
 
 <table width="100%">
 <tr><td class="leftdetail">
 <b>Email Addresses:</b><br>
-  <textarea style="dtextarea">
-  <% 
+  <textarea style="dtextarea"><% 
     {
     boolean first = true;
     for (User u:approved) {
         if (first)
             first = false;
         else
-            out.print(",");
+            out.print(", ");
         out.print(Util.html(u.getEmail())); 
     }
-} %>
-  </textarea><br><br>
+} %></textarea><br><br>
 <td class="rightdetail">
 
 <table width="100%" class="volunteers">
@@ -426,25 +430,23 @@ for (User u:approved) { %>
 </table>
 
 <hr>
-<b style="color: #ffddaa;">APPROVED / REGISTERED</b><br><br>
+<b style="color: #ffddaa;">APPROVED / REGISTERED:</b><br>
 
 <table width="100%">
 <tr><td class="leftdetail">
 <b>Email Addresses:</b><br>
-  <textarea style="dtextarea">
-  <% 
+  <textarea style="dtextarea"><% 
     {
         boolean first = true;
         for (User u:pending) {
             if (first)
                 first = false;
             else
-                out.print(",");
+                out.print(", ");
             out.print(Util.html(u.getEmail())); 
         }
     } 
-  %>
-  </textarea><br><br>
+  %></textarea><br><br>
   
 <td class="rightdetail">
 <table width="100%" class="volunteers">
@@ -462,6 +464,43 @@ for (User u:approved) { %>
 </table>
 
 </table>
+<!-- section -->
+<hr>
+<b style="color: #ffddaa;">NEEDS REVIEW:</b><br>
+
+<table width="100%">
+<tr><td class="leftdetail">
+<b>Email Addresses:</b><br>
+  <textarea style="dtextarea"><% 
+    {
+        boolean first = true;
+        for (User u:review) {
+            if (first)
+                first = false;
+            else
+                out.print(", ");
+            out.print(Util.html(u.getEmail())); 
+        }
+    } 
+  %></textarea><br><br>
+  
+<td class="rightdetail">
+<table width="100%" class="volunteers">
+<tr><th>Name<th>Email<th>Arrival<th>Departure
+<% for (User u:review) { %>
+<tr><td><a href="details.jsp?u=<%=u.getUserId()%>&next=<%=this_url%>%23<%=cell.getCellId()%>"><%=Util.html(u.getRealName()) %></a>
+    <td><a href="mailto:<%=Util.html(u.getEmail())%>"><%=Util.html(u.getEmail()) %></a>
+    <% if (u.isRegistrationComplete()) { %>
+      <td><%=Util.html(u.getRegistration().getArrivalDate()) %>
+      <td><%=Util.html(u.getRegistration().getDepartureDate() + " " + u.getRegistration().getDepartureTime()) %>
+    <% } else { %>
+      <td><td>
+    <% } %>
+<% } %>
+</table>
+
+</table>
+<!-- end -->
 <% } // if (!cat) %>
 
 <% if (canEdit) {

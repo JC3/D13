@@ -48,6 +48,7 @@ public class SessionData {
     public static final String SA_EDIT_TERMS_MESSAGE = "jsp.editterms.message";
     public static final String SA_EDIT_TERMS_TITLE = "jsp.editterms.title";
     public static final String SA_EDIT_TERMS_TEXT = "jsp.editterms.text";
+    public static final String SA_HOME_CHECK_ACTIVITY = "jsp.home.check_activity";
     public static final String SA_GLOBAL_PREVIOUS_LOGIN = "global.prevlogin";
     
     private static final String SA_USER_ID = "info.disorient.SessionData.userid";    
@@ -136,6 +137,19 @@ public class SessionData {
     }
     
     
+    public boolean getAttributeBoolean (String key) {
+        
+        Object o = getAttribute(key);
+        
+        try {
+            return (o == null) ? false: Boolean.parseBoolean(o.toString());
+        } catch (Exception x) {
+            return false;
+        }
+        
+    }
+    
+    
     public Object getAndClearAttribute (String key) {
         
         Object o = null;
@@ -151,7 +165,22 @@ public class SessionData {
 
     }
     
-    
+
+    public boolean getAndClearAttributeBoolean (String key) {
+
+        boolean b = false;
+        
+        try {
+            b = getAttributeBoolean(key);
+            session.removeAttribute(key);
+        } catch (Exception x) {
+            b = false;
+        }
+        
+        return b;
+
+    }
+
     /**
      * Check to see if a user is logged in.
      * @return True if a user is currently logged in, false if not.

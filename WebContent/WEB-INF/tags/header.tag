@@ -1,4 +1,5 @@
 <%@ tag language="java" pageEncoding="ISO-8859-1"%>
+<%@ tag trimDirectiveWhitespaces="true" %>
 <%@ attribute name="blank" required="false" %>
 <%@ attribute name="nav" required="false" %>
 <%@ tag import="d13.web.*" %>

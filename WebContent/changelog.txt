@@ -1,3 +1,40 @@
+2017-06-27 jasonc
+
+  1.23e
+  - cell details:
+    - now also shows registered users
+    - smaller font size
+  - data viewer:
+    - option to hide long fields
+    - option to hide long cells
+    - options persist in local session storage
+    - tooltip max width set
+    - todo: fix bug where tooltip causes page to oscillate
+    - todo: implement viewer for long fields
+
+2017-06-26 jasonc
+
+  1.23d
+  - Finance report now includes RV tier information and invoice IDs.
+  - Tweaked finance report layout.
+  - Don't show cell-specific fields on category edit page.
+
+2017-06-26 03:50 ET jasonc
+
+  1.23c
+  - Activity log now displayed on admin login if there was activity since last login.
+
+2017-06-25 13:39 ET jasonc
+
+  1.23b
+  - Reorganized some links on home.jsp.
+  - Smaller font and even/odd row coloring on view_invites.jsp.
+  - Smaller font on view_data.jsp.
+  - Improved login form styling.
+  - Better cache strategy for css, js, and images.
+  - Massively cut down size of view_data.jsp (3.1MB -> 871KB uncompressed!).
+  - Fixed misc/check.jsp since disengage cells removed.
+
 2017-06-25 09:21 ET jasonc
 
   1.23
@@ -19,7 +56,7 @@
 2017-06-23 11:48 ET jasonc
 
   1.22c
-  - notify.quiet option to suppress "Processing 0 notification..." log messages.
+  - notify.quiet option to suppress "Processing 0 notifications..." log messages.
   - listOrder added to options table, used by view_options.jsp.
   - Add viewer for long options to view_options.jsp. 
   - Store user info in session to make sessions easier to identify in tomcat manager.

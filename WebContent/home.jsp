@@ -37,13 +37,6 @@ User user = sess.getUser();
 Role role = user.getRole();
 String email_html = Util.html(user.getEmail());
 String realname_html = Util.html(user.getRealName());
-//String role_html = null; // = user.isAdmin() ? "Administrator" : null; //(user.isSpecialRole() ? Util.html(role.getName()) : null);
-//if (user.isAdmin() && user.isAdmissions()) // this is getting hacky
-//    role_html = "Administrator";
-//else if (user.isAdmin())
-//    role_html = "Registration";
-//else if (user.isAdmissions())
-//    role_html = "Admissions";
 String role_html = Util.html(user.getRoleDisplay());
 
 if (user.isInviteCodeNeeded()) {
@@ -63,6 +56,14 @@ if (cs != null) {
             c.setMaxAge(0);
             response.addCookie(c);
         }
+    }
+}
+
+if (sess.getAndClearAttributeBoolean(SessionData.SA_HOME_CHECK_ACTIVITY) && role.isSpecial()) {
+    long timestamp_login = sess.getAttributeLong(SessionData.SA_GLOBAL_PREVIOUS_LOGIN);
+    if (Note.anyNotesSince(user, timestamp_login)) {
+        response.sendRedirect("activity.jsp#login");
+        return;
     }
 }
 
@@ -166,6 +167,7 @@ here periodically for status updates! <strong>If your application is approved, y
 <li><form action="view_data.jsp" method="get">Search for user: <input type="text" name="search" class="dtext" style="width:20ex;"> <input type="submit" value="Search" class="dbutton" style="width:10ex;"></form>
 <li><a href="view_data.jsp">View Registration Data</a>
 <ul>
+  <li><a href="view_data.jsp?qf=11">All registered users (everybody but "New User").</a>
   <li><a href="view_data.jsp?qf=1">Only users that need registration applications reviewed.</a>
   <li><a href="view_data.jsp?qf=2">Only users that need to be approved or rejected.</a>
   <li><a href="view_data.jsp?qf=3">Only users that need to be finalized.</a>
@@ -177,17 +179,20 @@ here periodically for status updates! <strong>If your application is approved, y
   <li><a href="view_data.jsp?qf=9">Only not-yet-approved users that need to sign up for work cells.</a>
   <li><a href="view_data.jsp?qf=10">Only approved users that need to sign up for work cells.</a>  
 </ul>
-<li><a href="view_cells2.jsp">View<%= role.canEditCells() ? " / Edit" : "" %> Cells</a>
-<!-- <li><a href="view_groups.jsp">View Camper Groups</a> (removed for 2016 when group leader went away) -->
-<li><a href="view_finance.jsp">View Dues Report</a>
-<%   if (RuntimeOptions.Global.isInviteOnly()) { %>
-<%     if (role.canInviteUsers()) { %>
-<li><a href="view_invites.jsp">View / Manage Invites</a>
-<%     } else if (role.canViewInvites()) { %>
-<li><a href="view_invites.jsp">View Invites</a>
-<%     } %>
-<%   } %>
-<li><a href="activity.jsp">View Site Activity</a>
+<li>Camp Administration
+<ul>
+    <li><a href="activity.jsp">View Site Activity</a>
+	<!-- <li><a href="view_groups.jsp">View Camper Groups</a> (removed for 2016 when group leader went away) -->
+	<%   if (RuntimeOptions.Global.isInviteOnly()) { %>
+	<%     if (role.canInviteUsers()) { %>
+	<li><a href="view_invites.jsp">View / Manage Invites</a>
+	<%     } else if (role.canViewInvites()) { %>
+	<li><a href="view_invites.jsp">View Invites</a>
+	<%     } %>
+	<%   } %>
+    <li><a href="view_cells2.jsp">View<%= role.canEditCells() ? " / Edit" : "" %> Cells</a>
+	<li><a href="view_finance.jsp">View Dues Report</a>
+</ul>
 <%   if (role.canViewAdminData() || role.canEditTerms() || role.canEditAnnouncements() || role.canEditMailTemplates()) { %>
 <li>System Info / Settings
 <ul>

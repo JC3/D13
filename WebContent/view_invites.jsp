@@ -46,8 +46,18 @@ boolean show_actions = sess.getUser().getRole().canInviteUsers() && !RuntimeOpti
 .summary {
     background: #101010;
     border: 1px solid #303030;
+    border-spacing: 0;
     padding: 2ex;
     width: 60ex;    
+    margin-bottom: 4ex;
+    margin-left: auto;
+    margin-right: auto;
+}
+.summary.invites {
+    font-size: 90%;
+}
+.summary.invites tr.odd {
+    background: #000000;
 }
 .summary th {
     white-space: nowrap;
@@ -93,6 +103,12 @@ function updateView () {
     $('.invrej').toggle($('#vrej').is(':checked'));  
     $('.invexp').toggle($('#vexp').is(':checked'));  
     $('.invcan').toggle($('#vcan').is(':checked'));
+    $('.inv:visible').each(function(n,tr) {
+    	if (n % 2 === 0)
+    		$(tr).removeClass('odd');
+    	else
+    		$(tr).addClass('odd');
+    });
     var addrs = '';
     $('.inv:visible > .invemail').each(function() {
     	addrs = addrs + $(this).text() + ', ';
@@ -151,7 +167,7 @@ $(document).ready(function() {
 </td><td>
 <% } %>
 
-<table cellspacing="0" class="summary" style="margin-bottom:4ex;margin-left:auto;margin-right:auto;">
+<table class="summary">
     <tr><th class="standard">View?</th><th class="standard">Status</th><th class="standard">Count</th></tr>
     <tr><td class="standard"><input type="checkbox" id="vact" onclick="updateView()" checked></td><td class="standard">Active</td>   <td class="standard" id="nact"></td></tr>
     <tr><td class="standard"><input type="checkbox" id="vacc" onclick="updateView()" checked></td><td class="standard">Accepted</td> <td class="standard" id="nacc"></td></tr>
@@ -163,10 +179,10 @@ $(document).ready(function() {
 </table>
 
 <% if (show_actions) { %>
-</td></tr></table>
+</table>
 <% } %>
 
-<table cellspacing="0" class="summary" style="margin-bottom:4ex;margin-left:auto;margin-right:auto;">
+<table class="summary invites">
     <tr>
         <th class="standard"></th>
         <th class="standard">Invitee Email</th>
