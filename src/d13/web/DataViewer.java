@@ -23,6 +23,7 @@ import d13.dao.RegistrationForm;
 import d13.dao.Role;
 import d13.dao.User;
 import d13.dao.UserSearchFilter;
+import d13.dao.UserState;
 import d13.util.Util;
 
 public class DataViewer {
@@ -113,6 +114,8 @@ public class DataViewer {
     private final List<ViewDescriptor> cellProps;
     private final List<String> columns; // must be same order as getDataViewRow
     private final List<String> colclasses;
+    private final List<Integer> wideIndices = new ArrayList<Integer>();
+    private final List<Integer> cellIndices = new ArrayList<Integer>();
     private String colclassWide = "wide";
     private String colclassStandard = "standard";
     private final List<Row> rows = new ArrayList<Row>();
@@ -224,7 +227,24 @@ public class DataViewer {
         return columns;
         
     }
-    
+
+    @SafeVarargs
+    private final void setupDataViewColumnIndices (List<ViewDescriptor> ... lists) {
+        
+        wideIndices.clear();
+        cellIndices.clear();
+        
+        int n = 0;
+        for (List<ViewDescriptor> vds:lists) {
+            for (ViewDescriptor vd:vds) {
+                if (vd.longtext) wideIndices.add(n);
+                if (vd instanceof CellViewDescriptor) cellIndices.add(n);
+                ++ n;
+            }
+        }
+                
+    }
+
     private static String href (String val, boolean email) {
         if (email)
             return "mailto:" + val + "?subject=Disorient " + ThisYear.CAMP_YEAR + " Registration";
@@ -338,6 +358,8 @@ public class DataViewer {
                 if (a instanceof String) {
                     // 2015-06-27: empty strings at end instead of beginning; also case-insensitive
                     return compareDataStrings((String)a, (String)b);
+                } else if (a instanceof UserState) {
+                    return ((UserState)a).compareToOrdered((UserState)b);
                 } else if (a instanceof Comparable) {
                     try {
                         Comparable ac = (Comparable)a;
@@ -390,10 +412,12 @@ public class DataViewer {
             cellProps = getCellProps();
             columns = Collections.unmodifiableList(getDataViewColumns(userProps, rformProps, cellProps, aformProps));
             colclasses = Collections.unmodifiableList(getDataViewColumnClasses(userProps, rformProps, cellProps, aformProps));
+            setupDataViewColumnIndices(userProps, rformProps, cellProps, aformProps);
         } else {
             cellProps = null;
             columns = Collections.unmodifiableList(getDataViewColumns(userProps, rformProps, aformProps));
             colclasses = Collections.unmodifiableList(getDataViewColumnClasses(userProps, rformProps, aformProps));
+            setupDataViewColumnIndices(userProps, rformProps, aformProps);
         }
                 
         if ((flags & FLAG_SINGLE_USER) != 0) {
@@ -475,6 +499,14 @@ public class DataViewer {
     
     public List<String> getColumnClasses () {
         return colclasses;
+    }
+    
+    public List<Integer> getWideColumnIndices () {
+        return wideIndices;
+    }
+    
+    public List<Integer> getCellColumnIndices () {
+        return cellIndices;
     }
   
     public List<Row> getRows () {

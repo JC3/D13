@@ -1,3 +1,14 @@
+2017-06-27 jasonc
+
+  1.23e
+  - data viewer:
+    - option to hide long fields
+    - option to hide long cells
+    - options persist in local session storage
+    - tooltip max width set
+    - todo: fix bug where tooltip causes page to oscillate
+    - todo: implement viewer for long fields
+
 2017-06-26 jasonc
 
   1.23d

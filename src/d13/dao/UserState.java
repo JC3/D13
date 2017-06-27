@@ -2,20 +2,22 @@ package d13.dao;
 
 public enum UserState {
 
-    NEW_USER(0, "New User"),
-    NEEDS_REVIEW(1, "Needs Review"),
-    REGISTERED(2, "Registered"),
-    APPROVED(3, "Approved"),
-    REJECTED(4, "Rejected"),
-    APPROVE_PENDING(5, "Approval Pending"),
-    REJECT_PENDING(6, "Rejection Pending");
+    NEW_USER(0, "New User", 0),
+    NEEDS_REVIEW(1, "Needs Review", 1),
+    REGISTERED(2, "Registered", 2),
+    APPROVED(3, "Approved", 5),
+    REJECTED(4, "Rejected", 6),
+    APPROVE_PENDING(5, "Approval Pending", 3),
+    REJECT_PENDING(6, "Rejection Pending", 4);
     
     private final int dbId;
     private final String displayString;
+    private final int sortOrder;
     
-    private UserState (int dbId, String displayString) {
+    private UserState (int dbId, String displayString, int sortOrder) {
         this.dbId = dbId;
         this.displayString = displayString;
+        this.sortOrder = sortOrder;
     }
     
     public int toDBId () {
@@ -33,6 +35,12 @@ public enum UserState {
         case 6: return REJECT_PENDING;
         default: return null;
         }
+    }
+    
+    public int compareToOrdered (UserState o) {
+        int a = sortOrder;
+        int b = (o == null ? -1 : o.sortOrder);
+        return Integer.compare(a, b);
     }
     
     @Override public String toString () {

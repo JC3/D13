@@ -10,15 +10,6 @@ import d13.util.HibernateUtil;
 
 public class UserSearchFilter {
 
-    /*
-    <li><a href="view_data.jsp?qf=1">Only users that need registration applications reviewed.</a>
-    <li><a href="view_data.jsp?qf=2">Only users that need to be approved or rejected.</a>
-    <li><a href="view_data.jsp?qf=3">Only users that need to be finalized.</a>
-    <li><a href="view_data.jsp?qf=4">Only users that have been approved.</a>
-    <li><a href="view_data.jsp?qf=5">Only users that own RVs.</a>
-    <li><a href="view_data.jsp?qf=6">Only users that need to pay their dues.</a>
-    <li><a href="view_data.jsp?qf=7">Only users that need to complete their approval surveys.</a>*/
-   
     public static final int QUICK_ALL = 0;
     public static final int QUICK_NEED_REVIEW = 1;
     public static final int QUICK_NEED_APPROVED_OR_REJECTED = 2;
@@ -30,6 +21,7 @@ public class UserSearchFilter {
     public static final int QUICK_NEED_CELLS = 8;
     public static final int QUICK_NEED_CELLS_NOT_APPROVED = 9;
     public static final int QUICK_NEED_CELLS_APPROVED = 10;
+    public static final int QUICK_REGISTERED = 11;
     
     public static List<User> quickFilter (int filter) throws IllegalArgumentException {
         
@@ -94,6 +86,9 @@ public class UserSearchFilter {
             querystr = "where (user.state = " + UserState.APPROVED.toDBId() + " or " +
                     "user.state = " + UserState.APPROVE_PENDING.toDBId() + ") " + 
                     "and user.cells is empty";
+            break;
+        case QUICK_REGISTERED:
+            querystr = ("where user.state > 0");
             break;
         default:
             throw new IllegalArgumentException("Invalid quick filter index " + filter);

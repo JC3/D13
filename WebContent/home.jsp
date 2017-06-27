@@ -167,6 +167,7 @@ here periodically for status updates! <strong>If your application is approved, y
 <li><form action="view_data.jsp" method="get">Search for user: <input type="text" name="search" class="dtext" style="width:20ex;"> <input type="submit" value="Search" class="dbutton" style="width:10ex;"></form>
 <li><a href="view_data.jsp">View Registration Data</a>
 <ul>
+  <li><a href="view_data.jsp?qf=11">All registered users (everybody but "New User").</a>
   <li><a href="view_data.jsp?qf=1">Only users that need registration applications reviewed.</a>
   <li><a href="view_data.jsp?qf=2">Only users that need to be approved or rejected.</a>
   <li><a href="view_data.jsp?qf=3">Only users that need to be finalized.</a>
