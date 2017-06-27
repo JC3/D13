@@ -3,6 +3,7 @@
   1.23d
   - Finance report now includes RV tier information and invoice IDs.
   - Tweaked finance report layout.
+  - Don't show cell-specific fields on category edit page.
 
 2017-06-26 03:50 ET jasonc
 

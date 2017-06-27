@@ -99,6 +99,14 @@ String error_html = (error == null ? null : Util.html(error));
     display: flex;
     align-items: center;
 }
+<% if (iscat) { %>
+.notcat {
+    display: none;
+}
+.editcell-key {
+    min-width: 10ex;
+}
+<% } %>
 </style>
 <script type="text/javascript">
 $(document).ready(function () {	
@@ -198,19 +206,19 @@ $(document).ready(function () {
     <td class="editcell-key">Cat. Parent:
     <td><select class="dselect" name="newcatParent"><%= parentopts %></select>
 <% } %>
-<tr>
+<tr class="notcat">
     <td class="editcell-key">Description:
     <td><div style="margin:0;padding:0;display:flex"><textarea class="dtextarea" name="desc" style="width:calc(100% - 8px);height:15ex;"><%=isnew ? "" : Util.html(cell.getDescription()) %></textarea></div>
-<tr>
+<tr class="notcat">
     <td class="editcell-key">People Needed:
     <td><span class="centerer"><input type="text" class="dtext" name="people" value="<%=isnew ? 0 : cell.getPeople() %>" style="max-width:10ex"><span class="edit-note">(0 for unlimited)</span></span>
-<tr>
+<tr class="notcat">
     <td class="editcell-key">Hide When Full?
     <td><input type="checkbox" name="hideFull" value="1" <%=(!isnew && cell.isHideWhenFull())?"checked":""%>>
-<tr>
+<tr class="notcat">
     <td class="editcell-key">Mandatory?
     <td><input type="checkbox" name="mandatory" value="1" <%=(!isnew && cell.isMandatory())?"checked":""%>>
-<tr>
+<tr class="notcat">
     <td class="editcell-key">Hidden?
     <td><input type="checkbox" name="hidden" value="1" <%=(!isnew && cell.isHidden())?"checked":""%>>
 
