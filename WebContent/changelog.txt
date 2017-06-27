@@ -1,6 +1,9 @@
 2017-06-27 jasonc
 
   1.23e
+  - cell details:
+    - now also shows registered users
+    - smaller font size
   - data viewer:
     - option to hide long fields
     - option to hide long cells
