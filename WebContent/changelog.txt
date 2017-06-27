@@ -1,3 +1,9 @@
+2017-06-26 jasonc
+
+  1.23d
+  - Finance report now includes RV tier information and invoice IDs.
+  - Tweaked finance report layout.
+
 2017-06-26 03:50 ET jasonc
 
   1.23c

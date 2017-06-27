@@ -30,12 +30,15 @@ public class FinanceReport {
         public String personalTierName;
         public DateTime personalPaidDate;
         public User personalPaidBy;
+        public long personalInvoiceId;
         public boolean rvOwed;
         public boolean rvPaid;
         public int rvPaidAmount;
         public int rvOwedAmount;
+        public String rvTierName;
         public DateTime rvPaidDate;
         public User rvPaidBy;
+        public long rvInvoiceId;
         @Override public int compareTo (DuesByUser o) {
             if (o == this)
                 return 0;
@@ -78,6 +81,7 @@ public class FinanceReport {
         public int rvTotal;
         public int rvPaid;
         public Map<String,Integer> personalByTier = new TreeMap<String,Integer>();
+        public Map<String,Integer> rvByTier = new TreeMap<String,Integer>();
         public int paypalFees;
     }
      
@@ -138,6 +142,7 @@ public class FinanceReport {
                 }
                 d.personalPaidDate = u.getPersonalPaidDate();
                 d.personalPaidBy = (inv == null ? null : inv.getCreator());
+                d.personalInvoiceId = (inv == null ? -1 : inv.getInvoiceId());
             } else {
                 DueItem due = u.getPersonalDueItem();
                 d.personalPaid = false;
@@ -152,6 +157,7 @@ public class FinanceReport {
                 }
                 d.personalPaidDate = null;
                 d.personalPaidBy = null;
+                d.personalInvoiceId = -1;
             }
 
             d.rvOwed = u.getRvDueItem().isActive();
@@ -161,24 +167,34 @@ public class FinanceReport {
                 InvoiceItem invitem = (inv == null ? null : inv.findItem(due));
                 d.rvPaid = true;
                 d.rvPaidAmount = (invitem == null ? 0 : invitem.getAmount());
-                if (due.getCustomAmount() < 0)
-                    d.rvOwedAmount = DueCalculator.calculateAmount(u.getRegisteredOn(), u.getGracePeriodStart(), DueCalculator.TYPE_RV, inv.getCreated()).getAmount();
-                else
+                if (due.getCustomAmount() < 0) {
+                    DueCalculator.Amount a = DueCalculator.calculateAmount(u.getRegisteredOn(), u.getGracePeriodStart(), DueCalculator.TYPE_RV, inv.getCreated()); 
+                    d.rvOwedAmount = a.getAmount();
+                    d.rvTierName = a.getTierName();
+                } else {
                     d.rvOwedAmount = due.getCustomAmount();
+                    d.rvTierName = "Custom";
+                }
                 d.rvPaidDate = u.getRvPaidDate();
                 d.rvPaidBy = (inv == null ? null : inv.getCreator());
+                d.rvInvoiceId = (inv == null ? -1 : inv.getInvoiceId());
             } else {
                 DueItem due = u.getRvDueItem();
                 d.rvPaid = false;
                 d.rvPaidAmount = 0;
                 if (!d.rvOwed)
                     d.rvOwedAmount = 0;
-                else if (due.getCustomAmount() < 0)
-                    d.rvOwedAmount = DueCalculator.calculateAmount(u.getRegisteredOn(), u.getGracePeriodStart(), DueCalculator.TYPE_RV).getAmount();
-                else
+                else if (due.getCustomAmount() < 0) {
+                    DueCalculator.Amount a = DueCalculator.calculateAmount(u.getRegisteredOn(), u.getGracePeriodStart(), DueCalculator.TYPE_RV);
+                    d.rvOwedAmount = a.getAmount();
+                    d.rvTierName = a.getTierName();
+                } else {
                     d.rvOwedAmount = due.getCustomAmount();
+                    d.rvTierName = "Custom";
+                }
                 d.rvPaidDate = null;
                 d.rvPaidBy = null;
+                d.rvInvoiceId = -1;
             }
     
             duesByUser.add(d);
@@ -190,6 +206,10 @@ public class FinanceReport {
             totals.rvTotal += d.rvOwedAmount;
             Integer cval = totals.personalByTier.get(d.personalTierName);
             totals.personalByTier.put(d.personalTierName, (cval == null ? 0 : cval) + d.personalOwedAmount);
+            if (d.rvTierName != null) {
+                cval = totals.rvByTier.get(d.rvTierName);
+                totals.rvByTier.put(d.rvTierName, (cval == null ? 0 : cval) + d.rvOwedAmount);
+            }
             
         }
 
