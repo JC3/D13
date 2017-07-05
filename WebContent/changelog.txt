@@ -1,3 +1,12 @@
+2017-07-04 jasonc
+
+  1.23f
+  - Improved phone number handling (uses libphonenumber now).
+    - International cell numbers allowed.
+    - Proper phone number validation.
+    - Reg data now also displays what to dial for international numbers from US.
+    - New phone summary/check tool added to secret tools in /misc.
+
 2017-06-27 jasonc
 
   1.23e
