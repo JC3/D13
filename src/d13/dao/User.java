@@ -49,6 +49,8 @@ public class User implements Trackable {
     private Location location; 
     private String locationOther;
     private String phone;
+    private String phoneRegion;
+    private String phoneFromUs;
     private String emergencyContact;
     private RegistrationForm registration;
     private ApprovalSurvey approval;
@@ -214,6 +216,14 @@ public class User implements Trackable {
     @DataView(i=90, n="Phone")
     public String getPhone() {
         return phone;
+    }
+    
+    @DataView(i=91, n="Phone (From US)")
+    public String getPhoneFromUs () {
+        if (phoneFromUs == null || phoneFromUs.trim().isEmpty())
+            return null;
+        else
+            return String.format("%s (%s)", phoneFromUs, phoneRegion);
     }
     
     @Track
@@ -462,7 +472,17 @@ public class User implements Trackable {
     }
     
     public void setPhone(String phone) {
-        this.phone = Util.validatePhoneNumber(phone);
+        //this.phone = Util.validatePhoneNumber(phone);
+        Util.PhoneNumberInfo info = Util.parsePhoneNumber(phone);
+        if (info == null) {
+            this.phone = null;
+            this.phoneRegion = null;
+            this.phoneFromUs = null;
+        } else {
+            this.phone = info.formatted;
+            this.phoneRegion = info.region;
+            this.phoneFromUs = info.fromUS;
+        }
     }
     
     public void setEmergencyContact(String emergencyContact) {

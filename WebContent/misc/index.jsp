@@ -44,6 +44,7 @@ h1 {
 <h1>Tools</h1>
 <ul>
 <li><a href="check.jsp?separate">Find Weird Applications</a>
+<li><a href="phone.jsp">Phone Numbers</a>
 </ul>
 <% } %>
 </body>

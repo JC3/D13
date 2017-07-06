@@ -276,10 +276,12 @@ if (true) {
             playanamesForFuzzy.add(u.getPlayaName());
 }
 
+Util.PhoneCheckData pcd = new Util.PhoneCheckData(users);
+
 int optQuickReviewTime = 180;
 int optQuickApproveTime = 45;
 int optECMinLetters = 5;
-int optECMinNumbers = 10;
+int optECMinNumbers = 9;
 int optECFuzzyThreshold = 3;
 boolean optECPhonetic = true;
 
@@ -306,11 +308,19 @@ for (User u : users) {
     String em = u.getEmergencyContact();
     String op = null;
     boolean momordad = (em.toLowerCase().contains("mom") || em.toLowerCase().contains("dad"));
+    List<Util.PhoneCheckData.Match> ecm = pcd.getECMatches(u);
     
     if ((countMatches(em, "[a-zA-Z]") < optECMinLetters && !momordad) || countMatches(em, "[0-9]") < optECMinNumbers) {
         probadd(allprob, eprob, new Problem(u, "Emergency contact info seems incomplete (need name and number): '" + em + "'"));
+    } else if (Util.getPhoneNumbers(em).isEmpty()) {
+        probadd(allprob, eprob, new Problem(u, "Emergency contact info contains no valid phone numbers: '" + em + "'"));
+    } else if (!ecm.isEmpty()) {
+        String deets = "";
+        for (Util.PhoneCheckData.Match m : ecm)
+            deets += ", contact number " + m.thisPhone + " matches " + m.otherUser.getRealName() + "'s phone";
+        probadd(allprob, eprob, new Problem(u, "Emergency contact possibly camping with Disorient (should be off playa): '" + em + "'" + deets));
     } else if ((op = onPlaya(em, usernamesForFuzzy, playanamesForFuzzy, optECFuzzyThreshold, optECPhonetic, ctx)) != null) {
-        probadd(allprob, eprob, new Problem(u, "Emergency contact possibly camping with Disorient (must be off playa): '" + em + "', found a registered user named " + op + "."));
+        probadd(allprob, eprob, new Problem(u, "Emergency contact possibly camping with Disorient (should be off playa): '" + em + "', found a registered user named " + op + "."));
     }
     
     // --- does rv selection match living space selection ---
