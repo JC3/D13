@@ -1,4 +1,3 @@
-<%@page import="java.net.URLEncoder"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ page import="d13.ThisYear" %>
@@ -7,7 +6,8 @@
 <%@ page import="d13.util.Util" %>
 <%@ page import="java.util.*" %>
 <%@ page import="org.joda.time.*" %>
-<%@taglib tagdir="/WEB-INF/tags" prefix="dis"%>
+<%@ page import="java.net.URLEncoder"%>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="dis"%>
 <%!
 static String getTypeString (Note.Type t) {
     switch (t) {
