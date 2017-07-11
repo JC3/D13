@@ -10,7 +10,7 @@
 <hr>
 
 <div style="float:left;border:0;margin:0;padding:0;width:40ex;" class="contact">
-<a href="http://wiki.disorient.info" target="_blank">Wiki</a> <!-- | <a href="http://puddle.disorient.info" target="_blank">Puddle</a>--> | <a href="https://www.facebook.com/groups/pornj" target="_blank">Facebook</a>
+<a href="http://wiki.disorient.info" target="_blank">Wiki</a> | <a href="https://www.facebook.com/groups/pornj" target="_blank">Facebook</a>
 </div>
 
 <div style="float:right;border:0;margin:0;padding:0;text-align:right;width:40ex;" class="contact">
