@@ -99,31 +99,55 @@ Map<String,List<DataViewer.Column>> reportCols = rview.getReportColumns();
     justify-content: center;
 }
 .report {
+    /*background: #101010;
+    border: 1px solid #303030;
+    padding: 2ex;*/
     font-size: 90%;
+}
+.report td:first-child {
+    border-left: 1px solid #202020;
+}
+.report td {
+    vertical-align: top;
+    border: 0;
+    margin: 0;
+    padding: 2px 0.5ex 2px 0.5ex;
+    border-right: 1px solid #202020;
+    border-bottom: 1px solid #303030;
+    white-space: nowrap;
+    background: #101010;
+}
+.report div {
+    border: 0;
+    margin: 0;
+    padding: 0;
 }
 .report tr.r-spacer {
     visibility: hidden;
 }
 .report tr.r-section td {
-    background: #888;
-    color: white;
-    text-align: center;
+    background: #004080;
+    border-top: 1px solid #303030;
     font-weight: bold;
 }
 .report th {
-    background: #444;
-    font-weight: bold;
     white-space: nowrap;
     text-align: left;
+    border: 0;
+    margin: 0;
+    padding: 2px 0.5ex 2px 0.5ex;
+    background: #202020;
 }
-.report tr.r-user td {
-    white-space: nowrap;
-    width: 40ex;
+.report tr.r-user td.w {
+    white-space: inherit;
+}
+.report tr.r-user td.w div {
+    width: 30ex;
 }
 #report-wrapper {
-    display: flex;
+    /*display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center;*/
 }
 .report {
     width: 1px;
@@ -250,12 +274,15 @@ if (rcols != null) {
 	    }
 	    %><tr><%
 	    for (DataViewer.Column col : rcols) {
-            %><th><%= Util.html(col.name) %><%
+	        String cls = (col.shortClass == null) ? "" : (" class=\"" + col.shortClass + "\"");
+            %><th<%= cls %>><%= Util.html(col.name) %><%
         }
 	    for (DataViewer.Row row : s.rows) {
 	        %><tr class="r-user"><%  
-	        for (String value : row.values) {
-                %><td><%= Util.html(value) %><%
+	        for (int n = 0; n < row.values.size(); ++ n) {
+	            String cls = rcols.get(n).shortClass;
+	            cls = (cls == null) ? "" : (" class=\"" + cls + "\"");
+                %><td<%= cls %>><div><%= Util.html(row.values.get(n)) %></div><%
 	        }
 	    }
     } 
