@@ -1,3 +1,4 @@
 src\hibernate.cfg.xml
 /build
+/doc
 .~lock*#

@@ -13,7 +13,7 @@ if (!sess.isLoggedIn()) {
     return;
 }
 
-DataViewer view = new DataViewer(pageContext, sess, DataViewer.FLAG_SHORT_CLASSES);
+DataViewer view = new DataViewer(pageContext, sess);
 if (view.isFailed())
     return; // user should not be here
 
@@ -22,8 +22,7 @@ UserStatistics.Statistics stats = UserStatistics.calculateStatistics();
 String this_url = Util.html(java.net.URLEncoder.encode(Util.getCompleteUri(request), "us-ascii"));
 String root = pageContext.getServletContext().getContextPath();
 
-List<String> cols = view.getColumns();
-List<String> cls = view.getColumnClasses();
+List<DataViewer.Column> cols = view.getColumns();
 List<DataViewer.Row> rows = view.getRows();
 
 if (view.isDownloadCSV()) {
@@ -64,7 +63,7 @@ String makeQuery (String qf, String sortby, String search) {
     return query.toString();
 }
 %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <dis:common require="jquery tooltipster"/>
@@ -249,7 +248,7 @@ $(document).ready(function() {
 
 <div style="border:0;margin:0;padding:0;float:left;">
 <h1>Statistics:</h1>
-<table cellspacing="0" class="summary" id="stats">
+<table class="summary" id="stats">
 <tr>
   <th>
   <th>Total
@@ -342,12 +341,14 @@ Find: <input type="text" name="search" class="dtext" style="width:20ex;" value="
 
 <span id="summary-loading">Loading...</span>
 
-<table cellspacing="0" class="summary" id="summary-table" style="display:none">
+<table class="summary" id="summary-table" style="display:none">
 <tr>
 
     <th colspan="<%=show_comments?6:5%>">Actions<%
   for (int n = 0; n < cols.size(); ++ n) { 
-    %><th<% if (cls.get(n) != null) { %> class="<%=cls.get(n)%>"<%}%>><a href="<%=sortLink(qf, n, search)%>"><%=Util.html(cols.get(n)) %></a><%
+      String colClass = cols.get(n).shortClass;
+      String colName = cols.get(n).name;
+    %><th<% if (colClass != null) { %> class="<%=colClass%>"<%}%>><a href="<%=sortLink(qf, n, search)%>"><%=Util.html(colName) %></a><%
   } 
     %><th colspan="5">Actions
 
@@ -378,13 +379,15 @@ Find: <input type="text" name="search" class="dtext" style="width:20ex;" value="
    if (show_comments) { 
 %><td><div><%if (comments) {%><a href="details.jsp?<%=query%>#comments"><img src="<%=root %>/media/comment.png" class="tooltip" data-uid="<%=row.user.getUserId()%>"></a><%}%></div><%
    }
-   for (int n = 0; n < row.values.size(); ++ n) { String str=row.values.get(n);
+   for (int n = 0; n < row.values.size(); ++ n) { 
+     String str = row.values.get(n);
+     String cls = cols.get(n).shortClass;
      if (str.isEmpty()) {
         %><td><%
      } else if (row.hrefs.get(n) != null) {
-        %><td<% if (cls.get(n) != null) { %> class="<%=cls.get(n)%>"<%}%>><div><a href="<%=Util.html(row.hrefs.get(n))%>"><%=Util.html(str) %></a></div><%
+        %><td<% if (cls != null) { %> class="<%=cls%>"<%}%>><div><a href="<%=Util.html(row.hrefs.get(n))%>"><%=Util.html(str) %></a></div><%
      } else {
-        %><td<% if (cls.get(n) != null) { %> class="<%=cls.get(n)%>"<%}%>><div><%=Util.html(str) %></div><%
+        %><td<% if (cls != null) { %> class="<%=cls%>"<%}%>><div><%=Util.html(str) %></div><%
      }
    } 
 %><td><%if (personal) {%><div><a href="personal.jsp?<%=query%>">Profile</a></div><%}

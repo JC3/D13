@@ -1,6 +1,7 @@
 <%@ tag language="java" pageEncoding="ISO-8859-1"%>
 <%@ attribute name="title" required="false" %>
 <%@ attribute name="require" required="false" %>
+<%@ attribute name="nocbhack" required="false" %>
 <%@ tag trimDirectiveWhitespaces="true" %>
 <%@ tag import="d13.ThisYear" %>
 <%@ tag import="d13.util.Util" %>
@@ -18,6 +19,7 @@
         }
     }
     jquery = jquery || tooltipster; // tooltipster requires jquery
+    boolean nocbh = (nocbhack != null && Boolean.parseBoolean(nocbhack));
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="icon" href="${pageContext.request.contextPath}/favicon.ico">
@@ -31,6 +33,7 @@
 <% if (tooltipster) { %>
 <script type="text/javascript" src="${pageContext.request.contextPath}/ext/jquery.tooltipster.min.js"></script>
 <% } %>
+<% if (!nocbh) { %>
 <!-- browser style hacks -->
 <script type="text/javascript">
 if (window.chrome) {
@@ -40,4 +43,5 @@ if (window.chrome) {
 	document.head.appendChild(s);
 }
 </script>
+<% } %>
 <title><%= Util.html(title) %></title>
