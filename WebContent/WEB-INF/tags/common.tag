@@ -27,6 +27,8 @@
 <link rel="stylesheet" type="text/css" href="<%=vpath%>/disorient.css">
 <% if (tooltipster) { %>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.tooltipster/4.2.5/css/tooltipster.bundle.min.css">
+<!-- https://github.com/iamceege/tooltipster/issues/691: -->
+<style type="text/css">div.tooltipster-arrow,div.tooltipster-arrow div{margin:0}</style>
 <% } %>
 <% if (jquery) { %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

@@ -190,9 +190,8 @@ $(document).ready(function() {
         content: 'Loading...',
         contentAsHTML: true,
         maxWidth: 400,
-        updateAnimation: null,
+        updateAnimation: 'fade',
         arrow: true,
-        theme: 'punk',
         functionBefore: function(instance, helper) {
         	
         	var origin = $(helper.origin);

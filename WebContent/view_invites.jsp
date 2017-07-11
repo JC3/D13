@@ -92,8 +92,8 @@ pre {
     padding: 0;
 }
 </style>
-<% if (show_actions) { %>
 <script type="text/javascript">
+<% if (show_actions) { %>
 function confirmCancel (name) {
     return confirm('Really cancel the invite for ' + name + '? The user has already received an invite email so beware of possible confusion.');
 }
@@ -115,9 +115,8 @@ function updateView () {
     });
     $('#addrlist').text(addrs);
 }
-</script>
+
 <% } %>
-<script>
 $(document).ready(function() {
     $('.tooltip').tooltipster();
     $('#nact').text($('.invact').length);
