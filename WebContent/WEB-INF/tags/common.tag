@@ -20,18 +20,19 @@
     }
     jquery = jquery || tooltipster; // tooltipster requires jquery
     boolean nocbh = (nocbhack != null && Boolean.parseBoolean(nocbhack));
+    String vpath = request.getContextPath() + "/v/" + ThisYear.CSS_VERSION;
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="icon" href="${pageContext.request.contextPath}/favicon.ico">
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/v/<%=ThisYear.CSS_VERSION%>/disorient.css">
+<link rel="icon" href="<%=vpath%>/favicon.ico">
+<link rel="stylesheet" type="text/css" href="<%=vpath%>/disorient.css">
 <% if (tooltipster) { %>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ext/tooltipster.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.tooltipster/4.2.5/css/tooltipster.bundle.min.css">
 <% } %>
 <% if (jquery) { %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <% } %>
 <% if (tooltipster) { %>
-<script type="text/javascript" src="${pageContext.request.contextPath}/ext/jquery.tooltipster.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.tooltipster/4.2.5/js/tooltipster.bundle.min.js"></script>
 <% } %>
 <% if (!nocbh) { %>
 <!-- browser style hacks -->
