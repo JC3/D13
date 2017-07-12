@@ -12,6 +12,7 @@ public class ReportTemplate {
     public static final int CELLS_NONE = 0;
     public static final int CELLS_LIST = 1;
     public static final int CELLS_SPLIT = 2;
+    public static final int CELLS_LIST_OPT = 3;
 
     private long id;
     private DateTime created;
@@ -82,7 +83,7 @@ public class ReportTemplate {
     }
     
     public void setCells (int cells) {
-        if (cells != CELLS_NONE && cells != CELLS_LIST && cells != CELLS_SPLIT)
+        if (cells != CELLS_NONE && cells != CELLS_LIST && cells != CELLS_SPLIT && cells != CELLS_LIST_OPT)
             throw new IllegalArgumentException("Invalid cell mode specified.");
         this.cells = cells;
     }

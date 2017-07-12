@@ -2,6 +2,7 @@ package d13.web;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import d13.dao.Cell;
 import d13.dao.ReportTemplate;
+import d13.dao.User;
 import d13.util.Util;
 
 public class ReportController {
@@ -46,6 +48,8 @@ public class ReportController {
                     cells = ReportTemplate.CELLS_LIST;
                 else if ("split".equals(cellstr))
                     cells = ReportTemplate.CELLS_SPLIT;
+                else if ("listopt".equals(cellstr))
+                    cells = ReportTemplate.CELLS_LIST_OPT;
                 else
                     throw new IllegalArgumentException("Invalid cell mode name specified.");
 
@@ -178,8 +182,25 @@ public class ReportController {
                 return format.equals(myReportFormat);
         }
         
+        private List<DataViewer.Column> myReportColumns;
+        
         public List<DataViewer.Column> getMyReportColumns () {
-            return myReportDataViewer == null ? null : myReportDataViewer.getColumns();
+            if (myReportDataViewer == null)
+                return null;
+            if (myReportColumns == null) {
+                myReportColumns = myReportDataViewer.getColumns();
+                if (myReportTemplate.getCells() == ReportTemplate.CELLS_LIST || myReportTemplate.getCells() == ReportTemplate.CELLS_LIST_OPT) {
+                    myReportColumns = new ArrayList<DataViewer.Column>(myReportColumns);
+                    DataViewer.Column cellColumn = DataViewer.newColumn(false);
+                    cellColumn.name = myReportTemplate.getCells() == ReportTemplate.CELLS_LIST ? "Cells" : "Cells (Non-Mandatory)";
+                    myReportColumns.add(cellColumn);
+                }
+            }
+            return myReportColumns;
+        }
+        
+        public String getMyReportTitle () {
+            return myReportTemplate == null ? null : myReportTemplate.getTitle();
         }
         
         private static void buildCellList (List<Cell> cs, Cell c) {
@@ -231,11 +252,49 @@ public class ReportController {
                     
                 } else {
                     
-                    // Easy: One section with all the rows.
-                    Section s = new Section();
-                    s.rows = myReportDataViewer.getRows();
-                    myReportSections.add(s);
+                    List<DataViewer.Row> rows = myReportDataViewer.getRows(); 
                     
+                    // Add cell lists if necessary. Note: We're modifying DataViewer stuff internally here
+                    // which is weird but in this context causes no harm.
+                    if (myReportTemplate.getCells() == ReportTemplate.CELLS_LIST || myReportTemplate.getCells() == ReportTemplate.CELLS_LIST_OPT) {
+                        // Do this per cell to keep everything in order.
+                        List<Cell> cells = new ArrayList<Cell>();
+                        buildCellList(cells, Cell.findRoot());
+                        Map<Long,List<Cell>> userCells = new HashMap<Long,List<Cell>>();
+                        for (Cell cell : cells) {
+                            for (User user : cell.getUsers()) {
+                                long id = user.getUserId();
+                                List<Cell> uc = userCells.get(id);
+                                if (uc == null) {
+                                    uc = new ArrayList<Cell>();
+                                    userCells.put(id, uc);
+                                }
+                                uc.add(cell);
+                            }
+                        }
+                        // Now add info.
+                        for (DataViewer.Row row : rows) {
+                            row.hrefs.add(null);
+                            List<Cell> cellList = userCells.get(row.user.getUserId());
+                            String cellstr = "";
+                            if (cellList != null) {
+                                for (Cell cell : cellList) {
+                                    if (myReportTemplate.getCells() == ReportTemplate.CELLS_LIST || !cell.isMandatory())
+                                        cellstr += "• " + cell.getFullName() + "\n";
+                                }
+                            }
+                            cellstr = cellstr.trim();
+                            if (cellstr.isEmpty())
+                                cellstr = "None";
+                            row.values.add(cellstr);
+                        }
+                    }
+
+                    // One section with all the rows.
+                    Section s = new Section();
+                    s.rows = rows;
+                    myReportSections.add(s);
+                                        
                 }
                 
             }

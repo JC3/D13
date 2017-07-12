@@ -100,10 +100,18 @@ public class Util {
     }
     
     public static String html (String value) {
+        return html(value, false);
+    }
+
+    public static String html (String value, boolean linebreaks) {
         if (value == null)
             return "";
-        else
-            return StringEscapeUtils.escapeHtml(value);
+        else {
+            String str = StringEscapeUtils.escapeHtml(value);
+            if (linebreaks)
+                str = str.trim().replaceAll("\n", "<br/>");
+            return str;
+        }
     }
 
     public static boolean unbox (Boolean b) {

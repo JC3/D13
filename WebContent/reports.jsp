@@ -21,22 +21,48 @@ try {
     return;
 }
 
+boolean print = false;
 if (rview.isMyReportFormat("p")) {
-    // ...
-    out.println("print format");
-    return;
+    print = true;
 } else if (rview.isMyReportFormat("c")) {
     // ...
-    out.println("csv format");
+    out.println("Sorry, CSV reports aren't finished yet.");
     return;
 }
 
 Map<String,List<DataViewer.Column>> reportCols = rview.getReportColumns();
+
+request.setAttribute("rview", rview); // for report.tag
 %>
 <!DOCTYPE html>
 <html>
+<% if (print) { %>
+<!-- PRINT -->
 <head>
-<dis:common require="jquery" nocbhack="true"/>
+<title>Disorient<%= rview.getMyReportTitle() == null ? "" : (" - " + Util.html(rview.getMyReportTitle())) %></title>
+<style type="text/css">
+* { font-family: Verdana, sans-serif; }
+html, body { margin: 0; padding: 0; }
+.report { width: 100%; border-collapse: collapse; }
+th { text-align: left; }
+td, th { white-space: nowrap; font-size: 90%; padding: 1px 0.5ex; vertical-align: top; }
+td.w { white-space: inherit; }
+tr.r-section td { background: black; color: white; font-weight: bold; font-size: 110%; padding: 0.5ex; }
+/*tr.r-spacer { display: block; page-break-before: always; }*/
+th, tr.r-user td { border-bottom: 1px solid #ccc; }
+</style>
+</head>
+<body>
+<%   if (rview.getMyReportColumns() == null) { %>
+Invalid report ID.
+<%   } else { %>
+<dis:report/>
+<%   } %>
+</body>
+<!-- END PRINT -->
+<% } else { /* !print */ %>
+<head>
+<dis:common require="jquery tooltipster" nocbhack="true"/>
 <style type="text/css">
 #report-options {
     align-items: center;
@@ -103,6 +129,7 @@ Map<String,List<DataViewer.Column>> reportCols = rview.getReportColumns();
     border: 1px solid #303030;
     padding: 2ex;*/
     font-size: 90%;
+    margin: 0 auto;
 }
 .report td:first-child {
     border-left: 1px solid #202020;
@@ -143,6 +170,9 @@ Map<String,List<DataViewer.Column>> reportCols = rview.getReportColumns();
 }
 .report tr.r-user td.w div {
     width: 30ex;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    white-space: nowrap;
 }
 #report-wrapper {
     /*display: flex;
@@ -151,6 +181,9 @@ Map<String,List<DataViewer.Column>> reportCols = rview.getReportColumns();
 }
 .report {
     width: 1px;
+}
+.tooltipster-content {
+    font-size: 90%;
 }
 </style>
 <script type="text/javascript">
@@ -175,6 +208,16 @@ $(document).ready(function () {
         }).fail(function (r) {
             alert('A server error occurred: ' + e.status + ' ' + e.statusText);         
         });
+    });
+    $('td.w div').each(function (_,e) {
+        $(e)
+           .tooltipster({
+               contentAsHTML: true,
+               content: $(e).html(),
+               arrow: true,
+               animationDuration: 200,
+               maxWidth: 400
+           })
     });
 });
 </script>
@@ -235,7 +278,9 @@ for (String category : reportCols.keySet()) {
                 <tr><td>
                     <td><label title="Add a column that lists each cell a user is in."><input type="radio" name="_cells" value="list"<%= cm == ReportTemplate.CELLS_LIST ? " checked" : "" %>> List Cells</label>
                 <tr><td>
-                    <td><label title="Split report by cells, list users in each cell."><input type="radio" name="_cells" value="split"<%= cm == ReportTemplate.CELLS_SPLIT ? " checked" : "" %>> Split Report</label>   
+                    <td><label title="Add a column that lists each non-mandatory cell a user is in."><input type="radio" name="_cells" value="listopt"<%= cm == ReportTemplate.CELLS_LIST_OPT ? " checked" : "" %>> List Non-Mandatory Cells</label>
+                <tr><td>
+                    <td><label title="Split report by cells, list users in each cell."><input type="radio" name="_cells" value="split"<%= cm == ReportTemplate.CELLS_SPLIT ? " checked" : "" %>> Split Report By Cell</label>   
                 </table>
             </div>
             <div class="control-panel">
@@ -256,38 +301,10 @@ for (String category : reportCols.keySet()) {
 
 <hr>
 <% 
-List<DataViewer.Column> rcols = rview.getMyReportColumns();
-if (rcols != null) {
+if (rview.getMyReportColumns() != null) {
 %>
 <div id="report-wrapper">
-<table class="report">
-<% 
-	boolean first = true;
-	for (ReportController.View.Section s : rview.getMyReportSections()) {
-	    if (first) {
-	        first = false;
-	    } else {
-	        %><tr class="r-spacer"><td colspan="<%=rcols.size()%>">&nbsp;<%
-	    }
-	    if (s.title != null) {
-	        %><tr class="r-section"><td colspan="<%=rcols.size()%>"><%= Util.html(s.title) %><%
-	    }
-	    %><tr><%
-	    for (DataViewer.Column col : rcols) {
-	        String cls = (col.shortClass == null) ? "" : (" class=\"" + col.shortClass + "\"");
-            %><th<%= cls %>><%= Util.html(col.name) %><%
-        }
-	    for (DataViewer.Row row : s.rows) {
-	        %><tr class="r-user"><%  
-	        for (int n = 0; n < row.values.size(); ++ n) {
-	            String cls = rcols.get(n).shortClass;
-	            cls = (cls == null) ? "" : (" class=\"" + cls + "\"");
-                %><td<%= cls %>><div><%= Util.html(row.values.get(n)) %></div><%
-	        }
-	    }
-    } 
-%>
-</table>
+<dis:report/>
 </div>
 <%
 }
@@ -295,3 +312,5 @@ if (rcols != null) {
 
 <dis:footer/>
 </body>
+<% } /* if (print) ... else ... */ %>
+</html>

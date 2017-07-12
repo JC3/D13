@@ -220,6 +220,13 @@ public class DataViewer {
         
     }
     
+    public static Column newColumn (boolean longtext) {
+        Column c = new Column();
+        c.shortClass = longtext ? "w" : null; // todo just store longtext flag move classes to views
+        c.longClass = longtext ? "wide" : "standard";
+        return c;
+    }
+    
     @SafeVarargs
     private static List<Column> getDataViewColumns (List<ViewDescriptor> ... lists) {
         
@@ -227,11 +234,9 @@ public class DataViewer {
        
         for (List<ViewDescriptor> vds:lists)
             for (ViewDescriptor vd:vds) {
-                Column c = new Column();
+                Column c = newColumn(vd.longtext);
                 c.name = vd.field;
                 c.sid = vd.id;
-                c.shortClass = vd.longtext ? "w" : null; // todo just store longtext flag move classes to views
-                c.longClass = vd.longtext ? "wide" : "standard";
                 c.category = vd.category;
                 columns.add(c);               
             }
