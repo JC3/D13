@@ -43,13 +43,17 @@ if (!result.f) {
 
 if (!result.f) {
 	
-    List<String> cols = view.getColumns();
-	List<String> cls = view.getColumnClasses();
+    List<DataViewer.Column> cols = view.getColumns();
 	List<DataViewer.Row> rows = view.getRows();
 
-	result.c = cols.toArray(new String[cols.size()]);
-	result.l = cls.toArray(new String[cls.size()]);
+	result.c = new String[cols.size()];
+	result.l = new String[cols.size()];
 	result.r = new Row[rows.size()];
+	
+	for (int n = 0; n < cols.size(); ++ n) {
+	    result.c[n] = cols.get(n).name;
+	    result.l[n] = cols.get(n).longClass;
+	}
 	
 	for (int n = 0; n < rows.size(); ++ n) {
 	    DataViewer.Row r = rows.get(n);

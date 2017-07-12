@@ -29,7 +29,7 @@ String this_page = Util.getCompleteUrl(request);
 if (success_target == null || success_target.trim().isEmpty()) success_target = "home.jsp";
 
 // there will be only one row in result. cols and row.values will be the same size.
-List<String> cols = view.getColumns();
+List<DataViewer.Column> cols = view.getColumns();
 DataViewer.Row row = view.getRows().get(0);
 
 int profileBorder = view.getProfileBorderIndex();
@@ -121,7 +121,7 @@ here.</div>
 <table class="form">
 
 <% for (int n = 0; n < cols.size(); ++ n) { %>
-     <tr><td class="key"><%=Util.html(cols.get(n)) %><td class="value"><%=Util.html(row.values.get(n)) %>
+     <tr><td class="key"><%=Util.html(cols.get(n).name) %><td class="value"><%=Util.html(row.values.get(n)) %>
 <%   if (n == profileBorder && canEdit) { %>
         <tr><td class="link" colspan="2">^ <a href="personal.jsp?u=<%=editee.getUserId() %>&next=<%=next_html%>">Edit</a> this user's profile data. ^
 <%   } else if (n == registrationBorder) { 
@@ -146,7 +146,7 @@ here.</div>
 
 <% if (editee.getState() == UserState.APPROVED) { %>
 <%   for (int n = registrationBorder + 1; n < cols.size(); ++ n) { // continuation of hack from above %>
-       <tr><td class="key"><%=Util.html(cols.get(n)) %><td class="value"><%=Util.html(row.values.get(n)) %>
+       <tr><td class="key"><%=Util.html(cols.get(n).name) %><td class="value"><%=Util.html(row.values.get(n)) %>
 <%   } %>
 <%   if (canEdit) { %>
 <tr><td class="link" colspan="2">^ <a href="survey.jsp?u=<%=editee.getUserId() %>&next=<%=next_html%>">Edit</a> this user's approval survey. ^
@@ -154,7 +154,7 @@ here.</div>
 <% } %>
 
 <% if (notes != null) { %>
-<tr><td class="key" colspan="2"><a name="comments"></a><%= noteTitle %>:
+<tr><td class="key" colspan="2"><a id="comments"></a><%= noteTitle %>:
   <% if (notes.isEmpty()) { %>
      <tr><td class="log" colspan="2">None.
   <% } else { 
