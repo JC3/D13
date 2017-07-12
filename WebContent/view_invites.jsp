@@ -56,8 +56,11 @@ boolean show_actions = sess.getUser().getRole().canInviteUsers() && !RuntimeOpti
 .summary.invites {
     font-size: 90%;
 }
+/* originally i thought every other row highlight would be good. but the hover
+ * strategy seems to work better and i think odd highlighting is visually noisy
+ * now. so for now, don't do it. */
 .summary.invites tr.odd {
-    background: #000000;
+    /*background: #000000;*/
 }
 .summary.invites tr:hover td {
     background: #302020;
