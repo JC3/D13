@@ -88,7 +88,8 @@ boolean show_actions = sess.getUser().getRole().canInviteUsers() && !RuntimeOpti
     padding: 0;
 }
 table.form td {
-    white-space:nowrap;
+    white-space: nowrap;
+    vertical-align: top;
 }
 pre {
     border: 0;
@@ -154,13 +155,13 @@ $(document).ready(function() {
 <input type="hidden" name="action" value="invite">
 <table class="form" style="margin-bottom:4ex;">
 <tr>
-    <td>Email Addresses:
+    <td style="padding-top:4px">Email Addresses:
     <td><textarea class="dtextarea" id="emailtext" name="emails" placeholder="<%=Util.html("Please enter one or more email addresses, either separated by commas or one per line. Email addresses may have the form \"Full Name <emailaddress>\".") %>"><%= emails_html %></textarea>
 <tr>
-    <td>Expires In (Days):
+    <td style="padding-top:3px">Expires In (Days):
     <td><span style="display:flex"><input type="text" class="dtext" name="expires" placeholder="Leave blank for none." value="<%= expires_html %>"></span>
 <tr>
-    <td>Comment:
+    <td style="padding-top:3px">Comment:
     <td><span style="display:flex"><input type="text" class="dtext" name="comment" placeholder="Optional comment." value="<%= comment_html %>"></span>
 <tr>
     <td colspan="2" style="text-align:center;padding-top:2ex;"><input class="dbutton" type="submit" value="Send Invites">
@@ -178,7 +179,7 @@ $(document).ready(function() {
     <tr><td class="standard"><input type="checkbox" id="vexp" onclick="updateView()"></td><td class="standard">Expired</td>  <td class="standard" id="nexp"></td></tr>
     <tr><td class="standard"><input type="checkbox" id="vcan" onclick="updateView()"></td><td class="standard">Cancelled</td><td class="standard" id="ncan"></td></tr>
     <tr><td class="standard"></td><td class="standard">Total</td><td class="standard" id="ninv"></td></tr>
-    <tr><td class="standard" style="width:1ex">Emails:</td><td class="standard" colspan="2"><span style="display:flex"><textarea class="dtextarea" id="addrlist" style="width:100%"></textarea></span></td></tr>
+    <tr><td class="standard" style="width:1ex;padding-top:5px;">Emails:</td><td class="standard" colspan="2"><span style="display:flex"><textarea class="dtextarea" id="addrlist" style="width:100%"></textarea></span></td></tr>
 </table>
 
 <% if (show_actions) { %>
