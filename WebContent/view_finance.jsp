@@ -82,6 +82,10 @@ td.s span {
 #transactions, #dues {
     font-size: 90%;
 }
+#transactions tr:hover td, #dues tr:hover td {
+    background: #302020;
+    color: white;
+}
 h1 {
     font-size: larger;
 }
