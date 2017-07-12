@@ -59,7 +59,7 @@ boolean show_actions = sess.getUser().getRole().canInviteUsers() && !RuntimeOpti
 .summary.invites tr.odd {
     background: #000000;
 }
-.summary.invites tr:hover {
+.summary.invites tr:hover td {
     background: #302020;
     color: white;
 }
