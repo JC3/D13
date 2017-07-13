@@ -388,6 +388,7 @@ public class BillingManager {
     private static void handlePaymentFail (HttpServletRequest request, String response) throws Exception {
         
         // TODO: implement this. it's what happens if paypal response fails. should notify administrators.
+        System.err.println("BILLING: PAYMENT FAIL: " + response);
         
     }
     
@@ -422,6 +423,8 @@ public class BillingManager {
                 handlePaymentFail(request, rc);
         } catch (Exception t) {
             RawIPNLogEntry.addEntry(logparams.toString(), t.getMessage());
+            System.err.println("BILLING: EXCEPTION:");
+            t.printStackTrace(System.err);
             throw t;
         }
          
