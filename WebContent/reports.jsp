@@ -30,6 +30,8 @@ if (rview.isMyReportFormat("p")) {
     return;
 }
 
+boolean paged = true;
+
 Map<String,List<DataViewer.Column>> reportCols = rview.getReportColumns();
 
 request.setAttribute("rview", rview); // for report.tag
@@ -39,17 +41,23 @@ request.setAttribute("rview", rview); // for report.tag
 <% if (print) { %>
 <!-- PRINT -->
 <head>
+<dis:common require="jquery" raw="true"/>
 <title>Disorient<%= rview.getMyReportTitle() == null ? "" : (" - " + Util.html(rview.getMyReportTitle())) %></title>
 <style type="text/css">
-* { font-family: Verdana, sans-serif; }
+* { font-family: Tahoma, Verdana, sans-serif; }
 html, body { margin: 0; padding: 0; }
 .report { width: 100%; border-collapse: collapse; }
 th { text-align: left; }
 td, th { white-space: nowrap; font-size: 90%; padding: 1px 0.5ex; vertical-align: top; }
 td.w { white-space: inherit; }
 tr.r-section td { background: black; color: white; font-weight: bold; font-size: 110%; padding: 0.5ex; }
-/*tr.r-spacer { display: block; page-break-before: always; }*/
 th, tr.r-user td { border-bottom: 1px solid #ccc; }
+/* todo: these hand-wavey styles still don't always solve pb's after .r-header on chrome at least... */
+tr.r-section, tr.r-section *, tr.r-header, tr.r-header * { page-break-after: avoid; }
+tr, th, td { page-break-inside: avoid; }
+<%   if (paged) { %>
+tr.r-spacer, tr.r-spacer * { border:0; margin: 0; padding: 0; }
+<%   } %>
 </style>
 </head>
 <body>
@@ -57,6 +65,13 @@ th, tr.r-user td { border-bottom: 1px solid #ccc; }
 Invalid report ID.
 <%   } else { %>
 <dis:report/>
+<%     if (paged) { %>
+<script type="text/javascript">
+$('tr.r-spacer td').each(function(_,e){
+	$(e).empty().html('<div></div><div style="page-break-before:always"></div>');
+});
+</script>
+<%     } %>
 <%   } %>
 </body>
 <!-- END PRINT -->

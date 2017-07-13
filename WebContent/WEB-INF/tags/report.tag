@@ -18,7 +18,7 @@
         if (s.title != null) {
             %><tr class="r-section"><td colspan="<%=rcols.size()%>"><%= Util.html(s.title) %> (<%= s.rows.size() %>)<%
         }
-        %><tr><%
+        %><tr class="r-header"><%
         for (DataViewer.Column col : rcols) {
             String cls = (col.shortClass == null) ? "" : (" class=\"" + col.shortClass + "\"");
             %><th<%= cls %>><%= Util.html(col.name) %><%

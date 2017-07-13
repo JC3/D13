@@ -2,6 +2,7 @@
 <%@ attribute name="title" required="false" %>
 <%@ attribute name="require" required="false" %>
 <%@ attribute name="nocbhack" required="false" %>
+<%@ attribute name="raw" required="false" %>
 <%@ tag trimDirectiveWhitespaces="true" %>
 <%@ tag import="d13.ThisYear" %>
 <%@ tag import="d13.util.Util" %>
@@ -20,11 +21,14 @@
     }
     jquery = jquery || tooltipster; // tooltipster requires jquery
     boolean nocbh = (nocbhack != null && Boolean.parseBoolean(nocbhack));
+    boolean israw = (raw != null && Boolean.parseBoolean(raw));
     String vpath = request.getContextPath() + "/v/" + ThisYear.CSS_VERSION;
 %>
+<% if (!israw) { %>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="icon" href="<%=vpath%>/favicon.ico">
 <link rel="stylesheet" type="text/css" href="<%=vpath%>/disorient.css">
+<% } %>
 <% if (tooltipster) { %>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.tooltipster/4.2.5/css/tooltipster.bundle.min.css">
 <!-- https://github.com/iamceege/tooltipster/issues/691: -->
@@ -36,7 +40,7 @@
 <% if (tooltipster) { %>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.tooltipster/4.2.5/js/tooltipster.bundle.min.js"></script>
 <% } %>
-<% if (!nocbh) { %>
+<% if (!israw && !nocbh) { %>
 <!-- browser style hacks -->
 <script type="text/javascript">
 if (window.chrome) {
@@ -47,4 +51,6 @@ if (window.chrome) {
 }
 </script>
 <% } %>
+<% if (!israw) { %>
 <title><%= Util.html(title) %></title>
+<% } %>

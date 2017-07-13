@@ -166,7 +166,7 @@ public class ReportController {
         }
         
         public int getMyReportFilter () {
-            return myReportTemplate == null ? 0 : myReportTemplate.getFilter();
+            return myReportTemplate == null ? 11 : myReportTemplate.getFilter();
         }
         
         public int getMyReportCells () {
