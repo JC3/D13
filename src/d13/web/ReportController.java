@@ -40,6 +40,7 @@ public class ReportController {
                 String cellstr = page.getRequest().getParameter("cells");
                 int filter = Integer.parseInt(page.getRequest().getParameter("filter"));
                 String[] fields = filterValidFields(page, session, page.getRequest().getParameterValues("columns[]"));
+                boolean excludemc = Util.parseBooleanDefault(page.getRequest().getParameter("excludemc"), false);
                 
                 int cells;
                 if ("no".equals(cellstr))
@@ -48,12 +49,10 @@ public class ReportController {
                     cells = ReportTemplate.CELLS_LIST;
                 else if ("split".equals(cellstr))
                     cells = ReportTemplate.CELLS_SPLIT;
-                else if ("listopt".equals(cellstr))
-                    cells = ReportTemplate.CELLS_LIST_OPT;
                 else
                     throw new IllegalArgumentException("Invalid cell mode name specified.");
 
-                ReportTemplate rt = new ReportTemplate(fields, cells, filter, session.getUser());
+                ReportTemplate rt = new ReportTemplate(fields, cells, filter, excludemc, session.getUser());
                 ReportTemplate dbrt = ReportTemplate.findOrCreate(rt);
                 
                 reportCreated = (rt == dbrt);
@@ -173,6 +172,10 @@ public class ReportController {
             return myReportTemplate == null ? ReportTemplate.CELLS_NONE : myReportTemplate.getCells();
         }
         
+        public boolean getMyReportExcludeMandatoryCells () {
+            return myReportTemplate == null ? true : myReportTemplate.getExcludeMandatoryCells();
+        }
+        
         public boolean isMyReportFormat (String format) {
             if (format == myReportFormat)
                 return true;
@@ -189,7 +192,7 @@ public class ReportController {
                 return null;
             if (myReportColumns == null) {
                 myReportColumns = myReportDataViewer.getColumns();
-                if (myReportTemplate.getCells() == ReportTemplate.CELLS_LIST || myReportTemplate.getCells() == ReportTemplate.CELLS_LIST_OPT) {
+                if (myReportTemplate.getCells() == ReportTemplate.CELLS_LIST) {
                     myReportColumns = new ArrayList<DataViewer.Column>(myReportColumns);
                     DataViewer.Column cellColumn = DataViewer.newColumn(false);
                     cellColumn.name = myReportTemplate.getCells() == ReportTemplate.CELLS_LIST ? "Cells" : "Cells (Non-Mandatory)";
@@ -228,16 +231,19 @@ public class ReportController {
                     buildCellList(cells, Cell.findRoot());
                     Map<Long,Section> cellSections = new LinkedHashMap<Long,Section>();
                     for (Cell cell : cells)
-                        cellSections.put(cell.getCellId(), new Section(cell.getFullName()));
-                    cellSections.put(-1L, new Section("No Cells"));
+                        if (!myReportTemplate.getExcludeMandatoryCells() || !cell.isMandatory())
+                            cellSections.put(cell.getCellId(), new Section(cell.getFullName()));
+                    cellSections.put(-1L, new Section(myReportTemplate.getExcludeMandatoryCells() ? "No Non-Mandatory Cells" : "No Cells"));
                     
                     // Now distribute rows to sections in order of users.
                     for (DataViewer.Row row : myReportDataViewer.getRows()) {
                         boolean incells = false;
                         for (Cell cell : row.user.getCells()) {
                             Section s = cellSections.get(cell.getCellId());
-                            s.rows.add(row);
-                            incells = true;
+                            if (s != null) {
+                                s.rows.add(row);
+                                incells = true;
+                            }
                         }
                         if (!incells) {
                             Section s = cellSections.get(-1L);
@@ -256,7 +262,7 @@ public class ReportController {
                     
                     // Add cell lists if necessary. Note: We're modifying DataViewer stuff internally here
                     // which is weird but in this context causes no harm.
-                    if (myReportTemplate.getCells() == ReportTemplate.CELLS_LIST || myReportTemplate.getCells() == ReportTemplate.CELLS_LIST_OPT) {
+                    if (myReportTemplate.getCells() == ReportTemplate.CELLS_LIST) {
                         // Do this per cell to keep everything in order.
                         List<Cell> cells = new ArrayList<Cell>();
                         buildCellList(cells, Cell.findRoot());
@@ -279,13 +285,13 @@ public class ReportController {
                             String cellstr = "";
                             if (cellList != null) {
                                 for (Cell cell : cellList) {
-                                    if (myReportTemplate.getCells() == ReportTemplate.CELLS_LIST || !cell.isMandatory())
+                                    if (!myReportTemplate.getExcludeMandatoryCells() || !cell.isMandatory())
                                         cellstr += "• " + cell.getFullName() + "\n";
                                 }
                             }
                             cellstr = cellstr.trim();
-                            if (cellstr.isEmpty())
-                                cellstr = "None";
+                            //if (cellstr.isEmpty())
+                            //    cellstr = myReportTemplate.getExcludeMandatoryCells() ? "No Non-Mandatory Cells" : "None";
                             row.values.add(cellstr);
                         }
                     }

@@ -12,7 +12,6 @@ public class ReportTemplate {
     public static final int CELLS_NONE = 0;
     public static final int CELLS_LIST = 1;
     public static final int CELLS_SPLIT = 2;
-    public static final int CELLS_LIST_OPT = 3;
 
     private long id;
     private DateTime created;
@@ -22,11 +21,12 @@ public class ReportTemplate {
     private String fields;
     private int cells;
     private int filter;
+    private boolean excludeMandatoryCells;
     
     ReportTemplate () {
     }
     
-    public ReportTemplate (String[] fields, int cells, int filter, User creator) {
+    public ReportTemplate (String[] fields, int cells, int filter, boolean excludemc, User creator) {
         this.created = DateTime.now();
         this.createdBy = creator;
         this.accessed = this.created;
@@ -34,6 +34,7 @@ public class ReportTemplate {
         setFieldList(fields);
         setCells(cells);
         setFilter(filter);
+        setExcludeMandatoryCells(excludemc);
     }
 
     public long getId() {
@@ -72,6 +73,10 @@ public class ReportTemplate {
         return filter;
     }
     
+    public boolean getExcludeMandatoryCells () {
+        return excludeMandatoryCells;
+    }
+    
     public void setTitle (String title) {
         this.title = StringUtils.trimToNull(title);
     }
@@ -83,7 +88,7 @@ public class ReportTemplate {
     }
     
     public void setCells (int cells) {
-        if (cells != CELLS_NONE && cells != CELLS_LIST && cells != CELLS_SPLIT && cells != CELLS_LIST_OPT)
+        if (cells != CELLS_NONE && cells != CELLS_LIST && cells != CELLS_SPLIT)
             throw new IllegalArgumentException("Invalid cell mode specified.");
         this.cells = cells;
     }
@@ -94,6 +99,10 @@ public class ReportTemplate {
     
     public void setAccessedNow () {
         this.accessed = DateTime.now();
+    }
+    
+    public void setExcludeMandatoryCells (boolean excludemc) {
+        this.excludeMandatoryCells = excludemc;
     }
   
       /** Does not care about title. */
@@ -125,6 +134,7 @@ public class ReportTemplate {
                 .add(Restrictions.eq("cells", temp.getCells()))
                 .add(Restrictions.eq("filter", temp.getFilter()))
                 .add(Restrictions.eq("fields", temp.getFields()))
+                .add(Restrictions.eq("excludeMandatoryCells", temp.getExcludeMandatoryCells()))
                 .uniqueResult();
         
         if (existing == null) {

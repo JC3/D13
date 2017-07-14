@@ -200,13 +200,17 @@ $('tr.r-spacer td').each(function(_,e){
 .tooltipster-content {
     font-size: 90%;
 }
+.disabled {
+    opacity: 0.5;
+}
 </style>
 <script type="text/javascript">
 function getReportOptions () {    
     var options = {
         columns: [],
         filter: $('#report-opt-filter').val(),
-        cells: $('input[name="_cells"]:checked').val()
+        cells: $('input[name="_cells"]:checked').val(),
+        excludemc: $('#report-opt-excludemc').prop('checked')
     };
     $('input[data-column-sid]:checked').each(function (_,input) {
         options.columns.push($(input).data('column-sid'));
@@ -232,8 +236,18 @@ $(document).ready(function () {
                arrow: true,
                animationDuration: 200,
                maxWidth: 400
-           })
+           });
     });
+    $('input[name="_cells"]').change(function () {
+    	disableExclude();
+    });
+    function disableExclude () {
+    	if ($('input[name="_cells"]:checked').val() === 'no')
+            $('#report-opt-excludemc').prop('disabled', true).parent().addClass('disabled');
+    	else
+    	    $('#report-opt-excludemc').prop('disabled', false).parent().removeClass('disabled');
+    }
+    disableExclude();
 });
 </script>
 </head>
@@ -293,9 +307,9 @@ for (String category : reportCols.keySet()) {
                 <tr><td>
                     <td><label title="Add a column that lists each cell a user is in."><input type="radio" name="_cells" value="list"<%= cm == ReportTemplate.CELLS_LIST ? " checked" : "" %>> List Cells</label>
                 <tr><td>
-                    <td><label title="Add a column that lists each non-mandatory cell a user is in."><input type="radio" name="_cells" value="listopt"<%= cm == ReportTemplate.CELLS_LIST_OPT ? " checked" : "" %>> List Non-Mandatory Cells</label>
-                <tr><td>
                     <td><label title="Split report by cells, list users in each cell."><input type="radio" name="_cells" value="split"<%= cm == ReportTemplate.CELLS_SPLIT ? " checked" : "" %>> Split Report By Cell</label>   
+                <tr><td>
+                    <td style="border-top:1px dotted rgb(64,96,80)"><label title="Exclude mandatory cells from report."><input type="checkbox" id="report-opt-excludemc" <%= rview.getMyReportExcludeMandatoryCells() ? " checked" : "" %>> Exclude Mandatory Cells</label>   
                 </table>
             </div>
             <div class="control-panel">

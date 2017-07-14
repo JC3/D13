@@ -87,6 +87,16 @@ public class Util {
         }
     }
     
+    public static boolean parseBooleanDefault (String str, boolean def) {
+        if (str == null)
+            return def;
+        try {
+            return Boolean.parseBoolean(str);
+        } catch (Throwable t) {
+            return def;
+        }
+    }
+    
     public static Long getParameterLong (ServletRequest request, String param) {
         String s = request.getParameter(param);
         Long v = null;
