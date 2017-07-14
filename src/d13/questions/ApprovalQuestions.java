@@ -49,7 +49,7 @@ public class ApprovalQuestions {
         qs.add(q);
         
         q = Question.newMultiChoice("I am a Disengage Rock Star",
-                "Disengage rebate is up to $240. Please check EACH day that you plan to help DisEngage. Each full work day may entitle you to a rebate. **IMPORTANT: Keep this information updated if your travel plans change! We need an accurate headcount.");
+                "Disengage rebate is up to $240. Please check EACH day that you plan to help Disengage. Each full work day may entitle you to a rebate. **IMPORTANT: Keep this information updated if your travel plans change! We need an accurate headcount.");
         q.addChoice("disengageSun", PlayaWeek.DISENGAGE.getDate(-1).toString("EEEE M/d"), 1);
         q.addChoice("disengageMon", PlayaWeek.DISENGAGE.getDate(0).toString("EEEE M/d"), 1);
         q.addChoice("disengageTue", PlayaWeek.DISENGAGE.getDate(1).toString("EEEE M/d"), 1);

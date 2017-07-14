@@ -58,6 +58,9 @@ String error_html = (error == null ? null : Util.html(error));
 <html>
 <head>
 <dis:common/>
+<style type="text/css">
+#arrivalDate select, #departureDate select { width: 100% !important; }
+</style>
 <script language="JavaScript" type="text/javascript">
 function setVisible (id, visible) {
     document.getElementById(id).style.display = (visible ? 'block' : 'none');
