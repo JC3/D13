@@ -19,14 +19,18 @@ try {
 if (rview.getMyReportColumns() == null)
     return;
 
-boolean paged = false;
+boolean showpage = rview.getMyReportSections().size() > 1;
 
 request.setAttribute("rview", rview); // for report.tag
 %>
 <!DOCTYPE html>
 <html>
 <head>
+<% if (showpage) { %>
 <dis:common require="jquery" raw="true"/>
+<% } else { %>
+<dis:common raw="true"/>
+<% } %>
 <title>Disorient<%= rview.getMyReportTitle() == null ? "" : (" - " + Util.html(rview.getMyReportTitle())) %></title>
 <style type="text/css">
   * { font-family: Tahoma, Verdana, sans-serif; }
@@ -65,6 +69,7 @@ request.setAttribute("rview", rview); // for report.tag
   }
   @media print { #print-options { display: none !important; } }
 </style>
+<% if (showpage) { %>
 <script type="text/javascript">
 function setPaged (paged) {
 	$('tr.r-spacer td').each(function(_,e){
@@ -91,14 +96,17 @@ $(document).ready(function () {
 	});
 });
 </script>
+<% } %>
 </head>
 <body>
 <div id="print-options">
   <div>
+<% if (showpage) { %>
 	  <span style="margin-bottom:1ex">Select a choice here before printing:</span>
 	  <label><input type="radio" name="_page" value="no" checked>Print all sections with no page breaks.</label>
-	  <label><input type="radio" name="_page" value="yes">Start each section on a new page (doesn't work on Firefox).</label>
-	  <div style="margin-top:1ex">Printing pro-tips:
+	  <label style="margin-bottom:1ex"><input type="radio" name="_page" value="yes">Start each section on a new page (doesn't work on Firefox).</label>
+<% } %>
+	  <div>Printing pro-tips:
 	  <ul style="margin:1ex 0">
 	    <li>In Chrome you can shrink size by changing scale on the print page.
 	    <li>Don't forget landscape mode if the report is wide.

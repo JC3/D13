@@ -179,7 +179,7 @@ here periodically for status updates! <strong>If your application is approved, y
   <li><a href="view_data.jsp?qf=9">Only not-yet-approved users that need to sign up for work cells.</a>
   <li><a href="view_data.jsp?qf=10">Only approved users that need to sign up for work cells.</a>  
 </ul>
-<li><a href="reports.jsp">Generate Reports</a>
+<li><a href="report">Generate Reports</a>
 <li>Camp Administration
 <ul>
     <li><a href="activity.jsp">View Site Activity</a>

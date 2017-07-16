@@ -79,9 +79,9 @@ request.setAttribute("rview", rview); // for report.tag
 }
 .control-panel {
     background: #282828;
-    flex-grow: 1;
     align-items: center;
     justify-content: center;
+    flex-grow: 1;
 }
 .report {
     /*background: #101010;
@@ -196,6 +196,9 @@ $(document).ready(function () {
     	    $('#report-opt-excludemc').prop('disabled', false).parent().removeClass('disabled');
     }
     disableExclude();
+    $('input[name="_cells"], #report-opt-filter, input[data-column-sid]').change(function () {
+        $('#bookmark-here, #bookmark-print, #bookmark-csv').html('<%= rview.getNoLinkHTML() %>');        
+    });
 });
 function showHelp () {
 	alert('This page is still an experiment. To make reports:\n\n' +

@@ -150,11 +150,15 @@ public class ReportController {
         
         public String getLinkHTML (HttpServletRequest request, String format) {
             if (myReportTemplate == null)
-                return "<span class=\"nothing-yet\">Generate the report to get a link.";
+                return getNoLinkHTML();
             else {
                 String url = getURL(request, format);
                 return String.format("<a href=\"%s\">%s</a>", url, url);
             }
+        }
+        
+        public String getNoLinkHTML () {
+            return "<span class=\"nothing-yet\">Generate the report to get a link.";
         }
         
         public String getURL (HttpServletRequest request, String format) {
