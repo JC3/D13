@@ -109,6 +109,16 @@ public class Util {
         return v;
     }
     
+    public static String[] removeEmptyStrings (String[] s) {
+        ArrayList<String> a = new ArrayList<String>();
+        for (String r : s) {
+            r = r.trim();
+            if (!r.isEmpty())
+                a.add(r);
+        }
+        return a.toArray(new String[a.size()]);
+    }
+    
     public static String html (String value) {
         return html(value, false);
     }

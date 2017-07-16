@@ -421,7 +421,9 @@ public class DataViewer {
         boolean download;
     }
     
-    public DataViewer (PageContext context, SessionData session, int flags, Collection<String> onlyFields, Parameters params) {
+    public DataViewer (PageContext context, SessionData session, int flags, Collection<String> onlyFields, Parameters params) 
+        throws IllegalArgumentException
+    {
 
         User current = session.getUser();
         if (!current.getRole().canViewUsers()) {
@@ -435,6 +437,8 @@ public class DataViewer {
         }
         
         if (params == null) {
+            if (context == null)
+                throw new IllegalArgumentException("Either context or params must be non-null.");
             params = new Parameters();
             params.u = Util.getParameterLong(context.getRequest(), "u");
             params.sortby = intParam(context.getRequest().getParameter("sortby"));

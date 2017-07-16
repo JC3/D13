@@ -19,6 +19,7 @@ import d13.dao.Cell;
 import d13.dao.ReportTemplate;
 import d13.dao.User;
 import d13.util.Util;
+import d13.web.servlets.ReportParameters;
 
 public class ReportController {
         
@@ -116,22 +117,19 @@ public class ReportController {
     
     public static class View {
         
-        private int myReportId;
-        private String myReportFormat;
+        private long myReportId;
         private ReportTemplate myReportTemplate;
         private Set<String> myReportFields;
-        private PageContext pageContext;
         private DataViewer dataViewer;
         private DataViewer myReportDataViewer;
         private List<Section> myReportSections;
                 
-        public View (PageContext page, SessionData sess) throws Exception {
-            
+        public View (ReportParameters rp, PageContext page, SessionData sess) throws Exception {
+
             if (!sess.isLoggedIn() || !sess.getUser().getRole().canViewUsers())
                 throw new SecurityException("Permission denied.");
             
-            myReportId = Util.parseIntDefault(page.getRequest().getParameter("r"), -1);
-            myReportFormat = page.getRequest().getParameter("f");
+            myReportId = rp.getId();
             myReportTemplate = (myReportId >= 0 ? ReportTemplate.findById(myReportId) : null);
             if (myReportTemplate != null) {
                 DataViewer.Parameters params = new DataViewer.Parameters();
@@ -141,8 +139,8 @@ public class ReportController {
                 myReportDataViewer = new DataViewer(page, sess, DataViewer.FLAG_NO_CELLS, myReportFields, params);
             }
             
-            pageContext = page;
-            dataViewer = new DataViewer(page, sess, DataViewer.FLAG_NO_CELLS | DataViewer.FLAG_NO_ROWS);
+            DataViewer.Parameters params = new DataViewer.Parameters();
+            dataViewer = new DataViewer(page, sess, DataViewer.FLAG_NO_CELLS | DataViewer.FLAG_NO_ROWS, null, params);
 
         }
         
@@ -150,14 +148,18 @@ public class ReportController {
             return dataViewer.getColumnsByCategory();
         }
         
-        public String getLinkHTML (String format) {
+        public String getLinkHTML (HttpServletRequest request, String format) {
             if (myReportTemplate == null)
                 return "<span class=\"nothing-yet\">Generate the report to get a link.";
             else {
-                String url = "reports.jsp?r=" + myReportId + (format == null ? "" : ("&f=" + format));
-                url = Util.getAbsoluteUrl((HttpServletRequest)pageContext.getRequest(), url);
+                String url = getURL(request, format);
                 return String.format("<a href=\"%s\">%s</a>", url, url);
             }
+        }
+        
+        public String getURL (HttpServletRequest request, String format) {
+            String url = "report/" + myReportId + (format == null ? "" : ("/" + format));
+            return Util.getAbsoluteUrl(request, url);
         }
         
         public boolean isMyReportColumnSelected (String sid) {
@@ -176,13 +178,8 @@ public class ReportController {
             return myReportTemplate == null ? true : myReportTemplate.getExcludeMandatoryCells();
         }
         
-        public boolean isMyReportFormat (String format) {
-            if (format == myReportFormat)
-                return true;
-            else if (format == null || myReportFormat == null)
-                return false;
-            else
-                return format.equals(myReportFormat);
+        public Long getMyReportId () {
+            return myReportTemplate == null ? null : myReportTemplate.getId();
         }
         
         private List<DataViewer.Column> myReportColumns;

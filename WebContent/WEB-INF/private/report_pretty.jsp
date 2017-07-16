@@ -5,77 +5,21 @@
 <%@ page import="d13.dao.*" %>
 <%@ page import="d13.util.*" %>
 <%@ page import="java.util.*" %>
+<jsp:useBean id="params" scope="request" class="d13.web.servlets.ReportParameters"/>
 <%
 SessionData sess = new SessionData(session);
-if (!sess.isLoggedIn()) {
-    sess.setAttribute(SessionData.SA_LOGIN_ERROR, "You must be logged in.");
-    response.sendRedirect("index.jsp?next=" + java.net.URLEncoder.encode(Util.getCompleteUrl(request), "us-ascii"));
-    return;
-}
-
 ReportController.View rview;
 try {
-    rview = new ReportController.View(pageContext, sess);
+    rview = new ReportController.View(params, pageContext, sess);
 } catch (Exception x) {
     x.printStackTrace(System.err);
     return;
 }
 
-boolean print = false;
-if (rview.isMyReportFormat("p")) {
-    print = true;
-} else if (rview.isMyReportFormat("c")) {
-    // ...
-    out.println("Sorry, CSV reports aren't finished yet.");
-    return;
-}
-
-boolean paged = true;
-
-Map<String,List<DataViewer.Column>> reportCols = rview.getReportColumns();
-
 request.setAttribute("rview", rview); // for report.tag
 %>
 <!DOCTYPE html>
 <html>
-<% if (print) { %>
-<!-- PRINT -->
-<head>
-<dis:common require="jquery" raw="true"/>
-<title>Disorient<%= rview.getMyReportTitle() == null ? "" : (" - " + Util.html(rview.getMyReportTitle())) %></title>
-<style type="text/css">
-* { font-family: Tahoma, Verdana, sans-serif; }
-html, body { margin: 0; padding: 0; }
-.report { width: 100%; border-collapse: collapse; }
-th { text-align: left; }
-td, th { white-space: nowrap; font-size: 90%; padding: 1px 0.5ex; vertical-align: top; }
-td.w { white-space: inherit; }
-tr.r-section td { background: black; color: white; font-weight: bold; font-size: 110%; padding: 0.5ex; }
-th, tr.r-user td { border-bottom: 1px solid #ccc; }
-/* todo: these hand-wavey styles still don't always solve pb's after .r-header on chrome at least... */
-tr.r-section, tr.r-section *, tr.r-header, tr.r-header * { page-break-after: avoid; }
-tr, th, td { page-break-inside: avoid; }
-<%   if (paged) { %>
-tr.r-spacer, tr.r-spacer * { border:0; margin: 0; padding: 0; }
-<%   } %>
-</style>
-</head>
-<body>
-<%   if (rview.getMyReportColumns() == null) { %>
-Invalid report ID.
-<%   } else { %>
-<dis:report/>
-<%     if (paged) { %>
-<script type="text/javascript">
-$('tr.r-spacer td').each(function(_,e){
-	$(e).empty().html('<div></div><div style="page-break-before:always"></div>');
-});
-</script>
-<%     } %>
-<%   } %>
-</body>
-<!-- END PRINT -->
-<% } else { /* !print */ %>
 <head>
 <dis:common require="jquery tooltipster" nocbhack="true"/>
 <style type="text/css">
@@ -194,6 +138,10 @@ $('tr.r-spacer td').each(function(_,e){
     flex-direction: column;
     align-items: center;*/
 }
+#report-loading {
+    color: #ffeedd;
+    opacity: 0.8;
+}
 .report {
     width: 1px;
 }
@@ -223,7 +171,7 @@ $(document).ready(function () {
             if (r.error)
                 alert('Error: ' + r.error_message);
             else
-                window.location = '${pageContext.request.contextPath}/reports.jsp?r=' + r.report;
+                window.location = '${pageContext.request.contextPath}/report/' + r.report;
         }).fail(function (r) {
             alert('A server error occurred: ' + e.status + ' ' + e.statusText);         
         });
@@ -249,15 +197,31 @@ $(document).ready(function () {
     }
     disableExclude();
 });
+function showHelp () {
+	alert('This page is still an experiment. To make reports:\n\n' +
+	      '1. Choose the columns, filter, and cell options you want.\n' +
+	      '2. Click \'Generate Report\' at the bottom right.\n\n' +
+	      'Links will then display at the bottom right where you can view printable reports or download a CSV. ' +
+	      'You should BOOKMARK the \'bookmark\' link (or the current page) to save the report settings if you want to re-use it. ' +
+	      'You can share the bookmarks with other people (as long as they have view-user privileges).\n\n' +
+	      'Note: Reports will always be sorted by the first column. You can\'t change this yet.\n\n' +
+	      'Please let Jason know if you have any suggestions for improvements here or run into issues.');
+	return false;
+}
 </script>
 </head>
 <body>
 <dis:header/>
 
+<div class="nav" style="padding-bottom:1ex">
+  <a href="${pageContext.request.contextPath}/home.jsp">Home</a> | <a href="#" onclick="return showHelp()">Help</a>
+</div>
+
 <div id="report-options" class="vert">
     <div id="report-opts" class="vert" >
         <div class="categories">
-<% 
+<%
+Map<String,List<DataViewer.Column>> reportCols = rview.getReportColumns();
 int split = (reportCols.get("Registration").size() + 1) / 2; // kludge; it's the longest one.
 for (String category : reportCols.keySet()) { 
     int count = 0;
@@ -266,6 +230,8 @@ for (String category : reportCols.keySet()) {
 <%    
     for (DataViewer.Column col : reportCols.get(category)) { 
         boolean checked = rview.isMyReportColumnSelected(col.sid);
+        if (rview.getMyReportId() == null && col.sid.equals("realName"))
+            checked = true; // kludge to initially select this since it's super common
         ++ count;
         if (count > split) {
             %></ul></div><div class="cat-<%= category.toLowerCase() %>"><h1>&nbsp;</h1><ul><%
@@ -315,11 +281,11 @@ for (String category : reportCols.keySet()) {
             <div class="control-panel">
                 <table class="report-control-table">
                 <tr><td>Bookmark:
-                    <td id="bookmark-here"><%= rview.getLinkHTML(null) %>
+                    <td id="bookmark-here"><%= rview.getLinkHTML(request, null) %>
                 <tr><td>Printable:
-                    <td id="bookmark-print"><%= rview.getLinkHTML("p") %>
+                    <td id="bookmark-print"><%= rview.getLinkHTML(request, "print") %>
                 <tr><td>CSV:
-                    <td id="bookmark-csv"><%= rview.getLinkHTML("c") %>
+                    <td id="bookmark-csv"><%= rview.getLinkHTML(request, "csv") %>
                 <tr><td>
                     <td><button class="dbutton" id="report-run">Generate Report...</button>
                 </table>
@@ -328,12 +294,20 @@ for (String category : reportCols.keySet()) {
     </div>
 </div>
 
-<hr>
 <% 
 if (rview.getMyReportColumns() != null) {
 %>
-<div id="report-wrapper">
+<hr>
+<div id="report-loading">Loading...</div>
+<div id="report-wrapper" style="display:none">
 <dis:report/>
+</div>
+<script type="text/javascript">
+$('#report-loading').toggle(false);
+$('#report-wrapper').attr('style', null);
+</script>
+<div class="nav">
+  <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
 </div>
 <%
 }
@@ -341,5 +315,4 @@ if (rview.getMyReportColumns() != null) {
 
 <dis:footer/>
 </body>
-<% } /* if (print) ... else ... */ %>
 </html>
