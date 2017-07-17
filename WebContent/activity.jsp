@@ -110,7 +110,7 @@ for (Note n : notes) {
 <!DOCTYPE html>
 <html>
 <head>
-<dis:common require="jquery"/>
+<dis:common require="jquery" title="Activity Log"/>
 <style type="text/css">
 table.notes {
     /*border-collapse: collapse;*/

@@ -66,7 +66,7 @@ if (notes != null) {
 <!DOCTYPE html>
 <html>
 <head>
-<dis:common/>
+<dis:common title="<%= Util.html(editee.getRealName()) %>"/>
 <style type="text/css">
 table.form td.key { white-space: nowrap; font-weight: bold; color: #ff8000; vertical-align: top; border-top: 1px solid #202020; }
 table.form td.value { vertical-align: top; border-top: 1px solid #202020; }

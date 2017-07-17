@@ -9,6 +9,8 @@
 <% 
     if (title == null || "".equals(title)) 
         title = "Disorient";
+    else
+        title = "Disorient - " + title;
     boolean jquery = false;
     boolean tooltipster = false;
     if (require != null) {

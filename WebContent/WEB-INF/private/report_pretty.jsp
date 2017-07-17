@@ -21,7 +21,7 @@ request.setAttribute("rview", rview); // for report.tag
 <!DOCTYPE html>
 <html>
 <head>
-<dis:common require="jquery tooltipster" nocbhack="true"/>
+<dis:common require="jquery tooltipster" nocbhack="true" title="Reports"/>
 <style type="text/css">
 #report-options {
     align-items: center;

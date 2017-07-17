@@ -51,7 +51,7 @@ String message_html = (message == null ? null : Util.html(message));
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<dis:common/>
+<dis:common title="Rules"/>
 </head>
 <body>
 <dis:header/>

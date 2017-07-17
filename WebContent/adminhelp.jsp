@@ -19,7 +19,7 @@ if (!user.getRole().isSpecial())
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<dis:common/>
+<dis:common title="Admin Help"/>
 <style type="text/css">
 h1 { font-size: larger; font-weight: bold; }
 .section { padding-left: 4ex; }

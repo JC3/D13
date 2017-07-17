@@ -84,7 +84,7 @@ String error_html = (error == null ? null : Util.html(error));
 <!DOCTYPE html>
 <html>
 <head>
-<dis:common require="jquery"/>
+<dis:common require="jquery" title="Edit Cell"/>
 <style type="text/css">
 .editcell-key {
     white-space: nowrap;

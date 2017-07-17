@@ -56,7 +56,7 @@ String message_html = (message == null ? null : Util.html(message));
 <!DOCTYPE html>
 <html>
 <head>
-<dis:common require="jquery"/>
+<dis:common require="jquery" title="View Cells"/>
 <style type="text/css">
 #maindiv { 
     width:75%;

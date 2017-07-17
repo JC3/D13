@@ -99,7 +99,7 @@ String invoice_id = Long.toString(invoice.getInvoiceId());
 <!DOCTYPE html>
 <html>
 <head>
-<dis:common/>
+<dis:common title="Dues"/>
 <style type="text/css">
 table.invoice {
     border: 1px solid #303030;

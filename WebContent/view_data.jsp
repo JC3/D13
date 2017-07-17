@@ -66,7 +66,7 @@ String makeQuery (String qf, String sortby, String search) {
 <!DOCTYPE html>
 <html>
 <head>
-<dis:common require="jquery tooltipster"/>
+<dis:common require="jquery tooltipster" title="Registration Data"/>
 <style type="text/css">
 /*td { border-bottom: 1px solid black; border-right: 1px solid #e0e0e0; white-space: nowrap; vertical-align: top; }*/
 /*th { border-bottom: 1px solid black; border-right: 1px solid #e0e0e0; font-weight: bold; white-space: nowrap; }*/

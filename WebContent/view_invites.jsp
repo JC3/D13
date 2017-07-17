@@ -37,7 +37,7 @@ boolean show_actions = sess.getUser().getRole().canInviteUsers() && !RuntimeOpti
 <!DOCTYPE html>
 <html>
 <head>
-<dis:common require="jquery tooltipster"/>
+<dis:common require="jquery tooltipster" title="Manage Invites"/>
 <style type="text/css">
 #emailtext {
     width: 40ex;
