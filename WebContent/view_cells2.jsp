@@ -53,7 +53,7 @@ if (back_url == null)
 String message = (String)sess.getAndClearAttribute(SessionData.SA_EDIT_CELL_MESSAGE);
 String message_html = (message == null ? null : Util.html(message));
 %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <dis:common require="jquery"/>
@@ -66,25 +66,27 @@ String message_html = (message == null ? null : Util.html(message));
 #leftside {
     white-space: nowrap; 
     vertical-align:top;
-    border-right:1px solid #804000;
-    padding-right: 1ex;
-    margin-right: 1ex;
+    border-right:1px solid #804000 !important;
+    padding-right: 1ex !important;
+    margin-right: 1ex !important;
 }
 #rightside { 
     vertical-align:top;
     width:100%;
-    padding-left: 1ex;
+    padding-left: 1ex !important;
 }
 #slide {
     padding: 0;
     margin: 0;
     position: relative;
 }
-.celldetails {
+.toggle-pane {
     display:none;
     vertical-align:top;
     margin:0;
     padding:0;
+}
+.celldetails {
 }
 .celldetails > b, .celldetails > table {
     font-size: 90%;
@@ -92,25 +94,22 @@ String message_html = (message == null ? null : Util.html(message));
 .leftdetail {
     white-space: nowrap; 
     vertical-align:top;
-    border-right:1px dotted #402000;
-    padding-right: 1ex;
-    margin-right: 1ex;
+    border-right:1px dotted #402000 !important;
+    padding-right: 1ex !important;
+    margin-right: 1ex !important;
 }
 .rightdetail {
     white-space: nowrap; 
     vertical-align:top;
     width: 100%;
-    padding-left: 1ex;
+    padding-left: 1ex !important;
 }
-#instructions {
-    vertical-align:top;
-    margin:0;
-    padding:0;
+#details_help {
 }
 table.volunteers td {
     text-align:left;
     white-space:nowrap;
-    border-bottom:1px solid #603000;
+    border-bottom:1px solid #603000 !important;
 }
 table.volunteers th {
     text-align:left;
@@ -124,7 +123,7 @@ table.volunteers th {
 }
 td.indicator {
     text-align:center;
-    padding-right:2px;
+    padding-right:2px !important;
 }
 .indicator-letter {
     color:#00ccff;
@@ -153,25 +152,19 @@ td.cell-hidden a:visited {
 td.cell-hidden a:active {
     color: #bb6000;
 }
-.cell-link {
+.cell-link-td .cell-link {
     padding-left: 4px;
 }
 .cell-link-td {
-/*
-    border-left: 2px solid black;
-    border-right: 2px solid black;
-    */
 }
 .cell-hidden.current-cell a {
     color:#bbbbbb !important;
 }
+.select-mode-only {
+    display: none;
+}
 .current-cell a {
     color:white !important;
-/*
-    border-left: 2px solid #ffff00 !important;
-    border-right: 2px solid #ffff00 !important;
-    background: #202020;
-    */
 }
 .history {
 }
@@ -187,23 +180,31 @@ td.cell-hidden a:active {
 .history .desc {
     font-size: small;
     color: #ffeedd;
-    padding-left: 4ex;
-    margin-top: 0.25ex;
+    padding-left: 4ex !important;
+    margin-top: 0.25ex !important;
 }
 .catheader {
-    padding-top: 1ex;
+    padding-top: 1ex !important;
+}
+#details_select input[type="checkbox"] {
+    margin-left: 0;
+}
+#details_select td:first-child {
+    padding-right: 1ex !important;
 }
 </style>
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
+var curhashid = null;
 function showDetails (id) {
     var divid = 'details_' + id;
     var linkid = 'link_' + id;
-    var divs = document.getElementsByTagName('div');
+    var divs = document.getElementsByClassName('toggle-pane');
+    var previous = null;
     var gotone = false;
     for (let i = 0; i < divs.length; ++ i) {
         let obj = divs[i];
-        if (!obj.classList.contains('celldetails'))
-            continue;
+        if (obj.classList.contains('active-pane'))
+            previous = obj.id.substring(8);
         if (obj.id == divid) {
             obj.style.display = 'block';
             obj.classList.add('active-pane');
@@ -211,7 +212,7 @@ function showDetails (id) {
         } else {
             obj.style.display = 'none';
             obj.classList.remove('active-pane');
-        }
+        };
     }
     var links = document.getElementsByClassName('cell-link');
     for (let i = 0; i < links.length; ++ i) {
@@ -220,16 +221,17 @@ function showDetails (id) {
             obj.parentElement.classList.add('current-cell');
         } else {
             obj.parentElement.classList.remove('current-cell');
-        }
+        };
     }
+    curhashid = '#' + id;
     window.location.hash = '#' + id;
-    if (gotone) {
-        document.getElementById('instructions').style.display = 'none';
-        document.getElementById('instructions').classList.remove('active-pane');
-    } else {
-        document.getElementById('instructions').style.display = 'block';
-        document.getElementById('instructions').classList.add('active-pane');
+    if (!gotone) {
+        document.getElementById('details_help').style.display = 'block';
+        document.getElementById('details_help').classList.add('active-pane');
     }
+<% if (canEdit) { %>
+    setEditMultiple(document.getElementById('details_select').classList.contains('active-pane'), previous || 'help');
+<% } %>
     $(window).trigger('scroll');
 }
 
@@ -238,8 +240,13 @@ function displayAnchor () {
     if (anchor.length > 0)
         showDetails(anchor);
     else
-    	showDetails('help');
+        showDetails('help');
 }
+
+window.onhashchange = function () {
+    if (window.location.hash !== curhashid) // main goal: prevent recursion from displayAnchor
+        displayAnchor();
+};
 
 $(window).scroll(function () {
     var s = $('#slide');
@@ -253,10 +260,113 @@ $(window).scroll(function () {
         s.css('top', y);
     } else {
         s.css('top', 0);
-    }
+    };
 });
 
 <% if (canEdit) { %>
+var initselect = null;
+if (window.location.hash === '#select') {
+	try {
+	    initselect = JSON.parse(sessionStorage.getItem('jsp.view_cells2.selected'));
+	} catch (e) {
+	}
+}
+sessionStorage.removeItem('jsp.view_cells2.selected');
+
+function setEditMultiple (enabled, previous) {
+    if ($('#edit-multiple-link').data('active') == enabled)
+        return; // nothing to do
+    $('#edit-multiple-link').data('active', enabled);
+    if (enabled) {
+        $('#edit-multiple-link')
+          .attr('href', "javascript:showDetails('" + previous + "');")
+          .text('Cancel Edit Multiple');
+    } else {
+        $('#edit-multiple-link')
+          .attr('href', "javascript:showDetails('select');")
+          .text('Edit Multiple');
+    }
+    $('.select-mode-only').toggle(enabled);
+    // reset the checkboxes to indeterminate
+    if (enabled) {
+        $('.cell-select-checkbox').each(function (_,cb) {
+            cb.checked = false;
+            cb.readOnly = cb.indeterminate = true;
+        });
+    };
+    // apply initial state if specified
+    if (initselect) {
+        setCheckState(document.getElementById('cell-select-hide-when-full'), initselect.autohide);
+        setCheckState(document.getElementById('cell-select-mandatory'), initselect.mandatory);
+        setCheckState(document.getElementById('cell-select-hidden'), initselect.hidden);
+        $('.select-cell').prop('checked', false);
+        for (let id of initselect.cells)
+        	$('.select-cell[data-cid="' + id + '"]').prop('checked', true);
+        selectUpdate();
+    	initselect = null;
+    }
+}
+/*
+ *         autohide: checkState(document.getElementById('cell-select-hide-when-full')),
+ mandatory: checkState(document.getElementById('cell-select-mandatory')),
+ hidden: checkState(document.getElementById('cell-select-hidden')),
+ cells: $.map($('.select-cell[data-cid]:checked'), function (e) { return +e.dataset.cid; })
+
+ */
+function selectAll (all) {
+    $('.select-cell').prop('checked', all);
+    selectUpdate();
+}
+
+function selectUpdate () {
+    var count = $('.select-cell:checked').length;
+    $('#cell-select-count').text(count + ' cell' + (count === 1 ? '' : 's'));   
+}
+
+function checkState (cb) {
+    return cb.indeterminate ? null : cb.checked;
+}
+
+function setCheckState (cb, state) {
+	cb.checked = (state === true);
+	cb.readOnly = cb.indeterminate = (state === null);
+}
+
+function selectApply () {
+    var changes = {
+        autohide: checkState(document.getElementById('cell-select-hide-when-full')),
+        mandatory: checkState(document.getElementById('cell-select-mandatory')),
+        hidden: checkState(document.getElementById('cell-select-hidden')),
+        cells: $.map($('.select-cell[data-cid]:checked'), function (e) { return +e.dataset.cid; })
+    };
+    if (changes.cells.length === 0) {
+        alert('No cells selected.');
+        return;
+    }
+    if (changes.autohide === null && changes.mandatory === null && changes.hidden === null) {
+    	alert('Select some settings to change.')
+        return;
+    }
+    if (!confirm('Are you sure?'))
+        return;
+    $.post('${pageContext.request.contextPath}/ajax/inline_edit_cells.jsp', changes, 'json').then(function (r) {
+        if (r.error)
+            alert('Error: ' + r.error_message);
+        else {
+            if (r.warnings && r.warnings.length)
+                console.log('Warnings: ' + r.warnings);
+            sessionStorage.setItem('jsp.view_cells2.selected', JSON.stringify(changes));
+            window.location.reload();
+        };
+    }).fail(function (e) {
+        alert('A server error occurred: ' + e.status + ' ' + e.statusText);     
+    });
+}
+
+//function updateProps (p) {
+//	console.log(JSON.stringify(p));
+//}
+
 function moveCell (id, dir) {
     $.post('ajax/move_cell.jsp', {
         c: id,
@@ -265,11 +375,24 @@ function moveCell (id, dir) {
         if (r.ok)
             window.location.reload();
         else
-            alert(`Could not move cell: \${r.e}`);
+            alert('Could not move cell: ' + r.e);
     }).fail(function (e) {
-        alert(`A server error occurred: \${e.status} \${e.statusText}`);        
+        alert('A server error occurred: ' + e.status + ' ' + e.statusText);        
     });
 }
+
+$(document).ready(function () {
+    $('.cell-select-checkbox').click(function (ev) {
+        var cb = ev.target;
+        if (cb.readOnly) 
+            cb.checked = cb.readOnly = false;
+        else if (!cb.checked) 
+            cb.readOnly = cb.indeterminate = true;
+    });
+    $('#cell-select-apply').click(function () {
+        selectApply();
+    });
+});
 <% } %>
 </script>
 </head>
@@ -285,14 +408,14 @@ function moveCell (id, dir) {
 
 <div id="maindiv">
 
-<table width="100%">
+<table style="width:100%">
 
 <tr><td id="leftside">
 
-  <table border="0" cellspacing="0" cellpadding="0">
+  <table class="zerotable">
 <% if (cats != null && canEdit) { %>
     <tr>
-      <td colspan="3">Cells:
+      <td colspan="3">Cells<span class="select-mode-only"> (<a href="javascript:selectAll(true);">Select All</a> | <a href="javascript:selectAll(false);">Select None</a>)</span>:
 <% } %>
 <% for (Cell cell:cells) { 
     int max = cell.getPeople();
@@ -310,7 +433,7 @@ function moveCell (id, dir) {
     <tr>
       <td class="indicator indicator-letter"><%= cell.isHidden() ? "H" : (cell.isHideWhenFull() ? "A" : "") %>
       <td class="indicator<%= excls %>"><%= ((max > 0) ? String.format("%2d/%2d", tot, max) : String.format("%2d   ", tot)).replaceAll(" ", "&nbsp;") %>
-      <td class="cell-link-td<%= nexcls %>"><a class="cell-link" id="link_<%=cell.getCellId() %>" href="javascript:showDetails('<%=cell.getCellId() %>');"><%=Util.html(cell.getFullName()) %></a>
+      <td class="cell-link-td<%= nexcls %>"><% if (canEdit) { %><input type="checkbox" class="select-mode-only select-cell" onchange="selectUpdate()" data-cid="<%=cell.getCellId()%>"><% } %><a class="cell-link" id="link_<%=cell.getCellId() %>" href="javascript:showDetails('<%=cell.getCellId() %>');"><%=Util.html(cell.getFullName()) %></a>
 <% } %>
 <% if (cats != null && canEdit) { %>
     <tr>
@@ -326,15 +449,16 @@ function moveCell (id, dir) {
       <td class="cell-link-td"><a class="cell-link" id="link_<%=cat.getCellId() %>" href="javascript:showDetails('<%=cat.getCellId() %>');"><%=Util.html(cat.getFullName()) %></a>
 <%  }
    } 
-   if (canCreate) { %>
-    <tr>
-      <td class="catheader" colspan="3"><a href="editcell.jsp?c=new&next=<%= this_url %>">New Cell...</a>
+   if (canCreate || canEdit) { %>
+    <tr><td class="catheader" colspan="3">
+      <a href="javascript:showDetails('select');" id="edit-multiple-link">Edit Multiple</a>
+      <% if(canCreate) { %> | <a href="editcell.jsp?c=new&next=<%= this_url %>">New Cell...</a><% } %>
 <% } %>
   </table>
 
 <td id="rightside">
 <div id="slide">
-<div id="instructions" style="display:none">
+<div id="details_help" class="toggle-pane">
 <p>Click a cell on the left to view details. The numbers and letters to the left of the cell names mean:</p>
 <ul>
 <li>An <span class="indicator indicator-letter">H</span> means the cell is set to always be hidden.
@@ -365,6 +489,25 @@ the bottom of the list (the numbers on the left are the number of cells/subcateg
 </ul>
 <% } %>
 </div>
+<% if (canEdit) { %>
+<div id="details_select" class="toggle-pane" style="display:none">
+  <p>Select one or more cells, then select the changes you want to make below and press "Apply". A checkbox that looks like <input type="checkbox" id="example-checkbox" style="margin:0;padding:0;"> means don't change that setting.</p>
+  <script type="text/javascript">
+  (function(){
+      var cb = document.getElementById('example-checkbox');
+      cb.indeterminate = true;
+      cb.onchange = function () { cb.indeterminate = true; };
+  })();
+  </script>
+  <table>
+  <tr><td>Selected:<td id="cell-select-count">0 cells
+  <tr><td><label for="cell-select-hide-when-full">Hide When Full?</label><td><input type="checkbox" id="cell-select-hide-when-full" class="cell-select-checkbox">
+  <tr><td><label for="cell-select-mandatory">Mandatory?</label><td><input type="checkbox" id="cell-select-mandatory" class="cell-select-checkbox">
+  <tr><td><label for="cell-select-hidden">Hidden?</label><td><input type="checkbox" id="cell-select-hidden" class="cell-select-checkbox">
+  <tr><td><td><input id="cell-select-apply" type="button" class="dbutton" value="Apply">  
+  </table>
+</div>
+<% } %>
 <% 
 List<Cell> allthings = new ArrayList<Cell>(cells);
 if (cats != null && canEdit)
@@ -384,19 +527,25 @@ for (Cell cell:allthings) {
         java.util.Collections.sort(review, new User.RealNameComparator());
     }
 %>
-<div id="details_<%=cell.getCellId()%>" class="celldetails">
+<div id="details_<%=cell.getCellId()%>" class="celldetails toggle-pane">
 
-<b><%= cat ? "Category" : "Cell" %>:</b> <%= Util.html(cell.getFullName()) %><br>
+<b style="font-size:100% !important"><%= cat ? "Category" : "Cell" %>:</b> <%= Util.html(cell.getFullName()) %><br>
 <% if (cat) { %>
-<b>Items:</b> <%= cell.getChildren().size() %><br>
+<b style="font-size:100% !important">Items:</b> <%= cell.getChildren().size() %><br>
+<hr>
+<ul>
+<%   for (Cell catchild : cell.getChildren()) { %>
+<li><%= catchild.isCategory() ? "Category" : "Cell" %>: <a class="cell-link" id="link_<%=catchild.getCellId() %>" href="javascript:showDetails('<%=catchild.getCellId() %>');"><%= Util.html(catchild.getName()) %></a>
+<%   } %>
+</ul>
 <% } else { %>
-<b>Volunteers:</b> <%= cell.getUsers().size() + (cell.getPeople() > 0 ? " of " + cell.getPeople() : "") %><br>
-<b>Description:</b> <%= Util.html(cell.getDescription()) %><br>
+<b style="font-size:100% !important">Volunteers:</b> <%= cell.getUsers().size() + (cell.getPeople() > 0 ? " of " + cell.getPeople() : "") %><br>
+<b style="font-size:100% !important">Description:</b> <%= Util.html(cell.getDescription()) %><br>
 <hr>
 
 <b style="color: #ffddaa;">APPROVAL FINALIZED:</b><br>
 
-<table width="100%">
+<table style="width:100%">
 <tr><td class="leftdetail">
 <b>Email Addresses:</b><br>
   <textarea style="dtextarea"><% 
@@ -412,7 +561,7 @@ for (Cell cell:allthings) {
 } %></textarea><br><br>
 <td class="rightdetail">
 
-<table width="100%" class="volunteers">
+<table style="width:100%" class="volunteers">
 <tr><th>Name<th>Email<th>Arrival<th>Departure
 <% 
 for (User u:approved) { %>
@@ -432,7 +581,7 @@ for (User u:approved) { %>
 <hr>
 <b style="color: #ffddaa;">APPROVED / REGISTERED:</b><br>
 
-<table width="100%">
+<table style="width:100%">
 <tr><td class="leftdetail">
 <b>Email Addresses:</b><br>
   <textarea style="dtextarea"><% 
@@ -449,7 +598,7 @@ for (User u:approved) { %>
   %></textarea><br><br>
   
 <td class="rightdetail">
-<table width="100%" class="volunteers">
+<table style="width:100%" class="volunteers">
 <tr><th>Name<th>Email<th>Arrival<th>Departure
 <% for (User u:pending) { %>
 <tr><td><a href="details.jsp?u=<%=u.getUserId()%>&next=<%=this_url%>%23<%=cell.getCellId()%>"><%=Util.html(u.getRealName()) %></a>
@@ -468,7 +617,7 @@ for (User u:approved) { %>
 <hr>
 <b style="color: #ffddaa;">NEEDS REVIEW:</b><br>
 
-<table width="100%">
+<table style="width:100%">
 <tr><td class="leftdetail">
 <b>Email Addresses:</b><br>
   <textarea style="dtextarea"><% 
@@ -485,7 +634,7 @@ for (User u:approved) { %>
   %></textarea><br><br>
   
 <td class="rightdetail">
-<table width="100%" class="volunteers">
+<table style="width:100%" class="volunteers">
 <tr><th>Name<th>Email<th>Arrival<th>Departure
 <% for (User u:review) { %>
 <tr><td><a href="details.jsp?u=<%=u.getUserId()%>&next=<%=this_url%>%23<%=cell.getCellId()%>"><%=Util.html(u.getRealName()) %></a>

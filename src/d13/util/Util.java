@@ -87,14 +87,21 @@ public class Util {
         }
     }
     
-    public static boolean parseBooleanDefault (String str, boolean def) {
+    public static Boolean parseBooleanDefault (String str, Boolean def) {
         if (str == null)
             return def;
-        try {
-            return Boolean.parseBoolean(str);
-        } catch (Throwable t) {
-            return def;
-        }
+        //try {
+            str = str.trim();
+            if ("true".equalsIgnoreCase(str))
+                return true;
+            else if ("false".equalsIgnoreCase(str))
+                return false;
+            else
+                return def;
+        //    return Boolean.parseBoolean(str); // not strict enough
+        //} catch (Throwable t) {
+        //    return def;
+        //}
     }
     
     public static Long getParameterLong (ServletRequest request, String param) {
