@@ -303,8 +303,9 @@ public class EditCellDetails {
                 // for activity log
                 if (result.autohide != oldAutohide) flags |= Cell.CHANGED_HIDEWHENFULL;
                 if (result.mandatory != oldMandatory) flags |= Cell.CHANGED_MANDATORY;
-                if (result.hidden != oldHidden) flags |= Cell.CHANGED_HIDDEN;                
-                cell.addEditedActivityLogEntry(session.getUser(), flags);
+                if (result.hidden != oldHidden) flags |= Cell.CHANGED_HIDDEN;        
+                if (flags != 0)
+                    cell.addEditedActivityLogEntry(session.getUser(), flags);
                 
             }
             
