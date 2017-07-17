@@ -187,13 +187,13 @@ $(document).ready(function () {
            });
     });
     $('input[name="_cells"]').change(function () {
-    	disableExclude();
+        disableExclude();
     });
     function disableExclude () {
-    	if ($('input[name="_cells"]:checked').val() === 'no')
+        if ($('input[name="_cells"]:checked').val() === 'no')
             $('#report-opt-excludemc').prop('disabled', true).parent().addClass('disabled');
-    	else
-    	    $('#report-opt-excludemc').prop('disabled', false).parent().removeClass('disabled');
+        else
+            $('#report-opt-excludemc').prop('disabled', false).parent().removeClass('disabled');
     }
     disableExclude();
     $('input[name="_cells"], #report-opt-filter, input[data-column-sid]').change(function () {
@@ -201,15 +201,15 @@ $(document).ready(function () {
     });
 });
 function showHelp () {
-	alert('This page is still an experiment. To make reports:\n\n' +
-	      '1. Choose the columns, filter, and cell options you want.\n' +
-	      '2. Click \'Generate Report\' at the bottom right.\n\n' +
-	      'Links will then display at the bottom right where you can view printable reports or download a CSV. ' +
-	      'You should BOOKMARK the \'bookmark\' link (or the current page) to save the report settings if you want to re-use it. ' +
-	      'You can share the bookmarks with other people (as long as they have view-user privileges).\n\n' +
-	      'Note: Reports will always be sorted by the first column. You can\'t change this yet.\n\n' +
-	      'Please let Jason know if you have any suggestions for improvements here or run into issues.');
-	return false;
+    alert('This page is still an experiment. To make reports:\n\n' +
+          '1. Choose the columns, filter, and cell options you want.\n' +
+          '2. Click \'Generate Report\' at the bottom right.\n\n' +
+          'Links will then display at the bottom right where you can view printable reports or download a CSV. ' +
+          'You should BOOKMARK the \'bookmark\' link (or the current page) to save the report settings if you want to re-use it. ' +
+          'You can share the bookmarks with other people (as long as they have view-user privileges).\n\n' +
+          'Note: Reports will always be sorted by the first column. You can\'t change this yet.\n\n' +
+          'Please let Jason know if you have any suggestions for improvements here or run into issues.');
+    return false;
 }
 </script>
 </head>

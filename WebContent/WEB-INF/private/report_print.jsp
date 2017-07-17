@@ -82,7 +82,8 @@ function setPaged (paged) {
 	    $('body').addClass('paged');
 	else
 		$('body').removeClass('paged');
-    window.location.hash = (paged ? 'paged' : '');
+    //window.location.hash = (paged ? 'paged' : '');
+    window.location.replace(paged ? '#paged' : '#');
 }
 $(document).ready(function () {
 	if (window.location.hash === '#paged') {
