@@ -849,6 +849,18 @@ public class User implements Trackable {
 
     }
     
+    public static List<User> findAllExceptNew () {
+        
+        @SuppressWarnings("unchecked")
+        List<User> users = (List<User>)HibernateUtil.getCurrentSession()
+                .createCriteria(User.class)
+                .add(Restrictions.ne("state", UserState.NEW_USER))
+                .list();
+        
+        return users;
+        
+    }
+    
     /*
     public static User findSystemAdministrator () {
         

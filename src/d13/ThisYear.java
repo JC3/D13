@@ -102,6 +102,21 @@ Tier 3 $1550 RV Fee: Wednesday, August 16 at 11:59 PM (Eastern Time)
                 return "Festival Week";
         }
         
+        public static String getPhaseShortName (DateTime when) {
+            if (when == null)
+                return null;
+            else if (when.isBefore(FESTIVAL_START))
+                return "alpha";
+            else if (when.equals(FESTIVAL_START))
+                return "festival-open";
+            else if (when.equals(FESTIVAL_END))
+                return "festival-end";
+            else if (when.isAfter(FESTIVAL_END))
+                return "disengage";
+            else
+                return "festival";
+        }
+        
     }
     
 }

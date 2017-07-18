@@ -179,7 +179,12 @@ here periodically for status updates! <strong>If your application is approved, y
   <li><a href="view_data.jsp?qf=9">Only not-yet-approved users that need to sign up for work cells.</a>
   <li><a href="view_data.jsp?qf=10">Only approved users that need to sign up for work cells.</a>  
 </ul>
-<li><a href="report">Generate Reports</a>
+<li>Reports
+<ul>
+	<li><a href="report">Generate User Reports</a>
+	<li><a href="attendance.jsp">Attendance Estimates</a>
+	<li><a href="view_finance.jsp">Dues / Finance</a>
+</ul>
 <li>Camp Administration
 <ul>
     <li><a href="activity.jsp">View Site Activity</a>
@@ -192,7 +197,6 @@ here periodically for status updates! <strong>If your application is approved, y
 	<%     } %>
 	<%   } %>
     <li><a href="view_cells2.jsp">View<%= role.canEditCells() ? " / Edit" : "" %> Cells</a>
-	<li><a href="view_finance.jsp">View Dues Report</a>
 </ul>
 <%   if (role.canViewAdminData() || role.canEditTerms() || role.canEditAnnouncements() || role.canEditMailTemplates()) { %>
 <li>System Info / Settings
@@ -212,7 +216,7 @@ here periodically for status updates! <strong>If your application is approved, y
 <%     } %>
 </ul>
 <%   } %>
-<li><a href="adminhelp.jsp">Help (way out of date, but mostly valid)</a>
+<!-- too out of date, needs update: <li><a href="adminhelp.jsp">Help (way out of date, but mostly valid)</a> -->
 </ul>
 <% } %>
 
