@@ -111,6 +111,7 @@ $(document).ready(function () {
 	  <ul style="margin:1ex 0">
 	    <li>In Chrome you can shrink size by changing scale on the print page.
 	    <li>Don't forget landscape mode if the report is wide.
+	    <li>You may have to turn on background graphics in print settings.
 	  </ul>
 	  </div>
       <a href="<%= rview.getURL(request, null) %>" style="align-self:center">Back to Reports Page</a>
