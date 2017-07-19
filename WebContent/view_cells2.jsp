@@ -368,7 +368,7 @@ function selectApply () {
 //}
 
 function moveCell (id, dir) {
-    $.post('ajax/move_cell.jsp', {
+    $.post('${pageContext.request.contextPath}/ajax/move_cell.jsp', {
         c: id,
         d: dir
     }, 'json').then(function (r) {
