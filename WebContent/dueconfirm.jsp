@@ -189,6 +189,6 @@ div.note {
 
 </div>
 
-<dis:footer/>
+<dis:footer faqRedirect="true"/>
 </body>
 </html>

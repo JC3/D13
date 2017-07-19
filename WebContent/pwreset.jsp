@@ -71,6 +71,6 @@ if (expired) {
 </table>
 </form>
 
-<dis:footer/>
+<dis:footer faqRedirect="true"/>
 </body>
 </html>

@@ -114,6 +114,8 @@ CREATE TABLE IF NOT EXISTS `report_templates` (
   `excludeMandatoryCells` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `roles` ADD `editFAQ` TINYINT(1) NOT NULL DEFAULT '0' ;
      -->
     
 <hibernate-mapping default-access="field">
@@ -192,6 +194,7 @@ CREATE TABLE IF NOT EXISTS `report_templates` (
         <property name="editAnnouncements" not-null="true"/>
         <property name="editTerms" not-null="true"/>
         <property name="editMailTemplates" not-null="true"/>
+        <property name="editFAQ" not-null="true"/>
     </class>
 
     <class name="d13.dao.RuntimeOptions$RuntimeOption" table="options">

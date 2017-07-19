@@ -102,7 +102,7 @@ function doForgot () {
 a new account above!</strong>
 </div>
 
-<dis:footer/>
+<dis:footer faqRedirect="true"/>
 
 </body>
 </html>

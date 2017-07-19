@@ -179,6 +179,6 @@ may appear on charge statements.</p>
 
 <div class="nav"><a href="home.jsp">Go Back</a></div>
 
-<dis:footer/>
+<dis:footer faqRedirect="true"/>
 </body>
 </html>

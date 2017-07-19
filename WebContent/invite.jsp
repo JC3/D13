@@ -62,6 +62,6 @@ if (code_html == null || code_html.isEmpty()) {
 </table>
 </form>
 
-<dis:footer/>
+<dis:footer faqRedirect="true"/>
 </body>
 </html>

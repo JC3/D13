@@ -161,6 +161,11 @@ here periodically for status updates! <strong>If your application is approved, y
 </ul>
 <% } %>
 
+<strong>Need Help?</strong><br>
+<ul>
+<li><a href="faq.jsp">Frequently Asked Questions / Contact Info</a>
+</ul>
+
 <% if (role.isSpecial()) { %>
 <strong>For Administrators:</strong><br><ul>
 <!-- <li><a href="admin_users.jsp">Manage Users</a> -->
@@ -209,6 +214,9 @@ here periodically for status updates! <strong>If your application is approved, y
 <%     } %>
 <%     if (role.canEditMailTemplates()) { %>
   <li><a href="editmails.jsp">Edit Email Templates</a>
+<%     } %>
+<%     if (role.canEditFAQ()) { %>
+  <li><a href="editfaq.jsp">Edit FAQ</a>
 <%     } %>
 <%     if (role.canViewAdminData()) { %>
   <li><a href="view_roles.jsp">View Special Users / Privileges / Roles</a>
@@ -278,7 +286,7 @@ here periodically for status updates! <strong>If your application is approved, y
 </table>
 <% } %>
 
-<dis:footer/>
+<dis:footer faqRedirect="true"/>
 
 </body>
 </html>

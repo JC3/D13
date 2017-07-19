@@ -28,6 +28,6 @@ try {
 <% if (invite != null) { %>The invite has been turned down.<% } %> Thanks for responding promptly! Sorry to hear you won't be joining us this year. If you go to the playa, please stop by and visit! Have a good year!
 </div>
 
-<dis:footer/>
+<dis:footer faqRedirect="true"/>
 </body>
 </html>

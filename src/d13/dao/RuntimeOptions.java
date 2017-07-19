@@ -101,6 +101,10 @@ public class RuntimeOptions {
             return !"0".equals(RuntimeOptions.getOption("invite_only", "0"));
         }
         
+        public static boolean isFAQRedirect () {
+            return !"0".equals(RuntimeOptions.getOption("faq.redirect", "0"));
+        }
+        
         /** Returns null or returns value. Never returns empty string. */
         private static String nullOrElse (String option) {
             String value = RuntimeOptions.getOption(option, "");

@@ -48,6 +48,6 @@ if (invite != null) {
 
 </div>
 
-<dis:footer/>
+<dis:footer faqRedirect="true"/>
 </body>
 </html>

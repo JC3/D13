@@ -108,6 +108,6 @@ QuestionForm.writeQuestions(out, qs, defaults, true);
 </div>
 
 <div class="nav"><a href="<%=Util.html(success_target) %>">Go Back</a></div>
-<dis:footer/>
+<dis:footer faqRedirect="true"/>
 </body>
 </html>

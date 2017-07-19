@@ -88,7 +88,7 @@ String message_html = (message == null ? null : Util.html(message));
     <% } %>
 <% } %>
 
-<dis:footer/>
+<dis:footer faqRedirect="true"/>
 
 </body>
 </html>
