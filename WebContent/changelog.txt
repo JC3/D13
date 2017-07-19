@@ -1,3 +1,34 @@
+2017-07-18 jasonc
+
+  1.24
+  
+  - Printable/downloadable reports can be generated from selected columns.
+  - Registration forms display week (alpha/event/disengage) next to dates.
+  - Ability to set autohide/hidden/mandatory on multiple cells at once.
+  - Attendance report (# of people by day, total and per cell; TODO: RV numbers).
+  
+  - Remove link to puddle.
+  - Fix bug where users could not choose "Flying In" option.
+  - Fix bug where hovering over tooltips caused data page to jump around.
+  - Rows in invite table now highlighted when mouse is over them. No more striping.
+  - Rows in dues report tables now highlighted when mouse is over them.
+  - Label for terms acceptance checkbox is now clickable as well.
+  - Fix bug where failed IPN requests were not always logged.
+  - Slightly rearranged links on home page. Dues report now under "Reports".
+  - Maybe fix bug where reg terms edit page didn't work on IE.
+  - Cell view/edit page no longer wreaks havoc on browser history.
+  - All pages have titles now, so browser history should make more sense.
+  - PayPal's recent IPN changes should probably work now.
+  
+  - Various style tweaks, lots of alignment issues fixed.
+  - Many pages converted to HTML5.
+  - Misc. minor code cleanups.
+  - Upgrade tooltipster to v4.2.5.
+  - Use CDN (jsdelivr.net) for tooltipster instead of hosting it here.
+  
+  - Updated users who meant to pick "Flying In" but couldn't.
+  - Retrigger failed IPN requests and check PayPal settings to catch up on dues.
+
 2017-07-04 jasonc
 
   1.23f
