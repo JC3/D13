@@ -122,6 +122,7 @@ function updateView () {
     	addrs = addrs + $(this).text() + ', ';
     });
     $('#addrlist').text(addrs);
+    $('#ninv').text($('.inv:visible').length);
 }
 
 <% } %>
@@ -132,7 +133,7 @@ $(document).ready(function() {
     $('#nrej').text($('.invrej').length);
     $('#nexp').text($('.invexp').length);
     $('#ncan').text($('.invcan').length);
-    $('#ninv').text($('.inv').length);
+    $('#ninv').text($('.inv:visible').length);
     updateView();
 });
 </script>
@@ -181,7 +182,7 @@ $(document).ready(function() {
     <tr><td class="standard"><input type="checkbox" id="vrej" onclick="updateView()"></td><td class="standard">Rejected</td> <td class="standard" id="nrej"></td></tr>
     <tr><td class="standard"><input type="checkbox" id="vexp" onclick="updateView()"></td><td class="standard">Expired</td>  <td class="standard" id="nexp"></td></tr>
     <tr><td class="standard"><input type="checkbox" id="vcan" onclick="updateView()"></td><td class="standard">Cancelled</td><td class="standard" id="ncan"></td></tr>
-    <tr><td class="standard"></td><td class="standard">Total</td><td class="standard" id="ninv"></td></tr>
+    <tr><td class="standard"></td><td class="standard">Total Selected</td><td class="standard" id="ninv"></td></tr>
     <tr><td class="standard" style="width:1ex;padding-top:5px;">Emails:</td><td class="standard" colspan="2"><span style="display:flex"><textarea class="dtextarea" id="addrlist" style="width:100%"></textarea></span></td></tr>
 </table>
 

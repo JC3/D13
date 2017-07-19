@@ -11,6 +11,7 @@
   - faq and edit faq links on home page
   - graphics for faq editor buttons added to /media
   - placeholder styling moved to disorient.css, all placeholders should be orange now
+  - invite list total now only displays total of selected items instead of grand total
 
 2017-07-18 jasonc
 
