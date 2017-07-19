@@ -312,6 +312,7 @@ $(document).ready(function() {
     String targetName = note.getTargetName();
     String text = note.getText();
     String typestr = getTypeString(note.getType()); 
+    String detail = note.getDetail();
     long timestamp = note.getTime().getMillis();
     // hack cause i like to keep "by who" admins only, i think it's cleaner looking, so blank
     // out the column for edit activity where a user edited themself.
@@ -325,7 +326,7 @@ $(document).ready(function() {
   <td class="target <%= note.isCell() ? "target-cell" : "target-user" %>"><%= makeLink(targetName, getTargetUrl(note, this_url)) %>
   <td class="author"><%= makeLink(authorName, getAuthorUrl(note)) %>
   <td class="type"><%= Util.html(typestr) %>
-  <td class="text"><%= Util.html(text) %>
+  <td class="text"<%= detail == null ? "" : ("title=\"" + Util.html(detail) + "\"") %>><%= Util.html(text) %>
 <% } %>
 </table>
 

@@ -4,6 +4,7 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.lang.StringUtils;
 
+import d13.dao.GeneralLogEntry;
 import d13.dao.RuntimeOptions;
 
 public class EditAnnouncements {
@@ -25,8 +26,16 @@ public class EditAnnouncements {
             if (!session.getUser().getRole().canEditAnnouncements())
                 throw new SecurityException("Permission denied.");
 
+            String prevmessage = StringUtils.trimToNull(RuntimeOptions.Global.getLoggedInAnnouncement());            
             String message = StringUtils.trimToNull(context.getRequest().getParameter("message"));
             RuntimeOptions.Global.setLoggedInAnnouncement(message);
+            
+            if (!StringUtils.equals(prevmessage, message)) {
+                if (message != null)
+                    session.getUser().addGeneralLogEntry("Set site announcement.", message, GeneralLogEntry.TYPE_ANNOUNCEMENT);
+                else
+                    session.getUser().addGeneralLogEntry("Removed site announcement.", GeneralLogEntry.TYPE_ANNOUNCEMENT);
+            }
             
         } catch (Throwable t) {
             

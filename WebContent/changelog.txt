@@ -19,6 +19,8 @@
   - Cell view/edit page no longer wreaks havoc on browser history.
   - All pages have titles now, so browser history should make more sense.
   - PayPal's recent IPN changes should probably work now.
+  - Changes to site announcements are now logged.
+  - Activity log now has ability to display detail tooltips on certain entries.
   
   - Various style tweaks, lots of alignment issues fixed.
   - Many pages converted to HTML5.
