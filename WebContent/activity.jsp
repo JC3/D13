@@ -1,4 +1,3 @@
-<%@page import="java.net.URLEncoder"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ page import="d13.ThisYear" %>
@@ -7,7 +6,8 @@
 <%@ page import="d13.util.Util" %>
 <%@ page import="java.util.*" %>
 <%@ page import="org.joda.time.*" %>
-<%@taglib tagdir="/WEB-INF/tags" prefix="dis"%>
+<%@ page import="java.net.URLEncoder"%>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="dis"%>
 <%!
 static String getTypeString (Note.Type t) {
     switch (t) {
@@ -110,7 +110,7 @@ for (Note n : notes) {
 <!DOCTYPE html>
 <html>
 <head>
-<dis:common require="jquery"/>
+<dis:common require="jquery" title="Activity Log"/>
 <style type="text/css">
 table.notes {
     /*border-collapse: collapse;*/
@@ -312,6 +312,7 @@ $(document).ready(function() {
     String targetName = note.getTargetName();
     String text = note.getText();
     String typestr = getTypeString(note.getType()); 
+    String detail = note.getDetail();
     long timestamp = note.getTime().getMillis();
     // hack cause i like to keep "by who" admins only, i think it's cleaner looking, so blank
     // out the column for edit activity where a user edited themself.
@@ -325,7 +326,7 @@ $(document).ready(function() {
   <td class="target <%= note.isCell() ? "target-cell" : "target-user" %>"><%= makeLink(targetName, getTargetUrl(note, this_url)) %>
   <td class="author"><%= makeLink(authorName, getAuthorUrl(note)) %>
   <td class="type"><%= Util.html(typestr) %>
-  <td class="text"><%= Util.html(text) %>
+  <td class="text"<%= detail == null ? "" : ("title=\"" + Util.html(detail) + "\"") %>><%= Util.html(text) %>
 <% } %>
 </table>
 

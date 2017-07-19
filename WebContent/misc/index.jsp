@@ -18,11 +18,11 @@ boolean canCheck = u.getRole().canViewUsers();
 if (!canExport && !canCheck)
     return;
 %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Disorient Registration Tools</title>
+<title>Disorient - Registration Tools</title>
 <style type="text/css">
 h1 { 
     font-size: medium;

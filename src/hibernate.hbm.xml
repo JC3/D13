@@ -101,6 +101,19 @@ ALTER TABLE `roles` ADD `createCells` TINYINT NOT NULL DEFAULT '0' AFTER `editCe
 ALTER TABLE `cell_activity_log` CHANGE `toCell` `toCell` BIGINT(20) NULL DEFAULT NULL;
 
 ALTER TABLE `users` ADD `phoneRegion` VARCHAR(4) NULL DEFAULT NULL AFTER `phone`, ADD `phoneFromUs` VARCHAR(24) NULL DEFAULT NULL AFTER `phoneRegion`;
+
+CREATE TABLE IF NOT EXISTS `report_templates` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created` bigint(20) DEFAULT NULL,
+  `createdBy` bigint(20) DEFAULT NULL COMMENT 'user',
+  `accessed` bigint(20) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `fields` text NOT NULL,
+  `cells` int(11) NOT NULL,
+  `filter` int(11) NOT NULL,
+  `excludeMandatoryCells` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
      -->
     
 <hibernate-mapping default-access="field">
@@ -390,6 +403,18 @@ ALTER TABLE `users` ADD `phoneRegion` VARCHAR(4) NULL DEFAULT NULL AFTER `phone`
             <index column="`index`"/>
             <one-to-many class="d13.dao.CellActivityLogEntry"/>
         </list>
+    </class>
+    
+    <class name="d13.dao.ReportTemplate" table="report_templates">
+        <id name="id"><generator class="native"/></id>
+        <property name="created" type="d13.dao.types.DateTimeType"/>
+        <many-to-one name="createdBy" class="d13.dao.User"/>
+        <property name="accessed" type="d13.dao.types.DateTimeType"/>
+        <property name="title" type="string" length="255"/>
+        <property name="fields" not-null="true"/>
+        <property name="cells" not-null="true"/>
+        <property name="filter" not-null="true"/>
+        <property name="excludeMandatoryCells" not-null="true"/>
     </class>
 
 </hibernate-mapping>

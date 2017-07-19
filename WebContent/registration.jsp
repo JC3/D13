@@ -57,7 +57,10 @@ String error_html = (error == null ? null : Util.html(error));
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<dis:common/>
+<dis:common title="Registration"/>
+<style type="text/css">
+#arrivalDate select, #departureDate select { width: 100% !important; }
+</style>
 <script language="JavaScript" type="text/javascript">
 function setVisible (id, visible) {
     document.getElementById(id).style.display = (visible ? 'block' : 'none');

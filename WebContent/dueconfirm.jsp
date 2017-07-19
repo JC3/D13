@@ -96,10 +96,10 @@ String invoice_total = String.format("%.2f", (float)invoice.getInvoiceAmount() /
 String invoice_id = Long.toString(invoice.getInvoiceId());
 
 %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-<dis:common/>
+<dis:common title="Dues"/>
 <style type="text/css">
 table.invoice {
     border: 1px solid #303030;
@@ -148,7 +148,7 @@ div.note {
 
 <div class="form">
 
-<table width="100%" class="invoice">
+<table style="width:100%" class="invoice">
 <tr>
   <th class="item">Item 
   <th class="cost">Cost
@@ -167,7 +167,7 @@ div.note {
 
 <p>To go back and edit your payment items, please use the back button on your browser.</p>
 
-<p>To pay, please click here:
+<p>To pay, please click here:</p>
 <div style="text-align:center;">
 <form name="_xclick" action="<%=Util.html(paypal_site)%>" method="post" target="_top">
 <input type="hidden" name="business" value="<%=Util.html(paypal_email)%>">
@@ -182,11 +182,10 @@ div.note {
 <input type="hidden" name="return" value="<%=Util.html(paypal_return)%>">
 <!--<input type="hidden" name="rm" value="2">-->
 <input type="hidden" name="cancel_return" value="<%=Util.html(paypal_cancel)%>">
-<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online!">
 <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
 </form>
 </div>
-</p>
 
 </div>
 

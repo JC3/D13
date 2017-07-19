@@ -13,9 +13,11 @@ public class ThisYear {
 
     public static final int CAMP_YEAR = 2017;
     public static final String CAMP_NAME = "DISOR1E7T";
-    public static final String SYSTEM_VERSION = "v1.23f";
+    public static final String SYSTEM_VERSION = "v1.24";
     public static final String CSS_VERSION;
     public static final DateTime PLAYA_MONDAY = new DateTime(2017, 8, 28, 12, 0);
+    public static final DateTime FESTIVAL_START = PlayaWeek.FESTIVAL.getDate(-1); // sunday
+    public static final DateTime FESTIVAL_END = PlayaWeek.DISENGAGE.getDate(0);   // monday
     
     static {
         String css_version = "";
@@ -79,6 +81,40 @@ Tier 3 $1550 RV Fee: Wednesday, August 16 at 11:59 PM (Eastern Time)
 
         public DateTime getDate (int daysFromMonday) {
             return PLAYA_MONDAY.plusWeeks(offset).plusDays(daysFromMonday);
+        }
+        
+        public String getPhase (int daysFromMonday) {
+            return getPhase(getDate(daysFromMonday));
+        }
+        
+        public static String getPhase (DateTime when) {
+            if (when == null)
+                return null;
+            else if (when.isBefore(FESTIVAL_START))
+                return "BUILD WEEK (Alpha)";
+            else if (when.equals(FESTIVAL_START))
+                return "Festival Opens";
+            else if (when.equals(FESTIVAL_END))
+                return "Festival Ends";
+            else if (when.isAfter(FESTIVAL_END))
+                return "TEAR-DOWN (Disengage)";
+            else
+                return "Festival Week";
+        }
+        
+        public static String getPhaseShortName (DateTime when) {
+            if (when == null)
+                return null;
+            else if (when.isBefore(FESTIVAL_START))
+                return "alpha";
+            else if (when.equals(FESTIVAL_START))
+                return "festival-open";
+            else if (when.equals(FESTIVAL_END))
+                return "festival-end";
+            else if (when.isAfter(FESTIVAL_END))
+                return "disengage";
+            else
+                return "festival";
         }
         
     }

@@ -38,12 +38,27 @@ hr {
     border-top: 1px solid #603000;
 }
 
+table {
+	border-spacing: 0;
+}
+
 table.header {
     height: 12ex;
 }
 
 table.header td {
 	white-space: nowrap;
+}
+
+/* table.zerotable = <table border=0 cellspacing=0 cellpadding=0> */
+table.zerotable {
+	border: 0;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+table.zerotable td {
+	padding: 0;
 }
 
 tr.section td {
@@ -94,6 +109,7 @@ div.qname {
 	margin-right: 1ex;
     font-weight: bold;
     flex-basis: 19ex;
+    flex-shrink: 0;
 }
 
 div.qinput {

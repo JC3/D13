@@ -46,7 +46,7 @@ public class RawIPNLogEntry {
         if (data != null) {
             RawIPNLogEntry entry = new RawIPNLogEntry(data, reply);
             try {
-                HibernateUtil.getCurrentSession().persist(entry);
+                HibernateUtil.getCurrentSession().save(entry);
             } catch (Throwable t) {
                 t.printStackTrace();
             }

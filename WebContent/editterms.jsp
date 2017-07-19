@@ -39,7 +39,7 @@ terms_text = terms_text == null ? RuntimeOptions.Global.getTermsText() : terms_t
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<dis:common require="jquery"/>
+<dis:common require="jquery" title="Edit Terms"/>
 <style type="text/css">
 .edit-key {
     white-space: nowrap;
@@ -49,7 +49,7 @@ terms_text = terms_text == null ? RuntimeOptions.Global.getTermsText() : terms_t
 <script type="text/javascript">
 $(document).ready(function () {
 	if (<%=initial_modified%>) {
-        window.onbeforeunload = () => true;
+        window.onbeforeunload = function () { return true; }
 	}
 	function enableSubmit (enable) {
 		let submit = $('input[type="submit"]');
@@ -61,7 +61,7 @@ $(document).ready(function () {
 	enableSubmit(false);
 	$('[name="terms_text"], [name="terms_title"]').keypress(function () {
 		enableSubmit(false);
-		window.onbeforeunload = () => true;
+		window.onbeforeunload = function () { return true; }
 	});
     $('#preview').click(function () {
     	$.post('<%=root%>/ajax/render_markdown.jsp', { 
@@ -72,7 +72,7 @@ $(document).ready(function () {
     		    .append($('<h1 class="title"/>').text($('[name="terms_title"]').val()))
     		    .append($('<div/>').html(r));
     	}).fail(function (e) {
-    		$('#preview_html').text(`Error rendering markdown: ${JSON.stringify(e)}`);
+            $('#preview_html').text('Error rendering markdown: ' + JSON.stringify(e));
     	}).always(function () {
     		enableSubmit(true);
     	});

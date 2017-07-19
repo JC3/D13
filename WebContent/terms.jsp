@@ -51,7 +51,7 @@ String message_html = (message == null ? null : Util.html(message));
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<dis:common/>
+<dis:common title="Rules"/>
 </head>
 <body>
 <dis:header/>
@@ -76,7 +76,7 @@ String message_html = (message == null ? null : Util.html(message));
 <div style="margin-top:2ex;text-align:center;" class="content">
 <br>
 <input type="hidden" name="continue" value="1">
-<input type="checkbox" name="accept" value="1">I have read and understood the rules above!<br><br>
+<label><input type="checkbox" name="accept" value="1">I have read and understood the rules above!</label><br><br>
 <input class="dbutton" type="submit" value="Continue">
 </div>
 </form>

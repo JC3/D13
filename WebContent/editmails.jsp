@@ -62,7 +62,7 @@ String invite_fields = makeFields(InviteEmail.FIELD_INFO, "invite");
 <!DOCTYPE html>
 <html>
 <head>
-<dis:common require="jquery"/>
+<dis:common require="jquery" title="Edit Email Templates"/>
 <style type="text/css">
 .m-section {
     padding: 1ex;

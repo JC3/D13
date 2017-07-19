@@ -87,6 +87,23 @@ public class Util {
         }
     }
     
+    public static Boolean parseBooleanDefault (String str, Boolean def) {
+        if (str == null)
+            return def;
+        //try {
+            str = str.trim();
+            if ("true".equalsIgnoreCase(str))
+                return true;
+            else if ("false".equalsIgnoreCase(str))
+                return false;
+            else
+                return def;
+        //    return Boolean.parseBoolean(str); // not strict enough
+        //} catch (Throwable t) {
+        //    return def;
+        //}
+    }
+    
     public static Long getParameterLong (ServletRequest request, String param) {
         String s = request.getParameter(param);
         Long v = null;
@@ -99,11 +116,29 @@ public class Util {
         return v;
     }
     
+    public static String[] removeEmptyStrings (String[] s) {
+        ArrayList<String> a = new ArrayList<String>();
+        for (String r : s) {
+            r = r.trim();
+            if (!r.isEmpty())
+                a.add(r);
+        }
+        return a.toArray(new String[a.size()]);
+    }
+    
     public static String html (String value) {
+        return html(value, false);
+    }
+
+    public static String html (String value, boolean linebreaks) {
         if (value == null)
             return "";
-        else
-            return StringEscapeUtils.escapeHtml(value);
+        else {
+            String str = StringEscapeUtils.escapeHtml(value);
+            if (linebreaks)
+                str = str.trim().replaceAll("\n", "<br/>");
+            return str;
+        }
     }
 
     public static boolean unbox (Boolean b) {

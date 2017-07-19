@@ -4,9 +4,12 @@ import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
@@ -29,10 +32,12 @@ import d13.util.Util;
 public class DataViewer {
     
     private abstract static class ViewDescriptor implements Comparable<ViewDescriptor> {
+        String id;
         String field;
         int position;
         boolean longtext;
         boolean email;
+        String category;
         public abstract String getString (Object o);
         public abstract Object getObject (Object o);
         @Override public int compareTo (ViewDescriptor other) {
@@ -106,18 +111,26 @@ public class DataViewer {
         public List<String> hrefs;
         private List<Object> sortvalues;
     }
+    
+    public static class Column {
+        public String sid;
+        public String name;
+        public String longClass;
+        public String shortClass;
+        public String category;
+    }
         
     private boolean failed;
-    private static final List<ViewDescriptor> userProps = getDataViewProps(User.class);
-    private static final List<ViewDescriptor> rformProps = getDataViewProps(RegistrationForm.class);
-    private static final List<ViewDescriptor> aformProps = getDataViewProps(ApprovalSurvey.class);
+    private static final List<ViewDescriptor> userPropsFull = getDataViewProps(User.class, "Profile", null);
+    private static final List<ViewDescriptor> rformPropsFull = getDataViewProps(RegistrationForm.class, "Registration", null);
+    private static final List<ViewDescriptor> aformPropsFull = getDataViewProps(ApprovalSurvey.class, "Survey", null);
+    private final List<ViewDescriptor> userProps;
+    private final List<ViewDescriptor> rformProps;
+    private final List<ViewDescriptor> aformProps;
     private final List<ViewDescriptor> cellProps;
-    private final List<String> columns; // must be same order as getDataViewRow
-    private final List<String> colclasses;
+    private final List<Column> columns; // must be same order as getDataViewRow
     private final List<Integer> wideIndices = new ArrayList<Integer>();
     private final List<Integer> cellIndices = new ArrayList<Integer>();
-    private String colclassWide = "wide";
-    private String colclassStandard = "standard";
     private final List<Row> rows = new ArrayList<Row>();
     private List<Note> notes;
     private boolean downloadCSV;
@@ -152,10 +165,12 @@ public class DataViewer {
                 addCellProps(props, sub);
             else {
                 CellViewDescriptor vd = new CellViewDescriptor();
+                vd.id = String.format("cell-%d", sub.getCellId());
                 vd.field = sub.getFullName();
                 vd.position = props.size();
                 vd.longtext = false;
                 vd.cell = sub;
+                vd.category = "Cells";
                 props.add(vd);
             }
         }
@@ -171,14 +186,17 @@ public class DataViewer {
         return viewed;
     }
     
-    private static List<ViewDescriptor> getDataViewProps (Class<?> c) {
+    private static List<ViewDescriptor> getDataViewProps (Class<?> c, String category, Collection<String> onlyFields) {
     
         PropertyDescriptor[] all = PropertyUtils.getPropertyDescriptors(c);
         List<ViewDescriptor> viewed = new ArrayList<ViewDescriptor>();
         BeanViewDescriptor view;
         
         for (PropertyDescriptor prop:all) {
+            if (onlyFields != null && !onlyFields.contains(prop.getName()))
+                continue;
             view = new BeanViewDescriptor();
+            view.id = prop.getName();
             view.field = prop.getName();
             view.read = prop.getReadMethod();
             if (view.read == null) continue;
@@ -192,6 +210,7 @@ public class DataViewer {
             view.position = dv.i();
             view.longtext = dv.longtext();
             view.email = dv.email();
+            view.category = category;
             if (!dv.n().isEmpty()) view.field = dv.n();
             viewed.add(view);
         }
@@ -201,33 +220,31 @@ public class DataViewer {
         
     }
     
+    public static Column newColumn (boolean longtext) {
+        Column c = new Column();
+        c.shortClass = longtext ? "w" : null; // todo just store longtext flag move classes to views
+        c.longClass = longtext ? "wide" : "standard";
+        return c;
+    }
+    
     @SafeVarargs
-    private static List<String> getDataViewColumns (List<ViewDescriptor> ... lists) {
+    private static List<Column> getDataViewColumns (List<ViewDescriptor> ... lists) {
         
-        List<String> columns = new ArrayList<String>();
+        List<Column> columns = new ArrayList<Column>();
        
         for (List<ViewDescriptor> vds:lists)
             for (ViewDescriptor vd:vds) {
-                columns.add(vd.field);               
+                Column c = newColumn(vd.longtext);
+                c.name = vd.field;
+                c.sid = vd.id;
+                c.category = vd.category;
+                columns.add(c);               
             }
         
         return columns;
         
     }
     
-    @SafeVarargs
-    private final List<String> getDataViewColumnClasses (List<ViewDescriptor> ... lists) {
-        
-        List<String> columns = new ArrayList<String>();
-       
-        for (List<ViewDescriptor> vds:lists)
-            for (ViewDescriptor vd:vds)
-                columns.add(vd.longtext ? colclassWide : colclassStandard);
-        
-        return columns;
-        
-    }
-
     @SafeVarargs
     private final void setupDataViewColumnIndices (List<ViewDescriptor> ... lists) {
         
@@ -385,44 +402,76 @@ public class DataViewer {
     }
     
     public DataViewer (PageContext context, SessionData session) {
-        this(context, session, 0);
+        this(context, session, 0, null, null);
+    }
+    
+    public DataViewer (PageContext context, SessionData session, int flags) {
+        this(context, session, flags, null, null);
     }
     
     public static final int FLAG_SINGLE_USER = 1<<0;
     public static final int FLAG_NO_CELLS = 1<<1;
-    public static final int FLAG_SHORT_CLASSES = 1<<2;
+    public static final int FLAG_NO_ROWS = 1<<2;
     
-    public DataViewer (PageContext context, SessionData session, int flags) {
-        
+    public static class Parameters {
+        Long u;
+        int sortby;
+        int qf;
+        String search;
+        boolean download;
+    }
+    
+    public DataViewer (PageContext context, SessionData session, int flags, Collection<String> onlyFields, Parameters params) 
+        throws IllegalArgumentException
+    {
+
         User current = session.getUser();
         if (!current.getRole().canViewUsers()) {
             failed = true;
-            columns = null; // kludge
-            colclasses = null;
-            cellProps = null; // same
+            columns = null; // kludges:
+            userProps = null;
+            aformProps = null;
+            rformProps = null;
+            cellProps = null; // end kludges
             return; // permission denied
         }
         
-        if ((flags & FLAG_SHORT_CLASSES) != 0) {
-            colclassStandard = null;
-            colclassWide = "w";
+        if (params == null) {
+            if (context == null)
+                throw new IllegalArgumentException("Either context or params must be non-null.");
+            params = new Parameters();
+            params.u = Util.getParameterLong(context.getRequest(), "u");
+            params.sortby = intParam(context.getRequest().getParameter("sortby"));
+            params.qf = intParam(context.getRequest().getParameter("qf"));
+            params.search = context.getRequest().getParameter("search");
+            params.download = (context.getRequest().getParameter("download") != null);
         }
-
+        
+        if (onlyFields == null) {
+            // use the static cached ones
+            userProps = userPropsFull;
+            rformProps = rformPropsFull;
+            aformProps = aformPropsFull;
+        } else {
+            userProps = getDataViewProps(User.class, "Profile", onlyFields);
+            rformProps = getDataViewProps(RegistrationForm.class, "Registration", onlyFields);
+            aformProps = getDataViewProps(ApprovalSurvey.class, "Survey", onlyFields);
+            flags |= FLAG_NO_CELLS;
+        }
+        
         if ((flags & FLAG_NO_CELLS) == 0) {
             cellProps = getCellProps();
             columns = Collections.unmodifiableList(getDataViewColumns(userProps, rformProps, cellProps, aformProps));
-            colclasses = Collections.unmodifiableList(getDataViewColumnClasses(userProps, rformProps, cellProps, aformProps));
             setupDataViewColumnIndices(userProps, rformProps, cellProps, aformProps);
         } else {
             cellProps = null;
             columns = Collections.unmodifiableList(getDataViewColumns(userProps, rformProps, aformProps));
-            colclasses = Collections.unmodifiableList(getDataViewColumnClasses(userProps, rformProps, aformProps));
             setupDataViewColumnIndices(userProps, rformProps, aformProps);
         }
                 
         if ((flags & FLAG_SINGLE_USER) != 0) {
             
-            Long id = Util.getParameterLong(context.getRequest(), "u");
+            Long id = params.u;
             if (id == null) {
                 failed = true;
                 return; // missing required parameter
@@ -463,42 +512,55 @@ public class DataViewer {
             
         } else {
             
-            downloadCSV = (context.getRequest().getParameter("download") != null);
+            downloadCSV = params.download;
             
-            int sortby = intParam(context.getRequest().getParameter("sortby"));
-            int qf = intParam(context.getRequest().getParameter("qf"));
-            String search = context.getRequest().getParameter("search");
-            search = (search == null ? "" : search.trim());
-            
-            try {
-                List<User> users;
-                if (search != "")
-                    users = UserSearchFilter.search(search);
-                else
-                    users = UserSearchFilter.quickFilter(qf);
-                for (User user:users) {
-                    if (user.isViewableBy2(current))
-                        rows.add(getDataViewRow(user, current, (flags & FLAG_NO_CELLS) != 0));
+            if ((flags & FLAG_NO_ROWS) == 0) {
+                
+                int sortby = params.sortby;
+                int qf = params.qf;
+                String search = params.search;
+                search = (search == null ? "" : search.trim());
+                
+                try {
+                    List<User> users;
+                    if (search != "")
+                        users = UserSearchFilter.search(search);
+                    else
+                        users = UserSearchFilter.quickFilter(qf);
+                    for (User user:users) {
+                        if (user.isViewableBy2(current))
+                            rows.add(getDataViewRow(user, current, (flags & FLAG_NO_CELLS) != 0));
+                    }
+                } catch (Exception x) {
+                    System.err.println("ERROR while getting user list: " + x.getMessage());
+                    x.printStackTrace();
+                    failed = true;
+                    return;
                 }
-            } catch (Exception x) {
-                System.err.println("ERROR while getting user list: " + x.getMessage());
-                x.printStackTrace();
-                failed = true;
-                return;
+                
+                Collections.sort(rows, new ColumnValueComparator(sortby));
+                
             }
-            
-            Collections.sort(rows, new ColumnValueComparator(sortby));
             
         }
         
     }
    
-    public List<String> getColumns () {
+    public List<Column> getColumns () {
         return columns;
     }
     
-    public List<String> getColumnClasses () {
-        return colclasses;
+    public Map<String,List<Column>> getColumnsByCategory () {
+        Map<String,List<Column>> cc = new LinkedHashMap<String,List<Column>>();
+        for (Column c : columns) {
+            List<Column> cs = cc.get(c.category);
+            if (cs == null) {
+                cs = new ArrayList<Column>();
+                cc.put(c.category, cs);
+            }
+            cs.add(c);
+        }
+        return cc;
     }
     
     public List<Integer> getWideColumnIndices () {
@@ -529,12 +591,12 @@ public class DataViewer {
         
         boolean first = true;
         
-        for (String s:getColumns()) {
+        for (Column s:getColumns()) {
             if (first)
                 first = false;
             else
                 out.print(",");
-            out.print(StringEscapeUtils.escapeCsv(s));
+            out.print(StringEscapeUtils.escapeCsv(s.name));
         }
         out.println();
        

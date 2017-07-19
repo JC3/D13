@@ -35,7 +35,7 @@ FinanceReport.Totals tot = fr.getTotals();
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<dis:common/>
+<dis:common title="Finance Report"/>
 <style type="text/css">
 .summary {
     background: #101010;
@@ -81,6 +81,10 @@ td.s span {
 } 
 #transactions, #dues {
     font-size: 90%;
+}
+#transactions tr:hover td, #dues tr:hover td {
+    background: #302020;
+    color: white;
 }
 h1 {
     font-size: larger;

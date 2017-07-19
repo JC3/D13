@@ -19,7 +19,7 @@ public class RegistrationQuestions {
     static void addDateChoice (Question q, ThisYear.PlayaWeek week, int daysSinceMonday) {
         
         DateTime when = week.getDate(daysSinceMonday);
-        String ui = when.toString("EEEE M/d");
+        String ui = when.toString("EEEE M/d") + " - " + ThisYear.PlayaWeek.getPhase(when);
         String db = when.toString("M/d/YYYY");
         q.addChoice(ui, db);
 

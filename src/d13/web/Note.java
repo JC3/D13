@@ -30,6 +30,7 @@ public abstract class Note implements Comparable<Note> {
     public User getTargetUser () { return null; }
     public Cell getTargetCell () { return null; }
     public abstract String getText ();
+    public String getDetail () { return null; }
     public boolean isCell () { return false; }
     public final Type getType () { return type; }
     
@@ -245,6 +246,7 @@ public abstract class Note implements Comparable<Note> {
         @Override public DateTime getTime () { return e.getTime(); }
         @Override public User getAuthor () { return e.getByWho(); }
         @Override public String getText () { return e.getSummary(); }
+        @Override public String getDetail () { return e.getDetail(); }
         private static Type logtonote (GeneralLogEntry e) {
             return Type.ADMIN_EDIT;
         }

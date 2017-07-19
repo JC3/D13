@@ -25,7 +25,7 @@ public class EditCellDetails {
     private String successMessage; // only set on delete right now since that's all that's interesting
     private String failTarget;
     private String successTarget;
-
+    
     public EditCellDetails (PageContext context, SessionData session) {
         
         boolean is_new = false;
@@ -239,5 +239,81 @@ public class EditCellDetails {
         return failed;
     }
     
+
+    public static class Multiple {
+
+        private final List<String> warnings = new ArrayList<String>();
+        private final List<ResultState> results = new ArrayList<ResultState>();
+        
+        public static class ResultState {
+            public long cell;
+            public boolean autohide;
+            public boolean mandatory;
+            public boolean hidden;
+            ResultState (long cell) { this.cell = cell; }
+        }
+        
+        public Multiple (PageContext context, SessionData session) {
+            
+            if (!session.isLoggedIn() || !session.getUser().getRole().canEditCells())
+                throw new SecurityException("Permission denied.");
+            
+            Boolean autohide = Util.parseBooleanDefault(context.getRequest().getParameter("autohide"), null);
+            Boolean mandatory = Util.parseBooleanDefault(context.getRequest().getParameter("mandatory"), null);
+            Boolean hidden = Util.parseBooleanDefault(context.getRequest().getParameter("hidden"), null);
+            String[] cell_idstrs = context.getRequest().getParameterValues("cells[]");
+         
+            if (cell_idstrs == null || cell_idstrs.length == 0)
+                throw new IllegalArgumentException("At least one cell must be specified.");
+            
+            for (String cell_idstr : cell_idstrs) {
+                
+                // get cell
+                Cell cell;
+                try {
+                    cell = Cell.findById(Long.parseLong(cell_idstr));
+                    if (cell.isCategory())
+                        throw new Exception("Cannot apply changes to a category.");
+                } catch (Exception x) {
+                    warnings.add(cell_idstr + ": " + x.getMessage());
+                    continue;
+                }
+             
+                // for activity log
+                int flags = 0;
+                boolean oldAutohide = cell.isHideWhenFull();
+                boolean oldMandatory = cell.isMandatory();
+                boolean oldHidden = cell.isHidden();
+              
+                // apply changes
+                if (autohide != null)
+                    cell.setHideWhenFull(autohide);
+                if (mandatory != null)
+                    cell.setMandatory(mandatory);
+                if (hidden != null)
+                    cell.setHidden(hidden);
+                
+                // store results
+                ResultState result = new ResultState(cell.getCellId());
+                result.autohide = cell.isHideWhenFull();
+                result.mandatory = cell.isMandatory();
+                result.hidden = cell.isHidden();
+                results.add(result);
+                
+                // for activity log
+                if (result.autohide != oldAutohide) flags |= Cell.CHANGED_HIDEWHENFULL;
+                if (result.mandatory != oldMandatory) flags |= Cell.CHANGED_MANDATORY;
+                if (result.hidden != oldHidden) flags |= Cell.CHANGED_HIDDEN;        
+                if (flags != 0)
+                    cell.addEditedActivityLogEntry(session.getUser(), flags);
+                
+            }
+            
+        }
+        
+        public List<String> getWarnings () { return warnings; }
+        public List<ResultState> getResults () { return results; }
+        
+    }
 
 }

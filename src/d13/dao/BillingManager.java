@@ -321,8 +321,16 @@ public class BillingManager {
    
     private static void handlePaymentOK (HttpServletRequest request) throws Exception {
        
-        Invoice invoice = Invoice.findById(Long.parseLong(request.getParameter("item_number")));
         String txn_id = request.getParameter("txn_id");
+
+        // Around July 2017 PayPal just randomly started using item_number1 sometimes instead with no warning.
+        String invoice_id = request.getParameter("item_number");
+        if (invoice_id == null || invoice_id.trim().isEmpty()) {
+            invoice_id = request.getParameter("item_number1");
+            System.out.println("BILLING: " + txn_id + " " + invoice_id + " used item_number1 instead.");
+        }
+        
+        Invoice invoice = Invoice.findById(Long.parseLong(invoice_id));
         
         // TODO: notify administrator about any of the errors below
         
@@ -388,6 +396,7 @@ public class BillingManager {
     private static void handlePaymentFail (HttpServletRequest request, String response) throws Exception {
         
         // TODO: implement this. it's what happens if paypal response fails. should notify administrators.
+        System.err.println("BILLING: PAYMENT FAIL: " + response);
         
     }
     
@@ -422,6 +431,8 @@ public class BillingManager {
                 handlePaymentFail(request, rc);
         } catch (Exception t) {
             RawIPNLogEntry.addEntry(logparams.toString(), t.getMessage());
+            System.err.println("BILLING: EXCEPTION:");
+            t.printStackTrace(System.err);
             throw t;
         }
          

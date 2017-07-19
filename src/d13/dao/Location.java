@@ -50,6 +50,7 @@ public enum Location {
         case 7: return SEATTLE;
         case 9: return AUSTIN;
         case 10: return RENO;
+        case 11: return DIRECT;
         default: return null;
         }
     }
