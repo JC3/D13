@@ -6,7 +6,8 @@
 <%@ tag import="d13.dao.*" %>
 <%@ tag import="d13.web.*" %>
 <%
-boolean frGlobal = RuntimeOptions.Global.isFAQRedirect();
+boolean frEnabled = RuntimeOptions.Global.isFAQEnabled();
+boolean frGlobal = frEnabled && RuntimeOptions.Global.isFAQRedirect();
 boolean frPage = frGlobal && "true".equals(faqRedirect);
 boolean isFAQ = request.getRequestURI().endsWith("/faq.jsp");
 // note: we do the footer email link manually below instead of letting the frPage script
@@ -19,9 +20,11 @@ boolean isFAQ = request.getRequestURI().endsWith("/faq.jsp");
 <div style="border:0;margin:1ex;padding:0">
 <hr>
 <div style="float:left;border:0;margin:0;padding:0;width:40ex;" class="contact">
-  <% if (isFAQ) { %>FAQ<% } else { %><a href="${pageContext.request.contextPath}/faq.jsp">FAQ</a><% } %> 
-| <a href="http://wiki.disorient.info" target="_blank">Wiki</a> 
-| <a href="https://www.facebook.com/groups/pornj" target="_blank">Facebook</a> 
+  <% if (frEnabled) { %>
+  <% if (isFAQ) { %>FAQ<% } else { %><a href="${pageContext.request.contextPath}/faq.jsp">FAQ</a><% } %> | 
+  <% } %>  
+  <a href="http://wiki.disorient.info" target="_blank">Wiki</a> |  
+  <a href="https://www.facebook.com/groups/pornj" target="_blank">Facebook</a> 
 </div>
 <div style="float:right;border:0;margin:0;padding:0;text-align:right;width:40ex;<%= "true".equals(nomail) ? "visibility:hidden;" : "" %>" class="contact">
 <% if (frGlobal) { %>

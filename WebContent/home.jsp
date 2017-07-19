@@ -67,6 +67,8 @@ if (sess.getAndClearAttributeBoolean(SessionData.SA_HOME_CHECK_ACTIVITY) && role
     }
 }
 
+boolean faqEnabled = RuntimeOptions.Global.isFAQEnabled();
+
 WorkStatistics stats = new WorkStatistics(user);
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -160,12 +162,12 @@ here periodically for status updates! <strong>If your application is approved, y
 <% } %>
 </ul>
 <% } %>
-
+<% if (faqEnabled) { %>
 <strong>Need Help?</strong><br>
 <ul>
 <li><a href="faq.jsp">Frequently Asked Questions / Contact Info</a>
 </ul>
-
+<% } %>
 <% if (role.isSpecial()) { %>
 <strong>For Administrators:</strong><br><ul>
 <!-- <li><a href="admin_users.jsp">Manage Users</a> -->
@@ -215,7 +217,7 @@ here periodically for status updates! <strong>If your application is approved, y
 <%     if (role.canEditMailTemplates()) { %>
   <li><a href="editmails.jsp">Edit Email Templates</a>
 <%     } %>
-<%     if (role.canEditFAQ()) { %>
+<%     if (faqEnabled && role.canEditFAQ()) { %>
   <li><a href="editfaq.jsp">Edit FAQ</a>
 <%     } %>
 <%     if (role.canViewAdminData()) { %>

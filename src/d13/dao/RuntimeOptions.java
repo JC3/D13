@@ -101,6 +101,10 @@ public class RuntimeOptions {
             return !"0".equals(RuntimeOptions.getOption("invite_only", "0"));
         }
         
+        public static boolean isFAQEnabled () {
+            return !"0".equals(RuntimeOptions.getOption("faq.enabled", "0"));
+        }
+        
         public static boolean isFAQRedirect () {
             return !"0".equals(RuntimeOptions.getOption("faq.redirect", "0"));
         }
