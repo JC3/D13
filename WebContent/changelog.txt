@@ -1,6 +1,6 @@
 2017-07-18 jasonc
 
-  1.24
+  1.24 (https://github.com/JC3/D13/pull/10/files)
   
   - Printable/downloadable reports can be generated from selected columns.
   - Registration forms display week (alpha/event/disengage) next to dates.
@@ -15,7 +15,9 @@
   - Label for terms acceptance checkbox is now clickable as well.
   - Fix bug where failed IPN requests were not always logged.
   - Slightly rearranged links on home page. Dues report now under "Reports".
+  - Removed outdated "Admin Help" item from home page. (TODO: update it)
   - Maybe fix bug where reg terms edit page didn't work on IE.
+  - Maybe fix bug where admin cell view page didn't work on IE.
   - Cell view/edit page no longer wreaks havoc on browser history.
   - All pages have titles now, so browser history should make more sense.
   - PayPal's recent IPN changes should probably work now.
