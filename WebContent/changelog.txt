@@ -17,6 +17,7 @@
   - Slightly rearranged links on home page. Dues report now under "Reports".
   - Removed outdated "Admin Help" item from home page. (TODO: update it)
   - Maybe fix bug where reg terms edit page didn't work on IE.
+  - Maybe fix bug where admin cell view page didn't work on IE.
   - Cell view/edit page no longer wreaks havoc on browser history.
   - All pages have titles now, so browser history should make more sense.
   - PayPal's recent IPN changes should probably work now.
