@@ -378,3 +378,9 @@ div.nav {
 	padding: 0;
 	text-align: center;
 }
+
+::-webkit-input-placeholder { color: #7e4c00; }
+:-moz-placeholder { color: #7e4c00; opacity: 1; }
+::-moz-placeholder { color: #7e4c00; opacity: 1; }
+:-ms-input-placeholder { color: #7e4c00; }
+::-ms-input-placeholder { color: #7e4c00; }

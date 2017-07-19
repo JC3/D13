@@ -56,11 +56,6 @@ function doForgot () {
 <style type="text/css">
 .form label { display: flex; align-items: center; }
 .form span { display: flex; }
-::-webkit-input-placeholder { color: #7e4c00; }
-:-moz-placeholder { color: #7e4c00; opacity: 1; }
-::-moz-placeholder { color: #7e4c00; opacity: 1; }
-:-ms-input-placeholder { color: #7e4c00; }
-::-ms-input-placeholder { color: #7e4c00; }
 </style>
 </head>
 <body>

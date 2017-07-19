@@ -1,3 +1,17 @@
+2017-07-19 jasonc
+
+  1.25  
+  - add faq.jsp
+  - footer nomail attr to hide email
+  - footer shows faq link
+  - footer faqRedirect attr to replace camp@ mails with faq link
+  - RuntimeOptions.Global.isFAQRedirect (db: "faq.redirect")
+  - editFAQ privilege
+  - editfaq.jsp
+  - faq and edit faq links on home page
+  - graphics for faq editor buttons added to /media
+  - placeholder styling moved to disorient.css, all placeholders should be orange now
+
 2017-07-18 jasonc
 
   1.24 (https://github.com/JC3/D13/pull/10/files)
